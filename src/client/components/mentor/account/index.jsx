@@ -44,7 +44,7 @@ const Accounts = (props) => {
 
   // Fetch account details on component mount
   useEffect(() => {
-fetch("http://localhost:8000/api/account-details/", {
+fetch("http://www.mentiff.com/api_backend/api/account-details/", {
       method: "GET",
       headers: {
         Authorization: `Token ${authToken}`,
@@ -86,7 +86,7 @@ fetch("http://localhost:8000/api/account-details/", {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-fetch("http://localhost:8000/api/account-details/", {
+fetch("http://www.mentiff.com/api_backend/api/account-details/", {
       method: "POST",
       headers: {
         Authorization: `Token ${authToken}`,

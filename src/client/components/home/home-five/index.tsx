@@ -95,8 +95,8 @@ const HomeFive = ({ isLoggedIn, user }) => {
     const fetchData = async () => {
       try {
         const endpoints = [
-          'http://127.0.0.1:8000/api/universities/groups/',
-          'http://127.0.0.1:8000/api/users/mentors/',
+          'http://www.mentiff.com/api_backend/api/universities/groups/',
+          'http://www.mentiff.com/api_backend/api/users/mentors/',
         ];
 
         const responses = await axios.all(endpoints.map(endpoint => axios.get(endpoint)));

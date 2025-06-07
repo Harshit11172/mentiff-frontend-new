@@ -22,8 +22,8 @@ const MenteeProfile = (props) => {
     if (mentor?.id) {
       const fetchMentorDetails = async () => {
         try {
-          // const response = await axios.get(`http://127.0.0.1:8000/api/users/mentors/${mentor.id}/`);
-          const response = await axios.get(`http://127.0.0.1:8000/api/users/mentors/1/`);
+          // const response = await axios.get(`http://www.mentiff.com/api_backend/api/users/mentors/${mentor.id}/`);
+          const response = await axios.get(`http://www.mentiff.com/api_backend/api/users/mentors/1/`);
           setMentorDetails(response.data);
         } catch (err) {
           setError("Error fetching mentor details.");

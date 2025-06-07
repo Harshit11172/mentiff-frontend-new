@@ -94,7 +94,7 @@ const Register = (props) => {
 
     try {
       // URL for the API endpoint
-      const url = `http://127.0.0.1:8000/api/users/verify-email/${token}/`;
+      const url = `http://www.mentiff.com/api_backend/api/users/verify-email/${token}/`;
       console.log(url)
 
       // Prepare the payload with verification_status
@@ -115,7 +115,7 @@ const Register = (props) => {
       });
 
 
-      // const response = await fetch(`http://127.0.0.1:8000/api/users/verify-email/${token}/`, {
+      // const response = await fetch(`http://www.mentiff.com/api_backend/api/users/verify-email/${token}/`, {
       //   method: 'GET'
       // });
 
@@ -239,7 +239,7 @@ const Register = (props) => {
       try {
         console.log("User Details found: Calling api to create mentor instance and verification_status=verified")
         // URL for the API endpoint
-        const apiUrl = `http://127.0.0.1:8000/api/users/verify-email/${token}/`;
+        const apiUrl = `http://www.mentiff.com/api_backend/api/users/verify-email/${token}/`;
         console.log('calling verify email api with post request to enter extra mentor details')
         console.log(apiUrl)
 
@@ -263,7 +263,7 @@ const Register = (props) => {
 
 
         // NEW API CALL to create a group if not available and add mentor to it 
-        const apiUrlCreateGroup = `http://127.0.0.1:8000/api/group/add-mentor/`;
+        const apiUrlCreateGroup = `http://www.mentiff.com/api_backend/api/group/add-mentor/`;
         console.log("Creating a new group if group not available and adding the mentor to it...");
         console.log("UserDetails found: ")
         console.log(userDetails)
@@ -316,8 +316,8 @@ const Register = (props) => {
         console.log("User Details not found: Calling api to create only user instance")
         const apiUrl =
           role === "mentee"
-            ? "http://127.0.0.1:8000/api/users/signup/mentee/"
-            : "http://127.0.0.1:8000/api/users/signup/mentor/";
+            ? "http://www.mentiff.com/api_backend/api/users/signup/mentee/"
+            : "http://www.mentiff.com/api_backend/api/users/signup/mentor/";
 
         const response = await fetch(apiUrl, {
           method: "POST",

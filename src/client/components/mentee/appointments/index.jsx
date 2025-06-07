@@ -26,7 +26,7 @@ const ViewAllGroups = (props) => {
 
     const fetchGroups = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/universities/groups/'); // Your API endpoint
+        const response = await axios.get('http://www.mentiff.com/api_backend/api/universities/groups/'); // Your API endpoint
         setGroups(response.data); // Set the groups data
         console.log("Fetched groups data:", response.data);
       } catch (error) {

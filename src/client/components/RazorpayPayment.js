@@ -18,7 +18,7 @@ const RazorpayPayment = () => {
       return;
     }
 
-    const orderRes = await fetch("http://localhost:8000/create-order/", {
+    const orderRes = await fetch("http://www.mentiff.com/api_backend/create-order/", {
       method: "POST",
     });
 
@@ -32,7 +32,7 @@ const RazorpayPayment = () => {
       description: "Test Transaction",
       order_id: orderData.id,
       handler: async function (response) {
-        const verifyRes = await fetch("http://localhost:8000/verify-payment/", {
+        const verifyRes = await fetch("http://www.mentiff.com/api_backend/verify-payment/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -93,7 +93,7 @@ const VideoCall = ({ callDuration = 0, onEndCall }) => {
 
 
   const fetchCallDetails = async (callId) => {
-    const response = await fetch(`http://localhost:8000/api/voice_video/call/${callId}/`);
+    const response = await fetch(`http://www.mentiff.com/api_backend/api/voice_video/call/${callId}/`);
     
     if (response.ok) {
       const data = await response.json();
@@ -105,7 +105,7 @@ const VideoCall = ({ callDuration = 0, onEndCall }) => {
   };
 
   const setupWebSocket = (callId) => {
-    const socket = new WebSocket(`ws://127.0.0.1:8000/ws/call/${callId}/`);
+    const socket = new WebSocket(`ws://www.mentiff.com/api_backend/ws/call/${callId}/`);
     socket.onopen = () => {
       console.log("WebSocket connection established.");
     };

@@ -44,7 +44,7 @@ const LoginContainer = (props) => {
     setLoading(true);
 
     try {
-      await axios.post("http://127.0.0.1:8000/api/request-otp/", {
+      await axios.post("http://www.mentiff.com/api_backend/api/request-otp/", {
         email,
       });
       setOtpRequested(true);
@@ -61,7 +61,7 @@ const LoginContainer = (props) => {
     setError(""); // Clear previous errors
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/users/login/", {
+      const response = await axios.post("http://www.mentiff.com/api_backend/api/users/login/", {
         email,
         otp,
       });

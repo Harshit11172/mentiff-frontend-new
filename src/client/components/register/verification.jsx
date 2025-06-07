@@ -15,7 +15,7 @@ const Verification = () => {
     const verifyToken = async () => {
       if (token) {
         try {
-          const response = await fetch(`http://127.0.0.1:8000/api/users/verify-email/${token}/`);
+          const response = await fetch(`http://www.mentiff.com/api_backend/api/users/verify-email/${token}/`);
           
           if (!response.ok) {
             throw new Error('Verification failed');

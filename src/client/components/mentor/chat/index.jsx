@@ -14,7 +14,7 @@ const UniversityChatGroup = (props) => {
   const history = useHistory();
   const groupId = localStorage.getItem("groupId");
   const [messages, setMessages] = useState([]); // State for chat messages
-  const wsUrl = `ws://127.0.0.1:8000/ws/chat/group/${groupId}/`; // WebSocket URL
+  const wsUrl = `ws://www.mentiff.com/api_backend/ws/chat/group/${groupId}/`; // WebSocket URL
   const [inputValue, setInputValue] = useState(""); // Make sure this is defined
   const userData = useRef(null); // Store user data in ref
   const chatSocket = useRef(null); // Create a ref for WebSocket
@@ -57,7 +57,7 @@ const UniversityChatGroup = (props) => {
     console.log("Fetching group chats");
     
 
-    fetch(`http://127.0.0.1:8000/api/group/messages/${groupId}/`)
+    fetch(`http://www.mentiff.com/api_backend/api/group/messages/${groupId}/`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -86,13 +86,13 @@ const UniversityChatGroup = (props) => {
         console.log("group id found in chat=")
         console.log(groupId)
 
-        const response = await axios.get(`http://127.0.0.1:8000/api/universities/groups/${groupId}`, {
+        const response = await axios.get(`http://www.mentiff.com/api_backend/api/universities/groups/${groupId}`, {
           headers: {
             'Authorization': `Token ${token}`, // Include the token in the headers
           },
         });
 
-        console.log(`http://127.0.0.1:8000/api/universities/groups/${groupId}`)
+        console.log(`http://www.mentiff.com/api_backend/api/universities/groups/${groupId}`)
 
         setGroupData(response.data);
 
