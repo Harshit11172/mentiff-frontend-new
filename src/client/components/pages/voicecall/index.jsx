@@ -25,7 +25,7 @@ const VoiceCall = (props) => {
       return;
     }
 
-    const newSocket = new WebSocket(`ws://www.mentiff.com/api_backend/ws/call/${call_id}/`);
+    const newSocket = new WebSocket(`${process.env.REACT_APP_API_BASE_URL_BACKEND_CHAT}/ws/call/${call_id}/`);
     newSocket.onopen = () => {
       console.log("WebSocket connection established");
       startTimer();

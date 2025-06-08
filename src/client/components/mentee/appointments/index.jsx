@@ -22,12 +22,15 @@ const ViewAllGroups = (props) => {
     }
     else {
       console.log("Token not found. User is logged out intially")
+      console.log("API base URL:", process.env.REACT_APP_API_BASE_URL_BACKEND);
+
     }
 
     const fetchGroups = async () => {
       try {
-        const response = await axios.get('http://www.mentiff.com/api_backend/api/universities/groups/'); // Your API endpoint
-        setGroups(response.data); // Set the groups data
+const response = await axios.get(
+  `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/universities/groups/`
+);        setGroups(response.data); // Set the groups data
         console.log("Fetched groups data:", response.data);
       } catch (error) {
         console.error("Error fetching groups:", error);

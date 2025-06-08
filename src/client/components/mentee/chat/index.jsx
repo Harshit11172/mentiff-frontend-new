@@ -34,7 +34,7 @@ const PatientChat = (props) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const webSocket = new WebSocket('api_backend/ws/chat/group/<str:group_name>/');
+    const webSocket = new WebSocket('ws/chat/group/<str:group_name>/');
 
     webSocket.onopen = () => {
       console.log("Connected to WebSocket");

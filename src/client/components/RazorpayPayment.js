@@ -18,7 +18,8 @@ const RazorpayPayment = () => {
       return;
     }
 
-    const orderRes = await fetch("http://www.mentiff.com/api_backend/create-order/", {
+    const orderRes = await fetch(  `${process.env.REACT_APP_API_BASE_URL_BACKEND}/create-order/`,
+{
       method: "POST",
     });
 
@@ -32,7 +33,7 @@ const RazorpayPayment = () => {
       description: "Test Transaction",
       order_id: orderData.id,
       handler: async function (response) {
-        const verifyRes = await fetch("http://www.mentiff.com/api_backend/verify-payment/", {
+        const verifyRes = await fetch(`${process.env.REACT_APP_API_BASE_URL_BACKEND}/verify-payment/`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

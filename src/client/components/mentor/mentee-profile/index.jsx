@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import Footer from "../../footer";
 import Header from "../../header";
@@ -11,7 +11,7 @@ import { useLocation } from 'react-router-dom';
 const MenteeProfile = (props) => {
   const location = useLocation();
   const mentor = location.state?.mentor; // Get mentor data passed from the previous page
-  
+
   const [mentorDetails, setMentorDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -22,9 +22,9 @@ const MenteeProfile = (props) => {
     if (mentor?.id) {
       const fetchMentorDetails = async () => {
         try {
-          // const response = await axios.get(`http://www.mentiff.com/api_backend/api/users/mentors/${mentor.id}/`);
-          const response = await axios.get(`http://www.mentiff.com/api_backend/api/users/mentors/1/`);
-          setMentorDetails(response.data);
+          const response = await axios.get(
+            `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/mentors/1/`
+          ); setMentorDetails(response.data);
         } catch (err) {
           setError("Error fetching mentor details.");
         } finally {
@@ -55,27 +55,27 @@ const MenteeProfile = (props) => {
       <Header {...props} />
       <div>
         {/* Breadcrumb */}
-        
-        <div className="breadcrumb-bar-two">
-        <div className="container-fluid">
-          <div className="row align-items-start inner-banner">
-            <div className="col-md-12 col-12 text-start">
-              <nav aria-label="breadcrumb" className="page-breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <Link to="/index">Home</Link>
-                  </li>
-                  <li className="breadcrumb-item" aria-current="page">
-                  Mentee Profile
-                  </li>
-                </ol>
-              </nav>
-              <h2 className="breadcrumb-title">Mentee Profile</h2>
 
+        <div className="breadcrumb-bar-two">
+          <div className="container-fluid">
+            <div className="row align-items-start inner-banner">
+              <div className="col-md-12 col-12 text-start">
+                <nav aria-label="breadcrumb" className="page-breadcrumb">
+                  <ol className="breadcrumb">
+                    <li className="breadcrumb-item">
+                      <Link to="/index">Home</Link>
+                    </li>
+                    <li className="breadcrumb-item" aria-current="page">
+                      Mentee Profile
+                    </li>
+                  </ol>
+                </nav>
+                <h2 className="breadcrumb-title">Mentee Profile</h2>
+
+              </div>
             </div>
           </div>
         </div>
-      </div>
         {/* /Breadcrumb */}
         {/* Page Content */}
         <div className="content">
@@ -173,9 +173,9 @@ const MenteeProfile = (props) => {
             {/* <div className="card col-10 me-auto ms-auto p-0">
               <div className="card-body custom-border-card pb-0"> */}
 
-                
-                {/* Personal Details */}
-                {/* <div className="widget education-widget mb-0">
+
+            {/* Personal Details */}
+            {/* <div className="widget education-widget mb-0">
                   <h4 className="widget-title">Personal Details</h4>
                   <hr />
                   <div className="experience-box">
@@ -207,15 +207,15 @@ const MenteeProfile = (props) => {
                     </ul>
                   </div>
                 </div> */}
-                {/* /Personal Details */}
+            {/* /Personal Details */}
 
-{/* 
+            {/* 
 
               </div>
             </div>
              */}
-            
-            
+
+
             <div className="card col-10 me-auto ms-auto p-0">
               <div className="card-body custom-border-card pb-0">
                 {/* Qualification Details */}
@@ -224,8 +224,8 @@ const MenteeProfile = (props) => {
                   <hr />
                   <div className="experience-box">
                     <ul className="experience-list profile-custom-list">
-                      
-                      
+
+
                       <li>
                         <div className="experience-content">
                           <div className="timeline-content">
@@ -236,25 +236,25 @@ const MenteeProfile = (props) => {
                           </div>
                         </div>
                       </li>
-                
-                    
-                    
+
+
+
                     </ul>
                   </div>
                 </div>
                 {/* /Qualification Details */}
               </div>
             </div>
-            
-            
-            
+
+
+
             {/* <div className="card col-10 me-auto ms-auto p-0">
               <div className="card-body custom-border-card pb-0"> */}
-                
-                
-                {/* Location Details */}
-                
-{/*                 
+
+
+            {/* Location Details */}
+
+            {/*                 
                 <div className="widget awards-widget m-0">
                   <h4 className="widget-title">Location</h4>
                   <hr />
@@ -315,14 +315,14 @@ const MenteeProfile = (props) => {
                 </div>
                 
                  */}
-                {/* /Location Details */}
-             
-{/*   
+            {/* /Location Details */}
+
+            {/*   
               </div>
             </div>
              */}
-            
-            
+
+
             {/* /Mentor Details Tab */}
           </div>
         </div>

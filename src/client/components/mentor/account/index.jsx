@@ -20,12 +20,17 @@ import { Modal } from "react-bootstrap";
 const Accounts = (props) => {
   const [show, setShow] = useState(false);
   const [display, setDisplay] = useState(false);
-  
+
+  const [mentorEarning, setMentorEarning] = useState({
+    total_earnings: 0.00,
+    amount_requested: 0.00,
+    balance: 0.00,
+    updated_at: null,
+  });
+
 
   // Store fetched account details here
   const [accountDetails, setAccountDetails] = useState({
-    
-    
     bank_name: "",
     ifsc_code: "",
     bank_account_number: "",
@@ -42,20 +47,20 @@ const Accounts = (props) => {
 
   const authToken = localStorage.getItem("authToken"); // get auth token
 
-  // Fetch account details on component mount
   useEffect(() => {
-fetch("http://www.mentiff.com/api_backend/api/account-details/", {
-      method: "GET",
-      headers: {
-        Authorization: `Token ${authToken}`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch account details");
-        return res.json();
-      })
-      .then((data) => {
+    const fetchAccountDetails = async () => {
+      try {
+        const response = await fetch( `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/account-details/`,{
+          method: "GET",
+          headers: {
+            Authorization: `Token ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch account details");
+
+        const data = await response.json();
         setAccountDetails(data);
         setFormData({
           bank_name: data.bank_name || "",
@@ -63,9 +68,36 @@ fetch("http://www.mentiff.com/api_backend/api/account-details/", {
           bank_account_number: data.bank_account_number || "",
           account_holder_name: data.account_holder_name || "",
         });
-      })
-      .catch((err) => console.error(err));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const fetchMentorEarnings = async () => {
+      try {
+        const response = await fetch( `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/mentor-earning/`,{
+          method: "GET",
+          headers: {
+            Authorization: `Token ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch mentor earnings");
+
+        const data = await response.json();
+        setMentorEarning(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (authToken) {
+      fetchAccountDetails();
+      fetchMentorEarnings();
+    }
   }, [authToken]);
+
 
   // Open modal and set form data to current account details
   const handleShow = () => {
@@ -86,7 +118,7 @@ fetch("http://www.mentiff.com/api_backend/api/account-details/", {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-fetch("http://www.mentiff.com/api_backend/api/account-details/", {
+    fetch(`${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/account-details/`, {
       method: "POST",
       headers: {
         Authorization: `Token ${authToken}`,
@@ -149,15 +181,15 @@ fetch("http://www.mentiff.com/api_backend/api/account-details/", {
                         </div>
                       </div>
                       <div className="card-body">
-                        
+
                         <div className="profile-view-bottom">
                           <div className="row">
                             <div className="col-lg-6">
                               <div className="info-list">
                                 <div className="title">Bank Name</div>
                                 <div className="text" id="bank_name">
-                                  
-                                {accountDetails.bank_name || "-"}
+
+                                  {accountDetails.bank_name || "-"}
                                 </div>
                               </div>
                             </div>
@@ -165,7 +197,7 @@ fetch("http://www.mentiff.com/api_backend/api/account-details/", {
                               <div className="info-list">
                                 <div className="title">Branch IFSC</div>
                                 <div className="text" id="ifsc_code">
-                                                                  {accountDetails.ifsc_code || "-"}
+                                  {accountDetails.ifsc_code || "-"}
 
                                 </div>
                               </div>
@@ -174,7 +206,7 @@ fetch("http://www.mentiff.com/api_backend/api/account-details/", {
                               <div className="info-list">
                                 <div className="title">Account Number</div>
                                 <div className="text" id="bank_account_number">
-                                {accountDetails.bank_account_number || "-"}
+                                  {accountDetails.bank_account_number || "-"}
                                 </div>
                               </div>
                             </div>
@@ -182,17 +214,17 @@ fetch("http://www.mentiff.com/api_backend/api/account-details/", {
                               <div className="info-list">
                                 <div className="title">Holder's Name</div>
                                 <div className="text" id="account_holder_name">
-                                {accountDetails.account_holder_name || "-"}
+                                  {accountDetails.account_holder_name || "-"}
                                 </div>
                               </div>
                             </div>
 
-                            
-                         
-                         
-                         
-                         
-                         </div>
+
+
+
+
+
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -201,22 +233,60 @@ fetch("http://www.mentiff.com/api_backend/api/account-details/", {
                     <div className="card flex-fill">
                       <div className="card-body">
                         <div className="row">
-                          <div className="col-lg-6">
-                            <div className="account-card bg-success-light">
-                              <span>$90.48</span> Earned
-                            </div>
-                          </div>
-                          <div className="col-lg-6">
-                            <div className="account-card bg-warning-light">
-                              <span>$0.00</span> Requested
-                            </div>
-                          </div>
-                          <div className="col-lg-6">
-                            <div className="account-card bg-purple-light">
-                              <span>$90.48</span> Balance
-                            </div>
-                          </div>
-                          
+
+                          {mentorEarning && (
+                            <>
+                              {/* <div className="col-lg-6">
+                                <div className="account-card bg-success-light">
+                                  <span>₹{parseFloat(mentorEarning.total_earnings).toFixed(2)}</span> Total Earnings
+                                </div>
+                              </div>
+
+                              <div className="col-lg-6">
+                                <div className="account-card bg-warning-light">
+                                  <span>₹{parseFloat(mentorEarning.amount_requested).toFixed(2)}</span> Requested
+                                </div>
+                              </div>
+
+                              <div className="col-lg-6">
+                                <div className="account-card bg-purple-light">
+                                  <span>₹{parseFloat(mentorEarning.balance).toFixed(2)}</span> Wallet
+                                </div>
+                              </div> */}
+
+                              <div className="col-lg-6">
+                                <div className="account-card bg-success-light">
+                                  <span>₹{parseFloat(mentorEarning.total_earnings).toFixed(2)}</span> Total Earnings
+                                </div>
+                              </div>
+
+                               <div className="col-lg-6">
+                                <div className="account-card bg-primary-light">
+                                  <span>₹{parseFloat(mentorEarning.balance).toFixed(2)}</span> Wallet
+                                </div>
+                              </div>
+
+
+                              <div className="col-lg-6">
+                                <div className="account-card bg-info-light">
+                                  <span>₹{parseFloat(mentorEarning.amount_requested).toFixed(2)}</span> Requested
+                                </div>
+                              </div>
+
+                             
+
+                              {/* <div className="col-lg-6">
+                                <div className="account-card bg-purple-light">
+                                  <span>₹{parseFloat(mentorEarning.balance).toFixed(2)}</span> Wallet
+                                </div>
+                              </div> */}
+
+
+
+                            </>
+                          )}
+  
+
                           <div className="col-md-12 text-center">
                             <Link
                               to="#payment_request_modal"
@@ -226,9 +296,9 @@ fetch("http://www.mentiff.com/api_backend/api/account-details/", {
                             >
                               Payment Request
                             </Link>
-                          
+
                           </div>
-                       
+
                         </div>
                       </div>
                     </div>
@@ -282,8 +352,8 @@ fetch("http://www.mentiff.com/api_backend/api/account-details/", {
                                         <th />
                                       </tr>
                                     </thead>
-                                    
-                                    
+
+
                                     <tbody>
                                       <tr>
                                         <td>
@@ -292,7 +362,7 @@ fetch("http://www.mentiff.com/api_backend/api/account-details/", {
                                             10.00 AM
                                           </span>
                                         </td>
-                                        
+
                                         <td>
                                           <h2 className="table-avatar">
                                             <Link
@@ -311,16 +381,16 @@ fetch("http://www.mentiff.com/api_backend/api/account-details/", {
                                             </Link>
                                           </h2>
                                         </td>
-                                        
-                                        
+
+
                                         <td className="text-center">$150</td>
                                         <td>
                                           <span className="badge rounded-pill bg-success-light">
                                             Paid
                                           </span>
                                         </td>
-                                        
-                                        
+
+
                                         <td className="text-end">
                                           <div className="table-action">
                                             <Link
@@ -348,9 +418,9 @@ fetch("http://www.mentiff.com/api_backend/api/account-details/", {
                                           </div>
                                         </td>
                                       </tr>
-                                      
-                                      
-                      
+
+
+
                                     </tbody>
                                   </table>
                                 </div>
@@ -358,7 +428,7 @@ fetch("http://www.mentiff.com/api_backend/api/account-details/", {
                             </div>
                           </div>
                           {/* /Accounts Tab */}
-                          
+
                           {/* Refund Request Tab */}
                           <div className="tab-pane fade" id="pat_refundrequest">
                             <div className="card card-table mb-0">
@@ -433,9 +503,9 @@ fetch("http://www.mentiff.com/api_backend/api/account-details/", {
                                           </div>
                                         </td>
                                       </tr>
-                                      
-                                      
-                                    
+
+
+
                                     </tbody>
                                   </table>
                                 </div>
@@ -443,7 +513,7 @@ fetch("http://www.mentiff.com/api_backend/api/account-details/", {
                             </div>
                           </div>
                           {/* /Refund Request Tab */}
-                        
+
                         </div>
                         {/* Tab Content */}
                       </div>
@@ -469,8 +539,8 @@ fetch("http://www.mentiff.com/api_backend/api/account-details/", {
         <Modal.Header closeButton>
           <h5 className="modal-title">Account Details</h5>
         </Modal.Header>
-        
-        
+
+
         <Modal.Body>
           <form id="accounts_form" onSubmit={handleSubmit}>
             <div className="mb-3">
@@ -522,7 +592,7 @@ fetch("http://www.mentiff.com/api_backend/api/account-details/", {
             </button>
           </form>
         </Modal.Body>
-        
+
         <Modal.Footer></Modal.Footer>
       </Modal>
 
@@ -532,11 +602,11 @@ fetch("http://www.mentiff.com/api_backend/api/account-details/", {
 
 
       <Modal show={display} onHide={displayClose} centered>
-        
+
         <Modal.Header closeButton>
           <h5 className="modal-title">Payment Request</h5>
         </Modal.Header>
-        
+
         <Modal.Body>
           <form id="payment_request_form" method="post">
             <input
@@ -553,7 +623,7 @@ fetch("http://www.mentiff.com/api_backend/api/account-details/", {
                 id="request_amount"
                 className="form-control"
                 maxLength={6}
-                // oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+              // oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
               />
               <span className="help-block" />
             </div>

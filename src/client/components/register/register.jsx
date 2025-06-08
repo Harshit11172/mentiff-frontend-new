@@ -94,7 +94,7 @@ const Register = (props) => {
 
     try {
       // URL for the API endpoint
-      const url = `http://www.mentiff.com/api_backend/api/users/verify-email/${token}/`;
+      const url = `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/verify-email/${token}/`;
       console.log(url)
 
       // Prepare the payload with verification_status
@@ -115,9 +115,6 @@ const Register = (props) => {
       });
 
 
-      // const response = await fetch(`http://www.mentiff.com/api_backend/api/users/verify-email/${token}/`, {
-      //   method: 'GET'
-      // });
 
       const data = await response.json();
 
@@ -239,7 +236,7 @@ const Register = (props) => {
       try {
         console.log("User Details found: Calling api to create mentor instance and verification_status=verified")
         // URL for the API endpoint
-        const apiUrl = `http://www.mentiff.com/api_backend/api/users/verify-email/${token}/`;
+        const apiUrl = `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/verify-email/${token}/`;
         console.log('calling verify email api with post request to enter extra mentor details')
         console.log(apiUrl)
 
@@ -263,7 +260,7 @@ const Register = (props) => {
 
 
         // NEW API CALL to create a group if not available and add mentor to it 
-        const apiUrlCreateGroup = `http://www.mentiff.com/api_backend/api/group/add-mentor/`;
+        const apiUrlCreateGroup = `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/group/add-mentor/`;
         console.log("Creating a new group if group not available and adding the mentor to it...");
         console.log("UserDetails found: ")
         console.log(userDetails)
@@ -316,10 +313,10 @@ const Register = (props) => {
         console.log("User Details not found: Calling api to create only user instance")
         const apiUrl =
           role === "mentee"
-            ? "http://www.mentiff.com/api_backend/api/users/signup/mentee/"
-            : "http://www.mentiff.com/api_backend/api/users/signup/mentor/";
-
-        const response = await fetch(apiUrl, {
+            ? `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/signup/mentee/`
+            : `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/signup/mentor/`;
+        
+            const response = await fetch(apiUrl, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

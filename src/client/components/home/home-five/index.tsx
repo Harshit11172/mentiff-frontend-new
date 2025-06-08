@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import HomeFiveHeader from "./header";
 
-import Header from "../../header"; 
+import Header from "../../header";
 
 import HomeFiveFooter from "./footer";
 import ImageWithBasePath from "../../../../core/img/ImageWithBasePath";
@@ -23,13 +23,15 @@ const HomeFive = ({ isLoggedIn, user }) => {
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  console.log("API base URL:", process.env.REACT_APP_API_BASE_URL_BACKEND);
+
   const history = useHistory();
 
   const handleClick = (group) => {
 
     console.log("inside handleclick")
 
-      console.log(`/mentor/chat-mentor/${group.id}`);
+    console.log(`/mentor/chat-mentor/${group.id}`);
 
     isLoggedIn = isAuthenticated
 
@@ -76,7 +78,7 @@ const HomeFive = ({ isLoggedIn, user }) => {
     const token = localStorage.getItem('authToken'); // Check local storage for auth token
     const userDataString = localStorage.getItem('userData');
     console.log("User data in index-5?", userDataString);
-    
+
     if (token) {
       setIsAuthenticated(true); // Update state if token exists
       isLoggedIn = isAuthenticated
@@ -85,6 +87,7 @@ const HomeFive = ({ isLoggedIn, user }) => {
     }
     else {
       console.log("Token not found. User is logged out intially")
+
       isLoggedIn = isAuthenticated
       console.log("isAuthenticated set in isLoggedIn as: ")
       console.log(isLoggedIn)
@@ -95,11 +98,11 @@ const HomeFive = ({ isLoggedIn, user }) => {
     const fetchData = async () => {
       try {
         const endpoints = [
-          'http://www.mentiff.com/api_backend/api/universities/groups/',
-          'http://www.mentiff.com/api_backend/api/users/mentors/',
+          `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/universities/groups/`,
+          `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/mentors/`,
         ];
-
         const responses = await axios.all(endpoints.map(endpoint => axios.get(endpoint)));
+        console.log("API base URL:", process.env.REACT_APP_API_BASE_URL_BACKEND);
 
         setGroups(responses[0].data); // First API response
         setMentors(responses[1].data); // Second API response
@@ -202,7 +205,7 @@ const HomeFive = ({ isLoggedIn, user }) => {
   return (
     <div className="main-wrapper main-wrapper-five">
       <>
-        <HomeFiveHeader/>
+        <HomeFiveHeader />
 
 
 

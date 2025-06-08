@@ -9,14 +9,14 @@ const Verification = () => {
   const token = query.get('token'); // Get the token from the URL
 
   useEffect(() => {
-    
+
     console.log("Inside verification page")
 
     const verifyToken = async () => {
       if (token) {
         try {
-          const response = await fetch(`http://www.mentiff.com/api_backend/api/users/verify-email/${token}/`);
-          
+          const response = await fetch(`${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/verify-email/${token}/`);
+
           if (!response.ok) {
             throw new Error('Verification failed');
           }

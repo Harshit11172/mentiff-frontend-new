@@ -14,7 +14,8 @@ const UniversityChatGroup = (props) => {
   const history = useHistory();
   const groupId = localStorage.getItem("groupId");
   const [messages, setMessages] = useState([]); // State for chat messages
-  const wsUrl = `ws://www.mentiff.com/api_backend/ws/chat/group/${groupId}/`; // WebSocket URL
+  const wsUrl = `${process.env.REACT_APP_API_BASE_URL_BACKEND_CHAT}/ws/chat/group/${groupId}/`;
+
   const [inputValue, setInputValue] = useState(""); // Make sure this is defined
   const userData = useRef(null); // Store user data in ref
   const chatSocket = useRef(null); // Create a ref for WebSocket
@@ -55,9 +56,9 @@ const UniversityChatGroup = (props) => {
 
     const groupId = localStorage.getItem("groupId"); // Retrieve groupId from localStorage
     console.log("Fetching group chats");
-    
 
-    fetch(`http://www.mentiff.com/api_backend/api/group/messages/${groupId}/`)
+
+    fetch(`${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/group/messages/${groupId}/`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -86,13 +87,16 @@ const UniversityChatGroup = (props) => {
         console.log("group id found in chat=")
         console.log(groupId)
 
-        const response = await axios.get(`http://www.mentiff.com/api_backend/api/universities/groups/${groupId}`, {
-          headers: {
-            'Authorization': `Token ${token}`, // Include the token in the headers
-          },
-        });
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/universities/groups/${groupId}`,
+          {
+            headers: {
+              Authorization: `Token ${token}`, // Include the token in the headers
+            },
+          }
+        );
 
-        console.log(`http://www.mentiff.com/api_backend/api/universities/groups/${groupId}`)
+        console.log(`${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/universities/groups/${groupId}`);
 
         setGroupData(response.data);
 
@@ -132,8 +136,8 @@ const UniversityChatGroup = (props) => {
   }, [groupId, wsUrl]);
 
 
-  
-    // Scroll to bottom when messages update
+
+  // Scroll to bottom when messages update
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -191,7 +195,7 @@ const UniversityChatGroup = (props) => {
               <div className="chat-window">
 
                 {/* /Chat Left */}
-                
+
                 <div className="chat-cont-left">
                   <form className="chat-search d-flex align-items-center">
                     <div className="avatar avatar-online me-3">
@@ -305,11 +309,11 @@ const UniversityChatGroup = (props) => {
                   </div>
 
                   <div className="chat-body">
-                    
-                    
+
+
                     {/* <div className="chat-scroll"> */}
                     <div className="chat-scroll" ref={chatScrollRef}>
-                      
+
                       <ul className="list-unstyled">
 
                         {messages.map((msg, index) => (
@@ -337,9 +341,9 @@ const UniversityChatGroup = (props) => {
 
                       </ul>
                     </div>
-                  
-                  
-                  
+
+
+
                   </div>
 
                   <div className="chat-footer">
@@ -370,8 +374,8 @@ const UniversityChatGroup = (props) => {
                 {/* /Chat Right */}
 
               </div>
-            
-            
+
+
             </div>
           </div>
           {/* /Row */}
