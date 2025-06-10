@@ -246,8 +246,10 @@ const HomeFive = ({ isLoggedIn, user }) => {
                       { }
                       <span /> Taking College Admission?
                     </h4>
-                    <h1>Figure out your ifs and buts with Mentiff</h1>
-                    <p>Connect 1:1 with seniors from your aspiring college</p>
+                    {/* <h1>Figure out your ifs and buts with Mentiff</h1> */}
+                    <h1>Know more about your dream college</h1>
+
+                    <p>Connect one to one with seniors of your dream college</p>
                   </div>
                   <div className="banner-five-btns">
                     <Link to="/login">Login</Link>
