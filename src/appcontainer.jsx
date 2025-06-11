@@ -180,6 +180,8 @@ const AppContainer = function (props) {
              
 
               {/* home */}
+              <Route path="/" exact component={HomeFive} />
+
               {/* <Route path="/index-1" exact component={HomeOne} />
               <Route path="/index" exact component={Generalhome} />
               <Route path="/homeslider1" exact component={HomeSlider1} />
