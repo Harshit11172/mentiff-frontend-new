@@ -92,7 +92,7 @@ const DoctorSidebar = () => {
               >
                 <Link to="/mentor/chat-mentor">
                   <i className="fas fa-comments" />
-                  <span>Chat Group</span>
+                  <span>Chat Group </span> 
                   {/* <small className="unread-msg">23</small> */}
                   <span style={{ fontSize: '12px', wordWrap: 'break-word', whiteSpace: 'normal' }}>
                     {userData.groups[0].group_name}
@@ -112,7 +112,8 @@ const DoctorSidebar = () => {
                   {/* <small className="unread-msg">3</small> */}
                 </Link>
               </li>
-              <li
+              
+              {/* <li
                 className={
                   pathnames.includes("/mentor/mentee-list") ? "active" : ""
                 }
@@ -121,7 +122,9 @@ const DoctorSidebar = () => {
                   <i className="fas fa-user-injured" />
                   <span>My Mentees</span>
                 </Link>
-              </li>
+              </li> */}
+              
+              
               <li
                 className={
                   pathnames.includes("/mentor/schedule-timing") ? "active" : ""
@@ -142,14 +145,16 @@ const DoctorSidebar = () => {
                   <span>Available Timings</span>
                 </Link>
               </li>
-              <li
+              
+              {/* <li
                 className={pathnames.includes("/pages/invoice") ? "active" : ""}
               >
                 <Link to="/pages/invoice">
                   <i className="fas fa-file-invoice" />
                   <span>Invoices</span>
                 </Link>
-              </li>
+              </li> */}
+              
               <li
                 className={
                   pathnames.includes("/mentor/account") ? "active" : ""
@@ -189,7 +194,8 @@ const DoctorSidebar = () => {
                   <span>Profile Settings</span>
                 </Link>
               </li>
-              <li
+              
+              {/* <li
                 className={
                   pathnames.includes("/mentor/doctor-change-password")
                     ? "active"
@@ -200,7 +206,9 @@ const DoctorSidebar = () => {
                   <i className="fas fa-lock" />
                   <span>Change Password</span>
                 </Link>
-              </li>
+              </li> */}
+              
+              
               <li
                 className={
                   pathnames.includes("/mentor/social-media") ? "active" : ""

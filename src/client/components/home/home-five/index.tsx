@@ -239,6 +239,7 @@ const HomeFive = ({ isLoggedIn, user }) => {
           <div className="container">
             {/* <div className="container" style={{ backgroundColor: 'rgba(123, 232, 255, 0.8)', padding: '20px', borderRadius: '8px' }}> */}
             <div className="row align-items-center">
+
               <div className="col-lg-5 d-flex align-items-center">
                 <div className="home-slide-face aos" data-aos="fade-up">
                   <div className="home-slide-text ">
@@ -251,7 +252,8 @@ const HomeFive = ({ isLoggedIn, user }) => {
 
                     <p>Connect one to one with seniors of your dream college</p>
                   </div>
-                  <div className="banner-five-btns">
+                  
+                  {/* <div className="banner-five-btns">
                     <Link to="/login">Login</Link>
                     <Link to="">
                       <span>
@@ -259,7 +261,8 @@ const HomeFive = ({ isLoggedIn, user }) => {
                       </span>{" "}
                       Why Mentiff?
                     </Link>
-                  </div>
+                  </div> */}
+                  
                   {/* Search */}
                   <div className="search-box">
                     <form action="/mentee/search-mentor">
@@ -289,6 +292,7 @@ const HomeFive = ({ isLoggedIn, user }) => {
                   </div>
                 </div>
               </div>
+
               <div className="col-lg-5 d-flex align-items-end">
                 <div className="girl-slide-img aos " data-aos="fade-up">
                   <ImageWithBasePath
@@ -298,13 +302,14 @@ const HomeFive = ({ isLoggedIn, user }) => {
                   />
                 </div>
               </div>
+              
               <div className="col-lg-2">
                 <div className="banner-six-counter">
                   <div className="counter-box">
                     <h5>
-                      <CountUp className="counterUp" end={256} duration={2} />+
+                      <CountUp className="counterUp" end={200} duration={2} />+
                     </h5>
-                    <h4>Courses Added</h4>
+                    <h4>Listed Colleges</h4>
                   </div>
                   <div className="counter-box">
                     <h5>
@@ -320,6 +325,7 @@ const HomeFive = ({ isLoggedIn, user }) => {
                   </div>
                 </div>
               </div>
+            
             </div>
           </div>
         </section>

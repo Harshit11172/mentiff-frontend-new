@@ -272,8 +272,6 @@ const UniversityChatGroup = (props) => {
                 {/* /Chat Left */}
 
 
-
-
                 {/* Chat Right */}
 
                 <div className="chat-cont-right">
@@ -295,7 +293,8 @@ const UniversityChatGroup = (props) => {
                         <div className="user-name">{groupData ? groupData.college : "Loading..."}</div>
                       </div>
                     </div>
-                    <div className="chat-options">
+                    
+                    {/* <div className="chat-options">
                       <Link to="#" data-bs-toggle="modal" data-bs-target="#voice_call">
                         <i className="material-icons">local_phone</i>
                       </Link>
@@ -305,7 +304,8 @@ const UniversityChatGroup = (props) => {
                       <Link to="#">
                         <i className="material-icons">more_vert</i>
                       </Link>
-                    </div>
+                    </div> */}
+                  
                   </div>
 
                   <div className="chat-body">
@@ -384,7 +384,8 @@ const UniversityChatGroup = (props) => {
 
 
       {/* modal for video*/}
-      <div className="modal fade call-modal" id="video_call">
+      
+      {/* <div className="modal fade call-modal" id="video_call">
         <div className="modal-dialog modal-dialog-centered" role="document">
           <div className="modal-content">
             <div className="modal-body">
@@ -419,11 +420,12 @@ const UniversityChatGroup = (props) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
 
       {/* modal for call*/}
-      <div className="modal fade call-modal" id="voice_call">
+      
+      {/* <div className="modal fade call-modal" id="voice_call">
         <div className="modal-dialog modal-dialog-centered" role="document">
           <div className="modal-content">
             <div className="modal-body">
@@ -458,7 +460,9 @@ const UniversityChatGroup = (props) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
+    
+    
     </div>
   );
 };
