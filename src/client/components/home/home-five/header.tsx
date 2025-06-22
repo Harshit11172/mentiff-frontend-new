@@ -39,7 +39,7 @@
 //             <div className="menu-header">
 //               <Link to="/index" className="menu-logo">
 //                 <ImageWithBasePath
-//                   src="assets/img/logo.png"
+//                   src="assets/img/logo_mentiff.png"
 //                   className="img-fluid"
 //                   alt="Logo"
 //                 />
@@ -604,19 +604,21 @@ const HomeOneHeader = () => {
                 <span />
               </span>
             </Link>
-            <Link to="/index" className="navbar-brand logo">
+            
+            <Link to="/" className="navbar-brand logo">
               <ImageWithBasePath
-                src="assets/img/logo.png"
+                src="assets/img/logo_mentiff.png"
                 className="img-fluid"
                 alt="Logo"
               />
             </Link>
+          
           </div>
           <div className="main-menu-wrapper">
             <div className="menu-header">
-              <Link to="/index" className="menu-logo">
+              <Link to="/" className="menu-logo">
                 <ImageWithBasePath
-                  src="assets/img/logo.png"
+                  src="assets/img/logo_mentiff.png"
                   className="img-fluid"
                   alt="Logo"
                 />
@@ -626,6 +628,7 @@ const HomeOneHeader = () => {
               </Link>
             </div>
             <ul className="main-nav">
+              
               <li
                 className={`has-submenu   ${pathnames.includes("index")
                   ? "active"
@@ -634,15 +637,37 @@ const HomeOneHeader = () => {
                     : ""
                   }`}
               >
+                
+                
                 {/* <Link
-                  to="/index"
+                  to="/"
                   // target="_blank"
                 >
                   Home
                 </Link> */}
+
+
+{/* <Link
+  to="/"
+  className="text-decoration-none text-dark px-3 py-2 fw-semibold"
+  style={{
+    fontSize: '1rem',
+    transition: 'color 0.3s',
+  }}
+  onMouseOver={e => (e.currentTarget.style.color = '#0d6efd')} // Bootstrap blue
+  onMouseOut={e => (e.currentTarget.style.color = '#212529')} // Bootstrap dark
+>
+  Home
+</Link> */}
+
+
+
+
+
               </li>
               <li className="active megamenu has-submenu ">
-                <Link
+                
+                {/* <Link
                   to="#"
                   className={isSideMenu == "home" ? "subdrop " : ""}
                   onMouseEnter={() =>
@@ -652,7 +677,8 @@ const HomeOneHeader = () => {
                   }
                 >
                   Home <i className="fas fa-chevron-down" />
-                </Link>
+                </Link> */}
+
                 {isSideMenu == "home" ? (
                   <ul
                     // className="submenu mega-submenu"
@@ -818,7 +844,8 @@ const HomeOneHeader = () => {
                 className={`has-submenu ${url.includes("/mentor") ? "active" : ""
                   }`}
               >
-                <Link
+                
+                {/* <Link
                   to="#"
                   className={isSideMenu == "doctors" ? "subdrop " : ""}
                   onMouseEnter={() =>
@@ -828,7 +855,9 @@ const HomeOneHeader = () => {
                   }
                 >
                   Mentor <i className="fas fa-chevron-down" />
-                </Link>
+                </Link> */}
+
+
                 {isSideMenu == "doctors" ? (
                   <ul
                     className={`${isSideMenu == "doctors" ? "submenu d-block" : "submenu"
@@ -1002,7 +1031,8 @@ const HomeOneHeader = () => {
                 className={`has-submenu ${url.includes("/mentee") ? "active" : ""
                   }`}
               >
-                <Link
+                
+                {/* <Link
                   to="#"
                   className={isSideMenu == "patients" ? "subdrop" : ""}
                   onMouseEnter={() =>
@@ -1012,7 +1042,10 @@ const HomeOneHeader = () => {
                   }
                 >
                   Mentee <i className="fas fa-chevron-down" />
-                </Link>
+                </Link> */}
+                
+                
+                
                 {isSideMenu == "patients" ? (
                   <ul
                     className={`${isSideMenu == "patients" ? "submenu d-block" : "submenu"
@@ -1037,6 +1070,8 @@ const HomeOneHeader = () => {
                       >
                         Mentors{" "}
                       </Link>
+
+                      
                       {isSideMenutwo == "doctor" ? (
                         <ul
                           className={
@@ -1209,7 +1244,9 @@ const HomeOneHeader = () => {
                 className={`has-submenu ${url.includes("/pages") ? "active" : ""
                   }`}
               >
-                <Link
+                
+                
+                {/* <Link
                   to="#"
                   className={isSideMenu == "pages" ? "subdrop" : ""}
                   onMouseEnter={() =>
@@ -1218,6 +1255,10 @@ const HomeOneHeader = () => {
                 >
                   Pages <i className="fas fa-chevron-down" />
                 </Link>
+                 */}
+                
+                
+                
                 {isSideMenu == "pages" ? (
                   <ul
                     className={`${isSideMenu == "pages" ? "submenu d-block" : "submenu"
@@ -1367,7 +1408,7 @@ const HomeOneHeader = () => {
                 className={`has-submenu ${url.includes("/blog") ? "active" : ""
                   }`}
               >
-                <Link
+                {/* <Link
                   to="#"
                   className={isSideMenu == "blog" ? "subdrop" : ""}
                   onMouseEnter={() =>
@@ -1375,7 +1416,7 @@ const HomeOneHeader = () => {
                   }
                 >
                   Blog <i className="fas fa-chevron-down" />
-                </Link>
+                </Link> */}
                 {isSideMenu == "blog" ? (
                   <ul
                     className={`${isSideMenu == "blog" ? "submenu d-block" : "submenu"
@@ -1405,6 +1446,7 @@ const HomeOneHeader = () => {
                         Blog Grid
                       </Link>
                     </li>
+                    
                     <li
                       className={
                         pathnames.includes("blog-details") ? "active" : ""
@@ -1417,16 +1459,18 @@ const HomeOneHeader = () => {
                         Blog Details
                       </Link>
                     </li>
+                 
                   </ul>
                 ) : (
                   ""
                 )}
               </li>
+             
               <li>
-                <Link to="/admin" target="_blank">
+                {/* <Link to="/admin" target="_blank">
                   Admin
-                </Link>
-              </li>
+                </Link> */}
+             </li>
               <li className="login-link">
                 <Link to="/login">Login / Signup</Link>
               </li>
@@ -1534,11 +1578,52 @@ const HomeOneHeader = () => {
 
 
             ) : (
-              <li className="nav-item">
-                <Link className="nav-link header-login" to="/login">
-                  Log In
-                </Link>
-              </li>
+             
+             
+            //  <li className="nav-item">
+            //   <div className="d-flex gap-3">
+            //     <Link className="nav-link header-login bg-primary text-white px-3 py-2 rounded" to="/login">
+            //       Login
+            //     </Link>
+            //     <Link className="nav-link header-login bg-success text-white px-3 py-2 rounded" to="/register">
+            //       Register
+            //     </Link>
+            //   </div>
+            // </li>
+
+            <li className="nav-item">
+  <div className="d-flex gap-3">
+    <Link
+      to="/login"
+      className="nav-link header-login text-white px-3 py-2 rounded"
+      style={{
+        backgroundColor: '#4dabf7',
+        transition: 'background-color 0.3s',
+      }}
+      onMouseOver={e => (e.currentTarget.style.backgroundColor = '#228be6')}
+      onMouseOut={e => (e.currentTarget.style.backgroundColor = '#4dabf7')}
+    >
+      Login
+    </Link>
+
+    <Link
+      to="/login"
+      className="nav-link header-login text-white px-3 py-2 rounded"
+      style={{
+        backgroundColor: '#69db7c',
+        transition: 'background-color 0.3s',
+      }}
+      onMouseOver={e => (e.currentTarget.style.backgroundColor = '#40c057')}
+      onMouseOut={e => (e.currentTarget.style.backgroundColor = '#69db7c')}
+    >
+      Register
+    </Link>
+  </div>
+</li>
+
+
+
+              
             )}
 
             {/* Uncomment if you have a register link */}

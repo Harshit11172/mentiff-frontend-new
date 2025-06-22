@@ -364,7 +364,7 @@ const HomeFive = ({ isLoggedIn, user }) => {
                               alt=""
                             />
                           </span>
-                          <span className="cat-rat">5.0</span>
+                          <span className="cat-rat">Members: {group.member_count}</span>
                         </div>
                         <div className="categories-text" style={{ textAlign: 'left' }}> {/* Align text to the left */}
                           <h4 style={{ margin: 0 }}>{group.group_name}</h4> {/* Remove margin for better alignment */}
