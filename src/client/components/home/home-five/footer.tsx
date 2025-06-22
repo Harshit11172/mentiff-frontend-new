@@ -7,13 +7,26 @@ const HomeFiveFooter = () => {
         <>
   {/* Footer */}
   <footer className="footer footer-one footer-five">
+    
+    
+    
     {/* Footer Top */}
+    
+    
+{/*     
     <div className="footer-top aos " data-aos="fade-up">
       <div className="container">
         <div className="row">
-          <div className="col-lg-2 col-md-4">
+          <div className="col-lg-2 col-md-4"> */}
+           
+           
+           
             {/* Footer Widget */}
-            <div className="footer-widget footer-menu">
+       
+       
+       
+       
+            {/* <div className="footer-widget footer-menu">
               <h2 className="footer-title">Company</h2>
               <ul>
                 <li>
@@ -33,11 +46,24 @@ const HomeFiveFooter = () => {
                 </li>
               </ul>
             </div>
+          
+           */}
+          
             {/* /Footer Widget */}
-          </div>
-          <div className="col-lg-2 col-md-4">
+        
+        
+        
+          {/* </div>
+          <div className="col-lg-2 col-md-4"> */}
+            
+            
+           
+           
             {/* Footer Widget */}
-            <div className="footer-widget footer-menu">
+          
+          
+          
+            {/* <div className="footer-widget footer-menu">
               <h2 className="footer-title">Community</h2>
               <ul>
                 <li>
@@ -62,12 +88,23 @@ const HomeFiveFooter = () => {
                   <Link to="/mentee/dashboard">Become a Mentee</Link>
                 </li>
               </ul>
-            </div>
+            </div> */}
+          
+          
+          
             {/* /Footer Widget */}
-          </div>
-          <div className="col-lg-2 col-md-4">
+        
+        
+          {/* </div>
+          <div className="col-lg-2 col-md-4"> */}
+            
+            
+            
             {/* Footer Widget */}
-            <div className="footer-widget footer-menu">
+           
+           
+           
+            {/* <div className="footer-widget footer-menu">
               <h2 className="footer-title">More</h2>
               <ul>
                 <li>
@@ -92,9 +129,16 @@ const HomeFiveFooter = () => {
                   <Link to="/mentee/search-mentor">Search Mentors</Link>
                 </li>
               </ul>
-            </div>
+            </div> */}
+          
+          
+          
             {/* /Footer Widget */}
-          </div>
+         
+         
+         
+         
+          {/* </div>
           <div className="col-lg-2 col-md-4">
             <div className="footer-widget footer-menu">
               <h2 className="footer-title">Quick Links</h2>
@@ -121,11 +165,23 @@ const HomeFiveFooter = () => {
             </div>
           </div>
           <div className="col-lg-4 col-md-6 ">
+            
+             */}
+            
             {/* Footer Widget */}
-            <div className="footer-widget footer-subscribe bg-subscribe">
+           
+           
+           
+            {/* <div className="footer-widget footer-subscribe bg-subscribe">
               <h2 className="footer-title">Subscribe</h2>
+             */}
+            
+            
               {/* Footer Subscribe */}
-              <div className="footer-mail">
+           
+           
+           
+              {/* <div className="footer-mail">
                 <form action="/mentee/search-mentor">
                   <div className="form-group">
                     <input
@@ -140,9 +196,15 @@ const HomeFiveFooter = () => {
                     </Link>
                   </div>
                 </form>
-              </div>
+              </div> */}
+              
+              
+              
               {/* Footer Subscribe */}
-              <p className="subscribe-text">
+             
+             
+             
+              {/* <p className="subscribe-text">
                 Our goal is to translate the positive effects from
                 revolutionizing how companies engage with their clients &amp;
                 their team.
@@ -185,13 +247,34 @@ const HomeFiveFooter = () => {
                   </Link>
                 </li>
               </ul>
-            </div>
+            </div> */}
+            
+            
             {/* /Footer Widget */}
-          </div>
+          
+          
+          
+          {/* </div>
         </div>
       </div>
-    </div>
+    </div> */}
+    
+    
+    
+    
     {/* /Footer Top */}
+    
+    
+
+
+
+
+
+
+
+
+
+
     {/* Footer Bottom */}
     <div className="footer-bottom ">
       <div className="container">
@@ -201,35 +284,36 @@ const HomeFiveFooter = () => {
           <div className="row align-items-center">
             <div className="col-lg-6">
               <div className="copyright-text">
-                <p className="mb-0">© 2024 Mentoring. All rights reserved.</p>
+                <p className="mb-0">© 2025 Mentiff. All rights reserved.</p>
               </div>
             </div>
-            <div className="col-lg-6">
+            
+            {/* <div className="col-lg-6">
               <div className="term-privacy">
                 <div className="bottom-links">
                   <ul>
                     <li>
                       <Link to="#">About</Link>
                     </li>
+                    
                     <li>
-                      <Link to="#">Become a Mentor</Link>
+                      <Link to="#">Register as Mentor</Link>
+                    </li>
+                    
+                    <li>
+                      <Link to="#">Chat Groups</Link>
                     </li>
                     <li>
-                      <Link to="#">Become a Mentee</Link>
+                      <Link to="#">Mentors</Link>
                     </li>
                     <li>
-                      <Link to="#">Pricing</Link>
-                    </li>
-                    <li>
-                      <Link to="#">All Courses</Link>
-                    </li>
-                    <li>
-                      <Link to="#">Help</Link>
+                      <Link to="#">Contact Us</Link>
                     </li>
                   </ul>
                 </div>
               </div>
-            </div>
+            </div> */}
+          
           </div>
         </div>
         {/* /Copyright */}
