@@ -126,7 +126,7 @@ const LoginContainer = (props) => {
               <div className="login-right">
                 <div className="login-header">
                   <h3>
-                    Login <span>Mentoring</span>
+                    Login <span>Mentiff</span>
                   </h3>
                   <p className="text-muted">Access to our dashboard</p>
                 </div>

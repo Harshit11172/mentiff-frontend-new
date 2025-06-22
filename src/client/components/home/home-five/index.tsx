@@ -242,6 +242,7 @@ const HomeFive = ({ isLoggedIn, user }) => {
 
               <div className="col-lg-5 d-flex align-items-center">
                 <div className="home-slide-face aos" data-aos="fade-up">
+                  
                   <div className="home-slide-text ">
                     <h4>
                       { }
@@ -330,159 +331,392 @@ const HomeFive = ({ isLoggedIn, user }) => {
           </div>
         </section>
 
-        <section className="most-popular most-popular-five">
-          <div className="container">
-            <div
-              className="section-header section-head-left aos "
-              data-aos="fade-up"
-            >
-              <div className="section-head-five">
-                <h4>
-                  <span />
-                  Categories
-                </h4>
-                <h2>Enter Student Community Chat Groups</h2>
-              </div>
-              <div className="view-all ">
-                <Link to="/mentee/mentee-bookings">View All Groups</Link>
-              </div>
-            </div>
-            <div className="popular-categories aos" data-aos="fade-up" >
-              <div className="row" >
-                {groups.length > 0 ? (
-                  groups.slice(0, 8).map((group, index) => (
-                    <div className="col-lg-3 col-md-6" key={group.id}>
-                      <button
-                        onClick={() => handleClick(group)} // Call the handleClick function
-                        className="sub-categories-five" // Keep the same styles
-                        style={{ backgroundColor: '' }} // If you want to maintain styles, you can keep this
-                      >
-                        <div className="categories-five-img">
-                          <span>
-                            <ImageWithBasePath
-                              src={icons[index % icons.length]} // Change icon based on index
-                              alt=""
-                            />
-                          </span>
-                          <span className="cat-rat">Members: {group.member_count}</span>
-                        </div>
-                        <div className="categories-text" style={{ textAlign: 'left' }}> {/* Align text to the left */}
-                          <h4 style={{ margin: 0 }}>{group.group_name}</h4> {/* Remove margin for better alignment */}
-                          <h5 style={{ margin: 0 }}>
-                            <span>{group.college}</span>
-                          </h5>
-                        </div>
-                      </button>
-                    </div>
-                  ))
-                ) : (
-                  <div className="col-12">
-                    <p>No groups available at the moment.</p>
+
+{/* 
+  <section className="most-popular most-popular-five">
+    <div className="container">
+      <div
+        className="section-header section-head-left aos "
+        data-aos="fade-up"
+      >
+        <div className="section-head-five">
+          <h4>
+            <span />
+            Chat Groups
+          </h4>
+          <h2>Enter Student Community Chat Groups</h2>
+        </div>
+        <div className="view-all ">
+          <Link to="/mentee/mentee-bookings">View All Groups</Link>
+        </div>
+      </div>
+      <div className="popular-categories aos" data-aos="fade-up" >
+        <div className="row" >
+          {groups.length > 0 ? (
+            groups.slice(0, 8).map((group, index) => (
+              <div className="col-lg-3 col-md-6" key={group.id}>
+                <button
+                  onClick={() => handleClick(group)} 
+                  className="sub-categories-five" 
+                  style={{ backgroundColor: '' }} 
+                >
+                  <div className="categories-five-img">
+                    <span>
+                      <ImageWithBasePath
+                        src={icons[index % icons.length]} 
+                        alt=""
+                      />
+                    </span>
+                    <span className="cat-rat">Members: {group.member_count}</span>
                   </div>
-                )}
-
+                  <div className="categories-text" style={{ textAlign: 'left' }}> 
+                    <h4 style={{ margin: 0 }}>{group.group_name}</h4> 
+                    <h5 style={{ margin: 0 }}>
+                      <span>{group.college}</span>
+                    </h5>
+                  </div>
+                </button>
               </div>
+            ))
+          ) : (
+            <div className="col-12">
+              <p>No groups available at the moment.</p>
             </div>
-          </div>
-        </section>
+          )}
 
-        <section className="featured-instructor featured-instructor-three featured-instructor-three">
-          <div className="container">
-            <div
-              className="section-header section-head-left aos d-block"
-              data-aos="fade-up"
-            >
-              <div className="section-head-five section-head-five-two">
-                <div>
-                  <h4>
-                    <span />
-                    Meet Our
+        </div>
+      </div>
+    </div>
+  </section> */}
+
+
+
+
+<section className="most-popular most-popular-five">
+  <div className="container">
+    {/* Section Header */}
+    <div className="section-header section-head-left aos" data-aos="fade-up">
+  <div className="section-head-five row align-items-center w-100">
+    <div className="col-md-8 col-sm-12">
+      <h4>
+        <span />
+        Chat Groups
+      </h4>
+      <h2>Student Community Chat Groups</h2>
+    </div>
+    <div className="col-md-4 col-sm-12 text-md-end text-start mt-3 mt-md-0">
+      <div className="view-all">
+        <Link to="/mentee/mentee-bookings">View All</Link>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    {/* Group Cards Grid */}
+    <div className="popular-categories aos" data-aos="fade-up">
+      <div className="row g-4"> {/* g-4 adds spacing between columns and rows */}
+        {groups.length > 0 ? (
+          groups.slice(0, 8).map((group, index) => (
+            <div className="col-lg-3 col-md-6" key={group.id}>
+              <div
+                onClick={() => handleClick(group)}
+                className="sub-categories-five p-3 h-100 d-flex flex-column justify-content-between"
+                style={{ borderRadius: '8px', cursor: 'pointer' }}
+              >
+                {/* Top Image/Badge Area */}
+                <div className="categories-five-img mb-2">
+                  <span>
+                    <ImageWithBasePath
+                      src={icons[index % icons.length]}
+                      alt=""
+                      style={{ width: '40px', height: '40px' }}
+                    />
+                  </span>
+                  <span className="cat-rat"> Members: {group.member_count} </span>
+                </div>
+
+                {/* Text Content */}
+                <div className="categories-text text-start">
+                  {/* Group Name */}
+                  <h4
+                    className="mb-1"
+                    title={group.group_name}
+                    style={{
+                      fontSize: '1.05rem',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {group.group_name}
                   </h4>
-                  <h2>Newly joined Mentors</h2>
+
+                  {/* College Name */}
+                  <h5
+                    title={group.college}
+                    style={{
+                      margin: 0,
+                      fontSize: '0.9rem',
+                      color: '#777',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {group.college}
+                  </h5>
                 </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="col-12">
+            <p>No groups available at the moment.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</section>
 
-                <div className="sec-para owl-custom-nav">
-                  <p>
-                    Book 1:1 Session Now! <br />
-                    The only platform that onboard verified and authenticated mentors.
-                  </p>
-                  {/* <div className="view-all ">
-                    <Link to="/mentee/mentee-bookings">View All Mentors</Link>
-                  </div> */}
 
-                  <div className="owl-navigation">
 
-                    <div className="owl-nav mynav1 nav-control" />
-                  </div>
+                
 
-                </div>
 
+
+
+<section className="mentors-modern-section py-5 bg-white">
+  <div className="container">
+    {/* Header */}
+    
+    {/* <div className="section-header section-head-left aos mb-4" data-aos="fade-up">
+      <div className="section-head-five d-flex justify-content-between align-items-center flex-wrap w-100">
+        <div>
+          <h4><span />Mentors</h4>
+          <h2>Newly Joined Mentors</h2>
+        </div>
+        <p>
+          Book 1:1 Session Now! <br />
+          The only platform that onboard verified and authenticated mentors.
+        </p>
+        <div className="view-all">
+          <Link to="/mentee/search-mentor">View All Mentors</Link>
+        </div>
+      </div>  
+    </div> */}
+
+    <div className="section-header section-head-left aos" data-aos="fade-up">
+  <div className="section-head-five row align-items-center w-100">
+    <div className="col-md-8 col-sm-12">
+      <h4>
+        <span />
+        Mentors
+      </h4>
+      <h2>Newly Joined Mentors</h2>
+    </div>
+    
+    <div className="col-md-4 col-sm-12 text-md-end text-start mt-3 mt-md-0">
+      <div className="view-all">
+        <Link to="/mentee/mentee-bookings">View All</Link>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    {/* Mentor Grid */}
+    <div className="row gy-4" data-aos="fade-up">
+      {mentors.length > 0 ? (
+        mentors.slice(0, 4).map((mentor) => (
+          <div className="col-lg-3 col-md-6" key={mentor.id}>
+            <div
+              className="card mentor-card border-0 shadow-sm h-100 p-3 rounded-4"
+              style={{
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                cursor: 'pointer',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-5px)';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.05)';
+              }}
+            >
+              {/* Avatar */}
+              <div className="text-center mb-3">
+                <img
+                  src={mentor.profile_picture}
+                  alt={`${mentor.user.first_name} ${mentor.user.last_name}`}
+                  className="rounded-circle"
+                  style={{ width: '70px', height: '70px', objectFit: 'cover' }}
+                />
               </div>
 
-            </div>
-
-
-            <div className="featured-instructor-head aos" data-aos="fade-up"   >
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="instructor-slider-two" >
-                    <OwlCarousel {...instructorSlider}>
-                      {mentors.map((mentor) => (
-                        <div className="large-team" key={mentor.id}>
-                          <div className="student-img">
-                            <Link to={`/mentee/mentor-profile/${mentor.user.id}`}>
-                              <img
-                                src={mentor.profile_picture}
-                                alt={`${mentor.user.first_name} ${mentor.user.last_name}`}
-                              />
-                            </Link>
-                          </div>
-                          <div className="team-content">
-                            <h4>
-                              <Link to={`/mentee/mentor-profile/${mentor.user.id}`}>
-                                {mentor.user.first_name} {mentor.user.last_name}
-                              </Link>
-                              <i className="fas fa-check-double" />
-                            </h4>
-                            <span className="star-rate">
-                              {/* Display rating as stars */}
-                              {[...Array(5)].map((_, index) => (
-                                <i
-                                  key={index}
-                                  className={`fas fa-star ${index < Math.round(mentor.rating) ? 'filled' : ''}`}
-                                />
-                              ))}
-                              {mentor.rating.toFixed(1)} {/* Display the rating */}
-                            </span>
-                            <div className="view-student-three">
-                              <ul className="view-student-three-list justify-content-between">
-                                <li style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                  {/* <img
-                                    src="assets/img/icon/location-02.svg"
-                                    className="me-2"
-                                    alt=""
-                                  /> */}
-                                  {/* Display location or university if available */}
-                                  {mentor.university || ' '}
-                                </li>
-
-                                <li style={{ backgroundColor: '#f0f0f0', padding: '8px', borderRadius: '5px' }}>
-                                  <div className="view-all ">
-                                    <Link to="/mentee/search-mentor">Book a Call</Link>
-                                  </div>
-                                </li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </OwlCarousel>
-                  </div>
+              {/* Name & Rating */}
+              <div className="text-center">
+                <h5
+                  className="fw-semibold mb-1 text-truncate"
+                  title={`${mentor.user.first_name} ${mentor.user.last_name}`}
+                >
+                  {mentor.user.first_name} {mentor.user.last_name}
+                </h5>
+                <div className="text-warning mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <i
+                      key={i}
+                      className={`fas fa-star ${i < Math.round(mentor.rating) ? '' : 'text-muted'}`}
+                    ></i>
+                  ))}
+                  <small className="text-muted ms-1">({mentor.rating.toFixed(1)})</small>
                 </div>
+              </div>
+
+              {/* University with tooltip/ellipsis */}
+              <div
+                className="text-center mb-3"
+                title={mentor.university}
+              >
+                <p
+                  className="text-muted m-0"
+                  style={{
+                    fontSize: '0.9rem',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  {mentor.university || ' '}
+                </p>
+              </div>
+
+              {/* Book a Call */}
+              <div className="text-center mt-auto">
+                <Link
+                  to="/mentee/search-mentor"
+                  className="btn btn-sm btn-outline-primary rounded-pill px-3"
+                >
+                  Book a Call
+                </Link>
               </div>
             </div>
           </div>
-        </section>
+        ))
+      ) : (
+        <div className="col-12">
+          <p>No mentors available at the moment.</p>
+        </div>
+      )}
+    </div>
+  </div>
+</section>
+
+
+
+{/* <section className="featured-instructor featured-instructor-three featured-instructor-three">
+  <div className="container">
+    <div
+      className="section-header section-head-left aos d-block"
+      data-aos="fade-up"
+    >
+      <div className="section-head-five section-head-five-two">
+        <div>
+          <h4>
+            <span />
+            Meet Our
+          </h4>
+          <h2>Newly joined Mentors</h2>
+        </div>
+
+        <div className="sec-para owl-custom-nav">
+          <p>
+            Book 1:1 Session Now! <br />
+            The only platform that onboard verified and authenticated mentors.
+          </p>
+         
+
+          <div className="owl-navigation">
+
+            <div className="owl-nav mynav1 nav-control" />
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div className="featured-instructor-head aos" data-aos="fade-up"   >
+      <div className="row">
+        <div className="col-md-12">
+          <div className="instructor-slider-two" >
+            <OwlCarousel {...instructorSlider}>
+              {mentors.map((mentor) => (
+                <div className="large-team" key={mentor.id}>
+                  <div className="student-img">
+                    <Link to={`/mentee/mentor-profile/${mentor.user.id}`}>
+                      <img
+                        src={mentor.profile_picture}
+                        alt={`${mentor.user.first_name} ${mentor.user.last_name}`}
+                      />
+                    </Link>
+                  </div>
+                  <div className="team-content">
+                    <h4>
+                      <Link to={`/mentee/mentor-profile/${mentor.user.id}`}>
+                        {mentor.user.first_name} {mentor.user.last_name}
+                      </Link>
+                      <i className="fas fa-check-double" />
+                    </h4>
+                    <span className="star-rate">
+                     
+                      {[...Array(5)].map((_, index) => (
+                        <i
+                          key={index}
+                          className={`fas fa-star ${index < Math.round(mentor.rating) ? 'filled' : ''}`}
+                        />
+                      ))}
+                      {mentor.rating.toFixed(1)}
+                    </span>
+                    <div className="view-student-three">
+                      <ul className="view-student-three-list justify-content-between">
+                        <li style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          <img
+                            src="assets/img/icon/location-02.svg"
+                            className="me-2"
+                            alt=""
+                          />
+                          
+                          {mentor.university || ' '}
+                        </li>
+
+                        <li style={{ backgroundColor: '#f0f0f0', padding: '8px', borderRadius: '5px' }}>
+                          <div className="view-all ">
+                            <Link to="/mentee/search-mentor">Book a Call</Link>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </OwlCarousel>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> */}
+
+
+
+
+
+
 
         <section className="faq-four-sec faq-five-sec" style={{ backgroundColor: '' }}>
           <div className="container">
