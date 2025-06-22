@@ -1593,18 +1593,7 @@ const HomeOneHeader = () => {
 
             <li className="nav-item">
   <div className="d-flex gap-3">
-    <Link
-      to="/login"
-      className="nav-link header-login text-white px-3 py-2 rounded"
-      style={{
-        backgroundColor: '#4dabf7',
-        transition: 'background-color 0.3s',
-      }}
-      onMouseOver={e => (e.currentTarget.style.backgroundColor = '#228be6')}
-      onMouseOut={e => (e.currentTarget.style.backgroundColor = '#4dabf7')}
-    >
-      Login
-    </Link>
+ 
 
     <Link
       to="/login"
@@ -1617,6 +1606,20 @@ const HomeOneHeader = () => {
       onMouseOut={e => (e.currentTarget.style.backgroundColor = '#69db7c')}
     >
       Register
+    </Link>
+
+
+       <Link
+      to="/login"
+      className="nav-link header-login text-white px-3 py-2 rounded"
+      style={{
+        backgroundColor: '#4dabf7',
+        transition: 'background-color 0.3s',
+      }}
+      onMouseOver={e => (e.currentTarget.style.backgroundColor = '#228be6')}
+      onMouseOut={e => (e.currentTarget.style.backgroundColor = '#4dabf7')}
+    >
+      Login
     </Link>
   </div>
 </li>
