@@ -71,6 +71,7 @@
     "@babel/core": "^7.22.10",
     "@babel/preset-env": "^7.22.10",
     "@babel/preset-react": "^7.16.5",
+    "ajv": "^6.12.6",
     "babel-loader": "^9.1.3",
     "copy-webpack-plugin": "^12.0.2",
     "dotenv": "^16.5.0",
