@@ -284,7 +284,16 @@ const HomeFiveFooter = () => {
           <div className="row align-items-center">
             <div className="col-lg-6">
               <div className="copyright-text">
-                <p className="mb-0">© 2025 Mentiff. All rights reserved.</p>
+                <p className="mb-0">© 2025 Mentiff. All rights reserved.
+                  
+                </p>
+                
+
+
+
+
+
+                  
               </div>
             </div>
             

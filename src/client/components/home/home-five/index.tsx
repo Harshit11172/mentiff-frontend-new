@@ -215,27 +215,8 @@ const HomeFive = ({ isLoggedIn, user }) => {
         {/* <Header /> */}
 
         {/* Home Banner */}
+       
         <section className="home-slide home-slide-five six-slide-search d-flex align-items-center">
-          {/* 
-        <video
-          className="background-video"
-          autoPlay
-          loop
-          muted
-          playsInline
-          src="/bgvideo/3125427-uhd_3840_2160_25fps.mp4"
-          type="video/mp4"
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            transform: 'translate(-50%, -50%)',
-            zIndex: 0
-          }}
-        /> */}
           <div className="container">
             {/* <div className="container" style={{ backgroundColor: 'rgba(123, 232, 255, 0.8)', padding: '20px', borderRadius: '8px' }}> */}
             <div className="row align-items-center">
@@ -252,11 +233,11 @@ const HomeFive = ({ isLoggedIn, user }) => {
                     {/* <h1> Know more about your dream college...</h1> */}
 
                     <h1 style={{ fontSize: '30px' }}>
-  Know more about your dream college...
-</h1>
+                    Know more about your dream college 🎓 
+                  </h1>
                       
                   
-                    <p>Connect one to one with seniors of your dream college</p>
+                    <p>Connect one to one with seniors of your dream college!</p>
                   </div>
                   
                   {/* <div className="banner-five-btns">
@@ -327,7 +308,7 @@ const HomeFive = ({ isLoggedIn, user }) => {
                     <h5>
                       <CountUp className="counterUp" end={15} duration={2} />k+
                     </h5>
-                    <h4>Users Registered</h4>
+                    <h4>Users</h4>
                   </div>
                 </div>
               </div>
@@ -335,6 +316,8 @@ const HomeFive = ({ isLoggedIn, user }) => {
             </div>
           </div>
         </section>
+
+        
 
 
 {/* 
@@ -407,7 +390,7 @@ const HomeFive = ({ isLoggedIn, user }) => {
         <span />
         Chat Groups
       </h4>
-      <h2>Student Community Chat Groups</h2>
+      <h2>Top Student Community Chat Groups</h2>
     </div>
     <div className="col-md-4 col-sm-12 text-md-end text-start mt-3 mt-md-0">
       <div className="view-all">
@@ -521,7 +504,7 @@ const HomeFive = ({ isLoggedIn, user }) => {
         <span />
         Mentors
       </h4>
-      <h2>Newly Joined Mentors</h2>
+      <h2>Newly Joined Authenticated Mentors</h2>
     </div>
     
     <div className="col-md-4 col-sm-12 text-md-end text-start mt-3 mt-md-0">
