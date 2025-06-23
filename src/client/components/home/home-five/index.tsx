@@ -24,7 +24,7 @@ const HomeFive = ({ isLoggedIn, user }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   console.log("API base URL:", process.env.REACT_APP_API_BASE_URL_BACKEND);
-
+  
   const history = useHistory();
 
   const handleClick = (group) => {
