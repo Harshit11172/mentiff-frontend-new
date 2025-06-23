@@ -170,7 +170,8 @@ const opn = require("opn"); // Import the 'opn' package
 const publicPath = "/"; // To run this file in local
 
 module.exports = {
-  mode: "development",
+  mode: process.env.REACT_APP_ENV || "development",
+
   entry: path.join(__dirname, "src", "index.js"),
   output: {
     filename: "js/[name].bundle.js",
@@ -181,7 +182,7 @@ module.exports = {
     port: 3000,
     historyApiFallback: true,
     onAfterSetupMiddleware() {
-      opn(`http://localhost:${this.port}/index`);
+      opn(`http://localhost:${this.port}/`);
     },
   },
   externals: {
