@@ -251,7 +251,7 @@ const HomeFive = ({ isLoggedIn, user }) => {
                     {/* <h1>Figure out your ifs and buts with Mentiff</h1> */}
                     {/* <h1> Know more about your dream college...</h1> */}
 
-                    <h1 style={{ fontSize: '43px' }}>
+                    <h1 style={{ fontSize: '30px' }}>
   Know more about your dream college...
 </h1>
                       
