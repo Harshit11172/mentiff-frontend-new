@@ -110,7 +110,7 @@ const PatientChat = (props) => {
                         </div>
                         <div className="media-body flex-grow-1">
                           <div>
-                            <div className="user-name">Ruby Perrin</div>
+                            <div className="user-name">Ruby pppp</div>
                             <div className="user-last-chat">
                               Hey, How are you?
                             </div>

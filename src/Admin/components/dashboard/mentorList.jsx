@@ -20,7 +20,7 @@ const MentorListDashboard = () => {
   const data = [
     {
       id: 1,
-      MentorName: "Ruby Perrin",
+      MentorName: "Ruby Perrihhahahn",
       Speciality: "Maths",
       Earned: "$3200.00 ",
       Date: "27 Sep 2024",

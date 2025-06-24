@@ -11,7 +11,7 @@ const opn = require("opn"); // Import the 'opn' package
 const publicPath = "/"; // To run this file in local
 
 module.exports = {
-  mode: process.env.NODE_ENV || "development",
+  mode: process.env.NODE_ENV || "production",
 
   entry: path.join(__dirname, "src", "index.js"),
   output: {
