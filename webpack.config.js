@@ -236,7 +236,7 @@ module.exports = {
     }),
 
     new webpack.DefinePlugin({
-      "process.env.NODE_ENV": JSON.stringify("development"),
+      "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
       "process.env.REACT_APP_API_BASE_URL_BACKEND": JSON.stringify(process.env.REACT_APP_API_BASE_URL_BACKEND),
       "process.env.REACT_APP_API_BASE_URL_FRONTEND": JSON.stringify(process.env.REACT_APP_API_BASE_URL_FRONTEND),
       "process.env.REACT_APP_ENV": JSON.stringify(process.env.REACT_APP_ENV),

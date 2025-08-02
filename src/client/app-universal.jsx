@@ -22,7 +22,7 @@ import Components from "./components/pages/component";
 import BlankPage from "./components/pages/blankpage";
 import VideoCall from "./components/pages/videocall";
 import VoiceCall from "./components/pages/voicecall";
-import SearchDoctor from "./components/pages/searchdoctor";
+import SearchMentor from "./components/pages/SearchMentor";
 import Calendar from "./components/pages/calender";
 import Invoice from "./components/pages/invoices/invoices";
 import InvoiceView from "./components/pages/invoices/view";
@@ -60,6 +60,10 @@ import { base_path } from "../environment.js";
 import RazorpayPayment from "./components/RazorpayPayment";
 
 
+// import MentorProfile from "./components/mentee/mentorprofile";
+
+
+
 const ClientAppUniversal = function (props) {
   return (
     <BrowserRouter basename={base_path}>
@@ -74,6 +78,10 @@ const ClientAppUniversal = function (props) {
         <Route path="/sider-menu" exact component={SideMenu} />
         <Route render={(props) => <Header {...props} />} />
         <Switch>
+
+
+          {/* <Route path="/mentee/mentor-profile/:id" exact component={MentorProfile} /> */}
+
 
           <Route path="/payment" exact component={RazorpayPayment} />
 
@@ -99,7 +107,7 @@ const ClientAppUniversal = function (props) {
           {/* pages */}
           {/* <Route path="/video-call" exact component={VideoCall} />
 					<Route path="/voice-call" exact component={VoiceCall} /> */}
-          <Route path="/mentee/search-doctor" exact component={SearchDoctor} />
+          <Route path="/mentee/search-doctor" exact component={SearchMentor} />
           <Route path="/pages/calendar" exact component={Calendar} />
           <Route path="/pages/invoice" exact component={Invoice} />
           <Route path="/mentor/invoice-view" exact component={InvoiceView} />

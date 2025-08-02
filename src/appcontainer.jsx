@@ -14,7 +14,7 @@ import BlogDetails from "./client/components/blog/blogdetails";
 //pages
 import VideoCall from "./client/components/pages/videocall";
 import VoiceCall from "./client/components/pages/voicecall";
-import SearchDoctor from "./client/components/pages/searchdoctor/search-doctor1";
+import SearchMentor from "./client/components/pages/SearchMentor/search-doctor1";
 import Components from "./client/components/pages/component";
 import Invoice from "./client/components/pages/invoices/invoices";
 import InvoiceView from "./client/components/pages/invoices/view";
@@ -63,7 +63,7 @@ import Mentoreditblog from "./client/components/blog/mentorblog/mentoreditblog.j
 import EditBilling from "./client/components/mentor/editbilling/index";
 import AvailableTiming from "./client/components/mentor/availabletiming/index.jsx";
 import Accounts from "./client/components/mentor/account/index.jsx";
-import SearchDoctor2 from "./client/components/pages/searchdoctor/search-doctor2.jsx";
+import SearchMentor2 from "./client/components/pages/SearchMentor/search-doctor2.jsx";
 import HomeOne from "./client/components/home/home-one";
 import HomeTwo from "./client/components/home/home-two";
 import HomeThree from "./client/components/home/home-three";
@@ -72,6 +72,10 @@ import HomeFive from "./client/components/home/home-five";
 import HomeSix from "./client/components/home/home-six";
 import HomeSeven from "./client/components/home/home-seven";
 import HomeEight from "./client/components/home/home-eight";
+
+
+// import MentorProfile from "./client/components/mentee/mentorprofile";
+
 
 const AppContainer = function (props) {
   // const config = "/react/template/";
@@ -177,7 +181,7 @@ const AppContainer = function (props) {
                 exact
                 component={ForgotPassword}
               />
-             
+
 
               {/* home */}
               <Route path="/" exact component={HomeFive} />
@@ -227,25 +231,37 @@ const AppContainer = function (props) {
               <Route
                 path="/mentee/search-mentor"
                 exact
-                component={SearchDoctor}
+                component={SearchMentor}
               />
               <Route
                 path="/mentee/search-doctor2"
                 exact
-                component={SearchDoctor2}
+                component={SearchMentor2}
               />
               <Route path="/pages/component" exact component={Components} />
               <Route path="/pages/blank-page" exact component={BlankPage} />
               <Route path="/pages/invoice" exact component={Invoice} />
               <Route path="/mentor/invoice" exact component={Invoice} />
               <Route path="/pages/invoice-view" exact component={InvoiceView} />
-              
-              
+
+
+
+
               <Route
                 path="/mentee/mentor-profile"
                 exact
                 component={MentorProfile}
               />
+              <Route
+                path="/mentee/mentor-profile/:id"
+                exact
+                component={MentorProfile}
+              />
+
+
+
+
+
               <Route path="/mentor/mentee-list" exact component={MenteeList} />
               <Route path="/mentee/booking1" exact component={Booking} />
               <Route path="/mentee/booking2" exact component={Booking2} />
@@ -272,14 +288,14 @@ const AppContainer = function (props) {
                 component={PatientAccounts}
               />
               <Route path="/mentee/orders" exact component={Orders} />
-              
+
               <Route path="/mentee/favourites" exact component={Favourties} />
               <Route path="/mentee/profile" exact component={Profile} />
               <Route
                 path="/mentee/change-password"
                 exact
                 component={Password}
-              /> 
+              />
               <Route
                 path="/mentor/mentor-dashboard"
                 exact
@@ -354,7 +370,7 @@ const AppContainer = function (props) {
                 component={Registerstepthree}
               />
               <Route path="/editbilling" exact component={EditBilling} />
-              
+
               <Route path="/index" exact component={HomeOne} />
               <Route path="/index-2" exact component={HomeTwo} />
               <Route path="/index-3" exact component={HomeThree} />

@@ -34,6 +34,7 @@
     "eslint-plugin-react": "^7.34.1",
     "feather-icons-react": "^0.6.2",
     "font-awesome": "^4.7.0",
+    "framer-motion": "^12.23.12",
     "google-map-react": "^2.2.1",
     "google-maps-react": "^2.0.6",
     "i": "^0.3.7",

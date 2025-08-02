@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
 import Header from "../../header";
 import HomeFiveHeader from "../../home/home-five/header";
@@ -19,13 +21,19 @@ const MentorProfile = (props) => {
   const [state, setState] = useState(false);
   const [photoIndex, setphotoIndex] = useState(false);
 
-  const location = useLocation();
-  const mentorData = location.state?.mentorData; // Safely access the mentor data
-
+  // const location = useLocation();
+  // const mentorData = location.state?.mentorData; // Safely access the mentor data
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDay, setSelectedDay] = useState("");
   const [selectedTimeSlot, setSelectedTimeSlot] = useState("");
+
+  const { id } = useParams();  // Get mentor ID from URL
+  const [mentorData, setMentorData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  console.log('id in url is')
+  console.log(id)
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -53,7 +61,21 @@ const MentorProfile = (props) => {
   const maxDate = new Date();
   maxDate.setDate(today.getDate() + 7); // Next 7 days
 
+  useEffect(() => {
+    const fetchMentor = async () => {
+      try {
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/mentors/${id}/`);
+        setMentorData(res.data);
+        console.log(res.data)
+      } catch (error) {
+        console.error("Failed to load mentor data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchMentor();
+  }, [id]);
 
   const gridStyle = {
     display: 'grid',
@@ -143,7 +165,7 @@ const MentorProfile = (props) => {
         <div className="mentor-img" style={{ display: 'flex', justifyContent: 'center', width: '100px', height: '100px' }}>
           {mentorData.profile_picture ? (
             <img
-              src={mentorData.profile_picture}
+              src={mentorData.user.profile_picture}
               alt="Profile"
               className="rounded-circle"
               style={{
@@ -180,7 +202,7 @@ const MentorProfile = (props) => {
             className="usr-name"
             style={{ margin: '0 0 5px 0', fontWeight: '600' }}
           >
-            {mentorData.first_name} {mentorData.last_name}
+            {mentorData.user.first_name} {mentorData.user.last_name}
           </h4>
           <p
             className="mentor-type"
@@ -202,7 +224,7 @@ const MentorProfile = (props) => {
               fontSize: '0.9rem',
             }}
           >
-            {mentorData.degree} in {mentorData.major}
+            {mentorData.degree} {mentorData.major}
           </p>
         </div>
       </div>

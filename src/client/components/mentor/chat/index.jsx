@@ -247,11 +247,17 @@ const UniversityChatGroup = (props) => {
                                 {/* <div className="badge badge-success">BOOK SESSION</div> */}
 
                                 <div className="badge badge-success">
-                                  <Link
+                                  {/* <Link
                                     to={{
                                       pathname: "/mentee/mentor-profile",
                                       state: { mentorData: member } // Pass the mentor data here
                                     }}
+                                    className="badge badge-success"
+                                  >
+                                    BOOK SESSION
+                                  </Link> */}
+                                  <Link
+                                    to={`/mentee/mentor-profile/${member.user.id}`}
                                     className="badge badge-success"
                                   >
                                     BOOK SESSION
@@ -293,7 +299,7 @@ const UniversityChatGroup = (props) => {
                         <div className="user-name">{groupData ? groupData.college : "Loading..."}</div>
                       </div>
                     </div>
-                    
+
                     {/* <div className="chat-options">
                       <Link to="#" data-bs-toggle="modal" data-bs-target="#voice_call">
                         <i className="material-icons">local_phone</i>
@@ -305,7 +311,7 @@ const UniversityChatGroup = (props) => {
                         <i className="material-icons">more_vert</i>
                       </Link>
                     </div> */}
-                  
+
                   </div>
 
                   <div className="chat-body">
@@ -384,7 +390,7 @@ const UniversityChatGroup = (props) => {
 
 
       {/* modal for video*/}
-      
+
       {/* <div className="modal fade call-modal" id="video_call">
         <div className="modal-dialog modal-dialog-centered" role="document">
           <div className="modal-content">
@@ -424,7 +430,7 @@ const UniversityChatGroup = (props) => {
 
 
       {/* modal for call*/}
-      
+
       {/* <div className="modal fade call-modal" id="voice_call">
         <div className="modal-dialog modal-dialog-centered" role="document">
           <div className="modal-content">
@@ -461,8 +467,8 @@ const UniversityChatGroup = (props) => {
           </div>
         </div>
       </div> */}
-    
-    
+
+
     </div>
   );
 };

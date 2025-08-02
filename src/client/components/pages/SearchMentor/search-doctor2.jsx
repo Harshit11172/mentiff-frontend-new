@@ -7,7 +7,7 @@ import Footer from "../../footer";
 import { Link } from "react-router-dom";
 // import Slider from "react-slider";
 
-const SearchDoctor2 = (props) => {
+const SearchMentor2 = (props) => {
   // let pathname = props.location.pathname;
 
   // if (props.location.pathname === "/mentee/search-doctor2") {
@@ -524,4 +524,4 @@ const SearchDoctor2 = (props) => {
   );
 };
 
-export default SearchDoctor2;
+export default SearchMentor2;

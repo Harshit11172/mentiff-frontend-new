@@ -19,12 +19,16 @@ import { Link, useHistory } from "react-router-dom";
 import axios from 'axios';
 import FAQs from "./faqs";
 
+
+
+
+
 const HomeFive = ({ isLoggedIn, user }) => {
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   console.log("API base URL:", process.env.REACT_APP_API_BASE_URL_BACKEND);
-  
+
   const history = useHistory();
 
   const handleClick = (group) => {
@@ -98,8 +102,8 @@ const HomeFive = ({ isLoggedIn, user }) => {
     const fetchData = async () => {
       try {
         const endpoints = [
-          `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/universities/groups/`,
-          `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/mentors/`,
+          `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/universities/groups/top/`,
+          `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/mentors/top/`,
         ];
         const responses = await axios.all(endpoints.map(endpoint => axios.get(endpoint)));
         console.log("API base URL:", process.env.REACT_APP_API_BASE_URL_BACKEND);
@@ -215,10 +219,9 @@ const HomeFive = ({ isLoggedIn, user }) => {
         {/* <Header /> */}
 
         {/* Home Banner */}
-       
-        <section className="home-slide home-slide-five six-slide-search d-flex align-items-center">
+
+        {/* <section className="home-slide home-slide-five six-slide-search d-flex align-items-center">
           <div className="container">
-            {/* <div className="container" style={{ backgroundColor: 'rgba(123, 232, 255, 0.8)', padding: '20px', borderRadius: '8px' }}> */}
             <div className="row align-items-center">
 
               <div className="col-lg-5 d-flex align-items-center">
@@ -229,8 +232,7 @@ const HomeFive = ({ isLoggedIn, user }) => {
                       { }
                       <span /> Taking College Admission?
                     </h4>
-                    {/* <h1>Figure out your ifs and buts with Mentiff</h1> */}
-                    {/* <h1> Know more about your dream college...</h1> */}
+                  
 
                     <h1 style={{ fontSize: '30px' }}>
                     Know more about your dream college 🎓 
@@ -239,8 +241,8 @@ const HomeFive = ({ isLoggedIn, user }) => {
                   
                     <p>Connect one to one with seniors of your dream college!</p>
                   </div>
-                  
-                  {/* <div className="banner-five-btns">
+                   */}
+        {/* <div className="banner-five-btns">
                     <Link to="/login">Login</Link>
                     <Link to="">
                       <span>
@@ -249,9 +251,9 @@ const HomeFive = ({ isLoggedIn, user }) => {
                       Why Mentiff?
                     </Link>
                   </div> */}
-                  
-                  {/* Search */}
-                  <div className="search-box">
+
+        {/* Search */}
+        {/* <div className="search-box">
                     <form action="/mentee/search-mentor">
                       <div className="form-group search-info location-search">
                         <input
@@ -270,17 +272,19 @@ const HomeFive = ({ isLoggedIn, user }) => {
                         </Link>
                       </div>
                     </form>
-                  </div>
-                  {/* /Search */}
-                  <div className="pop-search">
+                  </div> */}
+        {/* /Search */}
+
+        {/* <div className="pop-search">
                     <p>
                       <span>Search Mentors by University</span>
                     </p>
-                  </div>
-                </div>
-              </div>
+                  </div> */}
 
-              <div className="col-lg-5 d-flex align-items-end">
+        {/* </div>
+              </div> */}
+
+        {/* <div className="col-lg-5 d-flex align-items-end">
                 <div className="girl-slide-img aos " data-aos="fade-up">
                   <ImageWithBasePath
                     src="assets/img/object-6.png"
@@ -288,9 +292,9 @@ const HomeFive = ({ isLoggedIn, user }) => {
                     alt=""
                   />
                 </div>
-              </div>
-              
-              <div className="col-lg-2">
+              </div> */}
+
+        {/* <div className="col-lg-2">
                 <div className="banner-six-counter">
                   <div className="counter-box">
                     <h5>
@@ -311,16 +315,64 @@ const HomeFive = ({ isLoggedIn, user }) => {
                     <h4>Users</h4>
                   </div>
                 </div>
+              </div> */}
+
+        {/* </div>
+          </div>
+        </section> */}
+
+        <section className="home-slide home-slide-five six-slide-search d-flex align-items-center">
+          <div className="container">
+            <div className="row align-items-center">
+
+              {/* Left Text Column */}
+              <div className="col-lg-6 d-flex align-items-center">
+                <div className="home-slide-face aos" data-aos="fade-up">
+                  <div className="home-slide-text">
+                    <h4 className="text-primary fw-bold">
+                      🎓 Confused About College Choices?
+                    </h4>
+
+                    <h1 className="mt-2" style={{ fontSize: '32px', fontWeight: '600' }}>
+                      Talk Directly to Students Who've Been There.
+                    </h1>
+
+                    <p className="mt-3" style={{ fontSize: '18px', color: '#555' }}>
+                      Get real insights from seniors of your dream college. Understand placements, campus life, and what truly matters — straight from someone who knows.
+                    </p>
+
+                    <div className="mt-4">
+                      <Link to="/mentee/search-mentor" className="btn btn-primary me-3">
+                        Find a Mentor
+                      </Link>
+                      {/* <Link to="/why-mentiff" className="btn btn-outline-secondary">
+                        Why Mentiff?
+                      </Link> */}
+                      <a href="#faq" className="btn btn-outline-secondary">
+                        Why Mentiff?
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
-            
+
+              {/* Right Image Column */}
+              <div className="col-lg-6 d-flex justify-content-center">
+                <div className="girl-slide-img aos" data-aos="fade-up">
+                  <ImageWithBasePath
+                    src="assets/img/object-6.png"
+                    className="img-fluid"
+                    alt="Mentor Illustration"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        
 
 
-{/* 
+        {/* 
   <section className="most-popular most-popular-five">
     <div className="container">
       <div
@@ -380,108 +432,108 @@ const HomeFive = ({ isLoggedIn, user }) => {
 
 
 
-<section className="most-popular most-popular-five">
-  <div className="container">
-    {/* Section Header */}
-    <div className="section-header section-head-left aos" data-aos="fade-up">
-  <div className="section-head-five row align-items-center w-100">
-    <div className="col-md-8 col-sm-12">
-      <h4>
-        <span />
-        Chat Groups
-      </h4>
-      <h2>Top Student Community Chat Groups</h2>
-    </div>
-    <div className="col-md-4 col-sm-12 text-md-end text-start mt-3 mt-md-0">
-      <div className="view-all">
-        <Link to="/mentee/mentee-bookings">View All</Link>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-    {/* Group Cards Grid */}
-    <div className="popular-categories aos" data-aos="fade-up">
-      <div className="row g-4"> {/* g-4 adds spacing between columns and rows */}
-        {groups.length > 0 ? (
-          groups.slice(0, 8).map((group, index) => (
-            <div className="col-lg-3 col-md-6" key={group.id}>
-              <div
-                onClick={() => handleClick(group)}
-                className="sub-categories-five p-3 h-100 d-flex flex-column justify-content-between"
-                style={{ borderRadius: '8px', cursor: 'pointer' }}
-              >
-                {/* Top Image/Badge Area */}
-                <div className="categories-five-img mb-2">
-                  <span>
-                    <ImageWithBasePath
-                      src={icons[index % icons.length]}
-                      alt=""
-                      style={{ width: '40px', height: '40px' }}
-                    />
-                  </span>
-                  {/* <span className="cat-rat"> Members: {group.member_count} </span> */}
-
-                  {/* <span className="cat-rat"> {group.member_count} </span> */}
-                </div>
-
-                {/* Text Content */}
-                <div className="categories-text text-start">
-                  {/* Group Name */}
-                  <h4
-                    className="mb-1"
-                    title={group.group_name}
-                    style={{
-                      fontSize: '1.05rem',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                    }}
-                  >
-                    {group.group_name}
+        <section className="most-popular most-popular-five">
+          <div className="container">
+            {/* Section Header */}
+            <div className="section-header section-head-left aos" data-aos="fade-up">
+              <div className="section-head-five row align-items-center w-100">
+                <div className="col-md-8 col-sm-12">
+                  <h4>
+                    <span />
+                    Chat Groups
                   </h4>
-
-                  {/* College Name */}
-                  <h5
-                    title={group.college}
-                    style={{
-                      margin: 0,
-                      fontSize: '0.9rem',
-                      color: '#777',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                    }}
-                  >
-                    {group.college}
-                  </h5>
+                  <h2>Top Student Community Chat Groups</h2>
+                </div>
+                <div className="col-md-4 col-sm-12 text-md-end text-start mt-3 mt-md-0">
+                  <div className="view-all">
+                    <Link to="/mentee/mentee-bookings">View All</Link>
+                  </div>
                 </div>
               </div>
             </div>
-          ))
-        ) : (
-          <div className="col-12">
-            <p>No groups available at the moment.</p>
+
+
+            {/* Group Cards Grid */}
+            <div className="popular-categories aos" data-aos="fade-up">
+              <div className="row g-4"> {/* g-4 adds spacing between columns and rows */}
+                {groups.length > 0 ? (
+                  groups.slice(0, 8).map((group, index) => (
+                    <div className="col-lg-3 col-md-6" key={group.id}>
+                      <div
+                        onClick={() => handleClick(group)}
+                        className="sub-categories-five p-3 h-100 d-flex flex-column justify-content-between"
+                        style={{ borderRadius: '8px', cursor: 'pointer' }}
+                      >
+                        {/* Top Image/Badge Area */}
+                        <div className="categories-five-img mb-2">
+                          <span>
+                            <ImageWithBasePath
+                              src={icons[index % icons.length]}
+                              alt=""
+                              style={{ width: '40px', height: '40px' }}
+                            />
+                          </span>
+                          {/* <span className="cat-rat"> Members: {group.member_count} </span> */}
+
+                          {/* <span className="cat-rat"> {group.member_count} </span> */}
+                        </div>
+
+                        {/* Text Content */}
+                        <div className="categories-text text-start">
+                          {/* Group Name */}
+                          <h4
+                            className="mb-1"
+                            title={group.group_name}
+                            style={{
+                              fontSize: '1.05rem',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                            }}
+                          >
+                            {group.group_name}
+                          </h4>
+
+                          {/* College Name */}
+                          <h5
+                            title={group.college}
+                            style={{
+                              margin: 0,
+                              fontSize: '0.9rem',
+                              color: '#777',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                            }}
+                          >
+                            {group.college}
+                          </h5>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="col-12">
+                    <p>No groups available at the moment.</p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
-        )}
-      </div>
-    </div>
-  </div>
-</section>
-
-
-
-                
+        </section>
 
 
 
 
-<section className="mentors-modern-section py-5 bg-white">
-  <div className="container">
-    {/* Header */}
-    
-    {/* <div className="section-header section-head-left aos mb-4" data-aos="fade-up">
+
+
+
+
+        <section className="mentors-modern-section py-5 bg-white">
+          <div className="container">
+            {/* Header */}
+
+            {/* <div className="section-header section-head-left aos mb-4" data-aos="fade-up">
       <div className="section-head-five d-flex justify-content-between align-items-center flex-wrap w-100">
         <div>
           <h4><span />Mentors</h4>
@@ -497,79 +549,79 @@ const HomeFive = ({ isLoggedIn, user }) => {
       </div>  
     </div> */}
 
-    <div className="section-header section-head-left aos" data-aos="fade-up">
-  <div className="section-head-five row align-items-center w-100">
-    <div className="col-md-8 col-sm-12">
-      <h4>
-        <span />
-        Mentors
-      </h4>
-      <h2>Newly Joined Authenticated Mentors</h2>
-    </div>
-    
-    <div className="col-md-4 col-sm-12 text-md-end text-start mt-3 mt-md-0">
-      <div className="view-all">
-        <Link to="/mentee/mentee-bookings">View All</Link>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-    {/* Mentor Grid */}
-    <div className="row gy-4" data-aos="fade-up">
-      {mentors.length > 0 ? (
-        mentors.slice(0, 4).map((mentor) => (
-          <div className="col-lg-3 col-md-6" key={mentor.id}>
-            <div
-              className="card mentor-card border-0 shadow-sm h-100 p-3 rounded-4"
-              style={{
-                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                cursor: 'pointer',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-5px)';
-                e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.05)';
-              }}
-            >
-              {/* Avatar */}
-              <div className="text-center mb-3">
-                <img
-                  src={mentor.profile_picture}
-                  alt={`${mentor.user.first_name} ${mentor.user.last_name}`}
-                  className="rounded-circle"
-                  style={{ width: '70px', height: '70px', objectFit: 'cover' }}
-                />
-              </div>
-
-              {/* Name & Rating */}
-              <div className="text-center">
-                <h4
-                    className="mb-1"
-                    title={`${mentor.user.first_name} ${mentor.user.last_name}`}
-                    style={{
-                      fontSize: '1.05rem',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                    }}
-                  >
-                    {mentor.user.first_name} {mentor.user.last_name}
+            <div className="section-header section-head-left aos" data-aos="fade-up">
+              <div className="section-head-five row align-items-center w-100">
+                <div className="col-md-8 col-sm-12">
+                  <h4>
+                    <span />
+                    Mentors
                   </h4>
-                
-                
-                
-                {/* <h5
+                  <h2>Top Authenticated Mentors</h2>
+                </div>
+
+                <div className="col-md-4 col-sm-12 text-md-end text-start mt-3 mt-md-0">
+                  <div className="view-all">
+                    <Link to="/mentee/search-mentor">View All</Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            {/* Mentor Grid */}
+            <div className="row gy-4" data-aos="fade-up">
+              {mentors.length > 0 ? (
+                mentors.slice(0, 4).map((mentor) => (
+                  <div className="col-lg-3 col-md-6" key={mentor.id}>
+                    <div
+                      className="card mentor-card border-0 shadow-sm h-100 p-3 rounded-4"
+                      style={{
+                        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                        cursor: 'pointer',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-5px)';
+                        e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.1)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.05)';
+                      }}
+                    >
+                      {/* Avatar */}
+                      <div className="text-center mb-3">
+                        <img
+                          src={mentor.profile_picture}
+                          alt={`${mentor.user.first_name} ${mentor.user.last_name}`}
+                          className="rounded-circle"
+                          style={{ width: '70px', height: '70px', objectFit: 'cover' }}
+                        />
+                      </div>
+
+                      {/* Name & Rating */}
+                      <div className="text-center">
+                        <h4
+                          className="mb-1"
+                          title={`${mentor.user.first_name} ${mentor.user.last_name}`}
+                          style={{
+                            fontSize: '1.05rem',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                          }}
+                        >
+                          {mentor.user.first_name} {mentor.user.last_name}
+                        </h4>
+
+
+
+                        {/* <h5
                   className="fw-semibold mb-1 text-truncate"
                   title={`${mentor.user.first_name} ${mentor.user.last_name}`}
                 >
                   {mentor.user.first_name} {mentor.user.last_name}
                 </h5> */}
-                {/* <div className="text-warning mb-2">
+                        {/* <div className="text-warning mb-2">
                   {[...Array(5)].map((_, i) => (
                     <i
                       key={i}
@@ -578,73 +630,79 @@ const HomeFive = ({ isLoggedIn, user }) => {
                   ))}
                   <small className="text-muted ms-1">({mentor.rating.toFixed(1)})</small>
                 </div> */}
-              </div>
+                      </div>
 
-              {/* University with tooltip/ellipsis */}
-              <div
-                className="text-center mb-3"
-                title={mentor.university}
-              >
+                      {/* University with tooltip/ellipsis */}
+                      <div
+                        className="text-center mb-3"
+                        title={mentor.university}
+                      >
 
-                
-                <p
-                  className="text-muted m-0"
-                  style={{
-                    margin: 0,
-                    fontSize: '0.9rem',
-                    color: '#777',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                >
-                  {mentor.university || ' '}
-                </p>
-              </div>
 
-              <div
-                className="text-center mb-3"
-                title={mentor.degree}
-              >
-                <p
-                  className="text-muted m-0"
-                  style={{
-                    margin: 0,
-                    fontSize: '0.9rem',
-                    color: '#777',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                >
-                  {mentor.degree || ' '} {mentor.major || ' '} 
-                </p>
-              </div>
+                        <p
+                          className="text-muted m-0"
+                          style={{
+                            margin: 0,
+                            fontSize: '0.9rem',
+                            color: '#777',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                          }}
+                        >
+                          {mentor.university || ' '}
+                        </p>
+                      </div>
 
-              {/* Book a Call */}
-              <div className="text-center mt-auto">
-                <Link
-                  to="/mentee/search-mentor"
-                  className="btn btn-sm btn-outline-primary rounded-pill px-3"
-                >
-                  Book a Call
-                </Link>
-              </div>
+                      <div
+                        className="text-center mb-3"
+                        title={mentor.degree}
+                      >
+                        <p
+                          className="text-muted m-0"
+                          style={{
+                            margin: 0,
+                            fontSize: '0.9rem',
+                            color: '#777',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                          }}
+                        >
+                          {mentor.degree || ' '} {mentor.major || ' '}
+                        </p>
+                      </div>
+
+                      {/* Book a Call */}
+                      <div className="text-center mt-auto">
+                        {/* <Link
+                          to="/mentee/search-mentor"
+                          className="btn btn-sm btn-outline-primary rounded-pill px-3"
+                        >
+                          Book a Call
+                        </Link> */}
+                        <Link
+                          to={`/mentee/mentor-profile/${mentor.id}`}
+                          className="btn btn-sm btn-outline-primary rounded-pill px-3"
+                        >
+                          Book a Call
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="col-12">
+                  <p>No mentors available at the moment.</p>
+                </div>
+              )}
             </div>
           </div>
-        ))
-      ) : (
-        <div className="col-12">
-          <p>No mentors available at the moment.</p>
-        </div>
-      )}
-    </div>
-  </div>
-</section>
+        </section>
 
 
 
-{/* <section className="featured-instructor featured-instructor-three featured-instructor-three">
+        {/* <section className="featured-instructor featured-instructor-three featured-instructor-three">
   <div className="container">
     <div
       className="section-header section-head-left aos d-block"
@@ -746,7 +804,7 @@ const HomeFive = ({ isLoggedIn, user }) => {
 
 
 
-        <section className="faq-four-sec faq-five-sec" style={{ backgroundColor: '' }}>
+        <section id="faq" className="faq-four-sec faq-five-sec" style={{ backgroundColor: '' }}>
           <div className="container">
             <div className="faq-sec-five">
               <div className="section-header section-head-left aos" data-aos="fade-up">
