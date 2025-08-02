@@ -75,6 +75,7 @@ const DoctorSidebar = () => {
         <div className="dashboard-widget">
           <nav className="dashboard-menu">
             <ul>
+              
               <li
                 className={
                   pathnames.includes("/mentor/mentor-dashboard") ? "active" : ""
@@ -85,6 +86,7 @@ const DoctorSidebar = () => {
                   <span>Dashboard</span>
                 </Link>
               </li>
+              
               <li
                 className={
                   pathnames.includes("/mentor/chat-mentor") ? "active" : ""
@@ -94,14 +96,19 @@ const DoctorSidebar = () => {
                   <i className="fas fa-comments" />
                   <span>Chat Group </span> 
                   {/* <small className="unread-msg">23</small> */}
-                  <span style={{ fontSize: '12px', wordWrap: 'break-word', whiteSpace: 'normal' }}>
+                  {/* <span style={{ fontSize: '12px', wordWrap: 'break-word', whiteSpace: 'normal' }}>
                     {userData.groups[0].group_name}
-                  </span>
+                  </span> */}
+                  <span style={{ fontSize: '12px', wordWrap: 'break-word', whiteSpace: 'normal' }}>
+  {userData?.groups?.[0]?.group_name || "No Group"}
+</span>
+
                 </Link>
 
 
               </li>
-              <li
+              
+              {/* <li
                 className={
                   pathnames.includes("/mentor/bookings") ? "active" : ""
                 }
@@ -109,9 +116,9 @@ const DoctorSidebar = () => {
                 <Link to="/mentor/bookings">
                   <i className="fas fa-calendar-check" />
                   <span>Appointments</span>
-                  {/* <small className="unread-msg">3</small> */}
+                
                 </Link>
-              </li>
+              </li> */}
               
               {/* <li
                 className={
