@@ -794,6 +794,37 @@ const UniversityChatGroup = () => {
     }
   };
 
+  const parseTimestamp = (ts) => {
+    if (!ts) return null;
+  
+    try {
+      // Normalize Z -> +00:00 for Safari/iOS support
+      const iso = ts.endsWith('Z') ? ts.replace('Z', '+00:00') : ts;
+  
+      const parsed = new Date(iso);
+      return isNaN(parsed.getTime()) ? null : parsed;
+    } catch (e) {
+      return null;
+    }
+  };
+  
+  const getDateLabel = (date) => {
+    const today = new Date();
+    const messageDate = new Date(date);
+    const diffInDays = Math.floor(
+      (today.setHours(0, 0, 0, 0) - messageDate.setHours(0, 0, 0, 0)) / (1000 * 60 * 60 * 24)
+    );
+  
+    if (diffInDays === 0) return "Today";
+    if (diffInDays === 1) return "Yesterday";
+    return messageDate.toLocaleDateString(undefined, {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+    });
+  };
+  
+
   useEffect(() => {
     userData.current = getUserData();
 
@@ -927,6 +958,15 @@ const UniversityChatGroup = () => {
     setInputValue("");
   };
 
+  const groupedMessages = messages.reduce((acc, msg) => {
+    const parsedDate = parseTimestamp(msg.timestamp);
+    const dateLabel = parsedDate ? getDateLabel(parsedDate) : "Unknown";
+    if (!acc[dateLabel]) acc[dateLabel] = [];
+    acc[dateLabel].push(msg);
+    return acc;
+  }, {});
+  
+
   return (
     // <div style={{ height: "100vh", display: "flex", flexDirection: "column", overflow: "hidden" }}>
           <div style={{ height: "100vh", overflow: "hidden" }}>
@@ -946,7 +986,7 @@ const UniversityChatGroup = () => {
           <div className="row" style={{ margin: 0 }}>
             {/* Left Panel */}
             {!showChatWindow || !isMobile ? (
-              <div className="col-md-4" style={{ padding: 0 }}>
+              <div className="col-md-4" style={{ padding: 10 }}>
                 <form
                   className="chat-search d-flex align-items-center mb-2"
                   style={{ padding: 10 }}
@@ -969,7 +1009,7 @@ const UniversityChatGroup = () => {
                   />
                 </form>
 
-                <div style={{ padding: "0 10px" }}>
+                <div style={{ padding: "5px" }}>
                   {loading ? "Loading..." : error || <h5>Mentors Available</h5>}
                 </div>
 
@@ -1040,7 +1080,7 @@ const UniversityChatGroup = () => {
                 >
                   {isMobile && (
                     <button className="btn btn-link" onClick={() => setShowChatWindow(false)}>
-                      <i className="fas fa-arrow-left" /> Back
+                      <i className="fas fa-arrow-left" /> 
                     </button>
                   )}
                   <div className="d-flex align-items-center">
@@ -1064,7 +1104,7 @@ const UniversityChatGroup = () => {
                   }}
                   ref={chatScrollRef}
                 >
-                  <ul className="list-unstyled">
+                  {/* <ul className="list-unstyled">
                     {messages.map((msg, idx) => (
                       <li
                         key={idx}
@@ -1113,15 +1153,76 @@ const UniversityChatGroup = () => {
                                 msg.sender === userData.current?.username ? "right" : "left",
                             }}
                           >
-                            {msg.timestamp && new Date(msg.timestamp).toLocaleTimeString([], {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
+                            {parseTimestamp(msg.timestamp)?.toLocaleTimeString([], {
+  hour: "2-digit",
+  minute: "2-digit",
+}) || "Invalid time"}
+
                           </div>
                         </div>
                       </li>
                     ))}
-                  </ul>
+                  </ul> */}
+
+{Object.entries(groupedMessages).map(([dateLabel, msgs]) => (
+  <div key={dateLabel}>
+    <div style={{ textAlign: "center", margin: "10px 0", fontSize: 12, color: "#888" }}>
+      {dateLabel}
+    </div>
+    {msgs.map((msg, idx) => (
+      <li
+        key={idx}
+        style={{
+          display: "flex",
+          flexDirection: msg.sender === userData.current?.username ? "row-reverse" : "row",
+          alignItems: "flex-start",
+          marginBottom: 12,
+        }}
+      >
+        <img
+          src={msg.profile_picture}
+          alt=""
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: "50%",
+            margin: "0 8px",
+          }}
+        />
+        <div
+          style={{
+            background: msg.sender === userData.current?.username ? "#d1f5d3" : "#ffffff",
+            borderRadius: "16px",
+            padding: "10px 14px",
+            maxWidth: "75%",
+            boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
+          }}
+        >
+          <p style={{ margin: 0, fontSize: 14 }}>
+            {msg.sender !== userData.current?.username && (
+              <strong>{msg.sender}: </strong>
+            )}
+            {msg.message}
+          </p>
+          <div
+            style={{
+              fontSize: 10,
+              color: "#999",
+              marginTop: 4,
+              textAlign: msg.sender === userData.current?.username ? "right" : "left",
+            }}
+          >
+            {parseTimestamp(msg.timestamp)?.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }) || "Invalid time"}
+          </div>
+        </div>
+      </li>
+    ))}
+  </div>
+))}
+
 
                   {typingUsers.length > 0 && (
                     <div style={{ fontStyle: "italic", fontSize: 13, color: "#555", marginTop: 8 }}>
