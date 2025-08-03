@@ -991,19 +991,19 @@ const UniversityChatGroup = () => {
                   className="chat-search d-flex align-items-center mb-2"
                   style={{ padding: 10 }}
                 >
-                  <div className="avatar avatar-online me-3">
+                  {/* <div className="avatar avatar-online me-3">
                     <img
                       src={groupData?.logo || "default-avatar.png"}
                       className="avatar-img rounded-circle"
                       alt="Logo"
                       style={{ width: 50, height: 50 }}
                     />
-                  </div>
+                  </div> */}
                   <input
                     type="text"
                     className="form-control rounded-pill"
-                    placeholder="Search mentors"
-                    style={{ padding: 8 }}
+                    placeholder="Search mentors..."
+                    style={{ padding: 10 }}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
                   />
