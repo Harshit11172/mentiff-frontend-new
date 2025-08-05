@@ -1,431 +1,212 @@
-/* eslint-disable no-unused-vars */
+
+import HomeFiveHeader from "../../home/home-five/header";
+import HomeFiveFooter from "../../home/home-five/footer";
+
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Link, useLocation } from "react-router-dom";
-import Header from "../../header";
-import HomeFiveHeader from "../../home/home-five/header";
-import Footer from "../../footer";
-import Content from "./content";
-import Pagecontent from "./pagecontent";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import RazorpayPayment from "../../RazorpayPayment";
+import { useMemo } from "react";
 
 
-
-const MentorProfile = (props) => {
-  const [show, setShow] = useState(false);
-  const [videocall, setvideocall] = useState(false);
-  const [isOpen, setisOpen] = useState(false);
-  const [state, setState] = useState(false);
-  const [photoIndex, setphotoIndex] = useState(false);
-
-  // const location = useLocation();
-  // const mentorData = location.state?.mentorData; // Safely access the mentor data
-
+const MentorProfile = () => {
+  const { id } = useParams();
+  const [mentorData, setMentorData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDay, setSelectedDay] = useState("");
   const [selectedTimeSlot, setSelectedTimeSlot] = useState("");
-
-  const { id } = useParams();  // Get mentor ID from URL
-  const [mentorData, setMentorData] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  console.log('id in url is')
-  console.log(id)
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-    if (date) {
-      const day = date.toLocaleString('en-US', { weekday: 'long' });
-      setSelectedDay(day);
-      setSelectedTimeSlot(""); // Reset time slot when day changes
-    } else {
-      setSelectedDay(""); // Clear selected day if no date is selected
-    }
-  };
-
-  const handleBookSession = () => {
-    if (selectedDay && selectedTimeSlot) {
-      console.log(`Booking session on ${selectedDay} at ${selectedTimeSlot}`);
-      // Implement booking logic here
-    } else {
-      alert('Please select a day and a time slot to book.');
-    }
-  };
-
-  // Calculate the min and max date for the date picker
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [posts, setPosts] = useState([]);
+  const [commentText, setCommentText] = useState({});
+  const [openComments, setOpenComments] = useState({});
   const today = new Date();
-  const minDate = today; // Current date
-  const maxDate = new Date();
-  maxDate.setDate(today.getDate() + 7); // Next 7 days
+  const minDate = today;
+  const maxDate = new Date(today);
+  maxDate.setDate(today.getDate() + 7);
 
   useEffect(() => {
     const fetchMentor = async () => {
       try {
-        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/mentors/${id}/`);
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/mentors/${id}/`
+        );
         setMentorData(res.data);
-        console.log(res.data)
       } catch (error) {
         console.error("Failed to load mentor data:", error);
       } finally {
         setLoading(false);
       }
     };
-
     fetchMentor();
   }, [id]);
 
-  const gridStyle = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
-    gap: '10px',
-    marginTop: '1rem',
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/posts/?mentor_id=${id}`
+        );
+        setPosts(res.data);
+      } catch (err) {
+        console.error("Error loading posts:", err);
+      }
+    };
+    if (mentorData) fetchPosts();
+  }, [mentorData]);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    if (date) {
+      const day = date.toLocaleString("en-US", { weekday: "long" });
+      setSelectedDay(day);
+      setSelectedTimeSlot("");
+    } else {
+      setSelectedDay("");
+    }
   };
 
-  const timeSlotStyle = {
-    padding: '15px',
-    border: '1px solid #ccc',
-    borderRadius: '5px',
-    textAlign: 'center',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s',
+  const toggleComments = (postId) => {
+    setOpenComments((prev) => ({
+      ...prev,
+      [postId]: prev[postId]
+        ? { ...prev[postId], open: !prev[postId].open }
+        : { open: true, visibleCount: 2 }, // show first 2 comments initially
+    }));
   };
 
-  const timeSlotHoverStyle = {
-    backgroundColor: '#f0f0f0',
+  const loadMoreComments = (postId) => {
+    setOpenComments((prev) => ({
+      ...prev,
+      [postId]: {
+        ...prev[postId],
+        visibleCount: (prev[postId]?.visibleCount || 2) + 2,
+      },
+    }));
   };
 
-  const timeSlotSelectedStyle = {
-    backgroundColor: '#007bff',
-    color: 'white',
-    borderColor: '#007bff',
+
+
+
+
+  // Helper to format time like LinkedIn: "17h", "2d", etc.
+  const getRelativeTime = (isoDateString) => {
+    const now = new Date();
+    const past = new Date(isoDateString);
+    const diffMs = now - past;
+
+    const seconds = Math.floor(diffMs / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const weeks = Math.floor(days / 7);
+    const months = Math.floor(days / 30);
+
+    if (months >= 1) return `${months}m`;
+    if (weeks >= 1) return `${weeks}w`;
+    if (days >= 1) return `${days}d`;
+    if (hours >= 1) return `${hours}h`;
+    if (minutes >= 1) return `${minutes}m`;
+    return "Just now";
   };
 
-  // Handle the case where mentorData is not provided
-  if (!mentorData) {
-    return <div>No mentor data available.</div>;
-  }
 
-  console.log(mentorData)
-  
-
-  return (
-    <div>
-      {/* <Header {...props} /> */}
-
-      <HomeFiveHeader/>
-
-      {/* <div className="breadcrumb-bar-two">
-        <div className="container-fluid">
-          <div className="row align-items-start inner-banner">
-            <div className="col-md-12 col-12 text-start">
-              <nav aria-label="breadcrumb" className="page-breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <Link to="/index">Home</Link>
-                  </li>
-                  <li className="breadcrumb-item" aria-current="page">
-                    Mentor Profile
-                  </li>
-                </ol>
-              </nav>
-              <h2 className="breadcrumb-title">Mentor Profile</h2>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
-      <div className="content">
-        <div className="container">
-          {/* Mentor Widget */}
-          <div
-  className="card col-12 col-md-10 mx-auto my-4"
-  style={{
-    border: 'none',
-    boxShadow: '0 0 20px rgba(0, 0, 0, 0.05)',
-    padding: '0',
-  }}
->
-  <div className="card-body p-4">
-    <div className="mentor-widget" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-      {/* Left Info */}
-      <div
-        className="user-info-left"
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          gap: '20px',
-          flex: '1 1 300px',
-        }}
-      >
-        {/* Profile Picture */}
-        <div className="mentor-img" style={{ display: 'flex', justifyContent: 'center', width: '100px', height: '100px' }}>
-          {mentorData.profile_picture ? (
-            <img
-              src={mentorData.user.profile_picture}
-              alt="Profile"
-              className="rounded-circle"
-              style={{
-                width: '100px',
-                height: '100px',
-                objectFit: 'cover',
-                border: '1px solidrgb(237, 244, 255)',
-              }}
-            />
-          ) : (
-            <div
-              className="pro-avatar"
-              style={{
-                width: '100px',
-                height: '100px',
-                borderRadius: '50%',
-                backgroundColor: '#f0f0f0',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: '1.5rem',
-                fontWeight: 'bold',
-                color: '#555',
-              }}
-            >
-              H P
-            </div>
-          )}
-        </div>
-
-        {/* Name & Info */}
-        <div className="user-info-cont" style={{ flex: 1 }}>
-          <h4
-            className="usr-name"
-            style={{ margin: '0 0 5px 0', fontWeight: '600' }}
-          >
-            {mentorData.user.first_name} {mentorData.user.last_name}
-          </h4>
-          <p
-            className="mentor-type"
-            style={{
-              margin: 0,
-              color: '#6c757d',
-              fontSize: '0.95rem',
-              fontWeight: '500',
-            }}
-          >
-            {mentorData.university}
-          </p>
-
-          <p
-            className="mentor-type social-title"
-            style={{
-              marginTop: '5px',
-              color: '#495057',
-              fontSize: '0.9rem',
-            }}
-          >
-            {mentorData.degree} {mentorData.major}
-          </p>
-        </div>
-      </div>
-
-      {/* Right Info */}
-      <div
-        className="user-info-right text-center"
-        style={{
-          marginTop: '20px',
-          flex: '1 1 200px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'flex-end',
-        }}
-      >
-        <div className="hireme-btn">
-          <span
-            className="hire-rate"
-            style={{
-              display: 'inline-block',
-              fontSize: '1rem',
-              fontWeight: '600',
-              backgroundColor: '#e9f5ff',
-              color: '#0d6efd',
-              padding: '10px 15px',
-              borderRadius: '8px',
-              border: '1px solid #cfe2ff',
-            }}
-          >
-            {mentorData.currency} {mentorData.session_fee} / {mentorData.session_time}
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+  const handleClearSelection = () => {
+    setSelectedDate(null);
+    setSelectedDay("");
+    setSelectedTimeSlot("");
+  };
 
 
-          
-          {/* /Mentor Widget */}
-
-          {/* Mentor Details Tab */}
-         <div
-  className="card col-12 col-md-10 mx-auto my-4"
-  style={{
-    border: 'none',
-    boxShadow: '0 0 20px rgba(0, 0, 0, 0.05)',
-    padding: '0',
-  }}
->
-  <div
-    className="card-body"
-    style={{
-      padding: '2rem',
-      paddingBottom: '0',
-    }}
-  >
-    {/* Tab Content */}
-    <div className="tab-content pt-0">
-      {/* Biography Content */}
-      {mentorData.about && (
-        <div
-          role="tabpanel"
-          id="biography"
-          className="tab-pane fade show active"
-        >
-          <div className="row">
-            <div className="col-md-12">
-              {/* About Details */}
-              <div
-                className="widget about-widget mb-0"
-                style={{
-                  backgroundColor: '#ffffff',
-                  borderRadius: '8px',
-                  padding: '1.5rem',
-                  border: '1px solid #dee2e6',
-                }}
-              >
-                <h4
-                  className="widget-title"
-                  style={{
-                    fontWeight: '600',
-                    marginBottom: '1rem',
-                    textAlign: 'center',
-                  }}
-                >
-                  🙋 About Me
-                </h4>
-                <hr style={{ marginBottom: '1rem' }} />
-                <p
-                  style={{
-                    fontSize: '1rem',
-                    lineHeight: '1.6',
-                    color: '#333',
-                    textAlign: 'justify',
-                  }}
-                >
-                  {mentorData.about}
-                </p>
-              </div>
-              {/* /About Details */}
-            </div>
-          </div>
-        </div>
-      )}
-      {/* /biography Content */}
-    </div>
-  </div>
-</div>
-
-          {/* Availability Section */}
-      {/* <div className="card col-10 me-auto ms-auto p-0">
-        <div className="card-body">
-          <h4 className="widget-title">Select Date and Time</h4>
-          <hr />
-          
-          <div>
-            <label style={{marginRight: '10px' }}>Select a date : </label>
-            <DatePicker 
-              selected={selectedDate} 
-              onChange={handleDateChange} 
-              dateFormat="yyyy/MM/dd"
-              minDate={minDate} // Restrict to current date
-              maxDate={maxDate} // Restrict to next 7 days
-            />
-          </div>
-
-          {selectedDay && (
-            <div style={{ marginTop: '1rem', fontWeight: 'bold' }}>
-              Selected Day: {selectedDay}
-            </div>
-          )}
-          
-          <div style={{ marginTop: '1rem' }}>
-            <label>Select a time slot:</label> 
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
-              gap: '10px',
-              marginTop: '1rem',
-            }}>
-              {selectedDay && mentorData.availability[selectedDay]?.map((hour, index) => (
-                
-                <div
-                  key={index}
-                  onClick={() => setSelectedTimeSlot(hour)}
-                  style={{
-                    padding: '15px',
-                    border: '1px solid #ccc',
-                    borderRadius: '5px',
-                    textAlign: 'center',
-                    cursor: 'pointer',
-                    backgroundColor: selectedTimeSlot === hour ? '#007bff' : 'white',
-                    color: selectedTimeSlot === hour ? 'white' : 'black',
-                    transition: 'background-color 0.3s',
-                  }}
-                >
-                  {hour}
-                </div>
-              ))}
-              {selectedDay && mentorData.availability[selectedDay]?.length === 0 && (
-                <p>No available time slots for {selectedDay}.</p>
-              )}
-            </div>
-          </div>
-          
-          <button className="btn btn-primary mt-3" onClick={RazorpayPayment}>Pay Now</button>
-        </div>
-      </div> */}
 
 
+
+  const handlePayNow = () => {
+    if (!selectedDate || !selectedTimeSlot) {
+      alert("Please select a date and time slot.");
+      return;
+    }
+    alert(`Paying for session on ${selectedDay} at ${selectedTimeSlot}`);
+  };
+
+  const handleLikeToggle = async (postId) => {
+    try {
+      const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/posts/${postId}/like/`);
+      const updatedPosts = posts.map((post) =>
+        post.id === postId ? { ...post, likes_count: res.data.likes_count, liked_by_user: res.data.liked_by_user } : post
+      );
+      setPosts(updatedPosts);
+    } catch (err) {
+      console.error("Error toggling like:", err);
+    }
+  };
+
+
+
+  const handleCommentSubmit = async (postId) => {
+    const comment = commentText[postId];
+    if (!comment) return;
+
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/comments/`,
+        {
+          post: postId,
+          text: comment,
+        },
+        {
+          headers: {
+            Authorization: `Token ${localStorage.getItem("authToken")}`,
+          },
+        }
+      );
+
+      const updatedPosts = posts.map((post) =>
+        post.id === postId
+          ? { ...post, comments: [...(post.comments || []), res.data] }
+          : post
+      );
+
+      setPosts(updatedPosts);
+      setCommentText({ ...commentText, [postId]: "" });
+    } catch (err) {
+      console.error("Error submitting comment:", err);
+    }
+  };
+
+
+
+
+
+
+
+
+
+  if (loading) return <div>Loading...</div>;
+  if (!mentorData) return <div>No mentor data available.</div>;
+
+  const bookingCard = (
     <div
-  className="card col-12 col-md-10 mx-auto my-4"
-  style={{
-    border: 'none',
-    boxShadow: '0 0 20px rgba(0, 0, 0, 0.05)',
-  }}
->
-  <div className="card-body p-4">
-    <h4
-      className="text-center"
       style={{
-        fontWeight: '600',
-        marginBottom: '1rem',
+        background: "#ffffff",
+        border: "1px solid #dee2e6",
+        borderRadius: "10px",
+        padding: "1.5rem",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
+        zIndex: 100,
+        position: "sticky",
+        top: "80px",
       }}
     >
-      📅 Select Date & Time
-    </h4>
-    <hr />
-
-    {/* Date Picker */}
-    <div style={{ marginBottom: '1.5rem' }}>
-      <label
-        style={{
-          display: 'block',
-          marginBottom: '0.5rem',
-          fontWeight: '500',
-        }}
-      >
-        Select a Date:
-      </label>
+      <h4 style={{ fontWeight: "600", marginBottom: "1rem", fontSize: "1.1rem" }}>📅 Book a Session</h4>
+      <label style={{ fontWeight: "500", display: "block", marginBottom: "0.5rem" }}>Select a Date:</label>
       <DatePicker
         selected={selectedDate}
         onChange={handleDateChange}
@@ -434,135 +215,432 @@ const MentorProfile = (props) => {
         maxDate={maxDate}
         placeholderText="Click to select a date"
         className="form-control"
-        style={{
-          width: '100%',
-          padding: '10px',
-          fontSize: '1rem',
-          borderRadius: '6px',
-          border: '1px solid #ced4da',
-        }}
       />
-    </div>
+      {selectedDay && (
+        <div style={{ marginTop: "1rem" }}>
+          <span
+            style={{
+              backgroundColor: "#0d6efd",
+              color: "white",
+              padding: "6px 12px",
+              borderRadius: "20px",
+              fontSize: "0.9rem",
+              fontWeight: "500",
+            }}
+          >
+            {selectedDay}
+          </span>
+        </div>
+      )}
 
-    {/* Selected Day Display */}
-    {selectedDay && (
-      <div style={{ marginBottom: '1.5rem' }}>
-        <span
-          style={{
-            backgroundColor: '#0d6efd',
-            color: 'white',
-            padding: '8px 12px',
-            borderRadius: '20px',
-            fontSize: '0.95rem',
-            fontWeight: '500',
-          }}
+
+
+
+      <div style={{ marginTop: "1rem" }}>
+        <label style={{ fontWeight: "500", display: "block", marginBottom: "0.5rem" }}>Time Slots:</label>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))", gap: "8px" }}>
+          {selectedDay &&
+            mentorData.availability[selectedDay]?.map((slot, i) => (
+              <div
+                key={i}
+                onClick={() => setSelectedTimeSlot(slot)}
+                style={{
+                  padding: "10px",
+                  borderRadius: "6px",
+                  border: "1px solid #dee2e6",
+                  textAlign: "center",
+                  backgroundColor: selectedTimeSlot === slot ? "#0d6efd" : "#f8f9fa",
+                  color: selectedTimeSlot === slot ? "white" : "black",
+                  cursor: "pointer",
+                }}
+              >
+                {slot}
+              </div>
+            ))}
+          {selectedDay && mentorData.availability[selectedDay]?.length === 0 && (
+            <p style={{ fontSize: "0.9rem", color: "#777" }}>No slots available.</p>
+          )}
+        </div>
+      </div>
+
+      {/* <div className="text-center mt-3">
+        <button
+          className="btn btn-outline-secondary btn-sm"
+          onClick={handleClearSelection}
         >
-          {selectedDay}
-        </span>
-      </div>
-    )}
+          Clear All
+        </button>
+      </div> */}
 
-    {/* Time Slots */}
-    <div style={{ marginBottom: '1.5rem' }}>
-      <label
-        style={{
-          display: 'block',
-          marginBottom: '0.5rem',
-          fontWeight: '500',
-        }}
-      >
-        Select a Time Slot:
-      </label>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
-          gap: '10px',
-        }}
-      >
-        {selectedDay &&
-          mentorData.availability[selectedDay]?.map((hour, index) => (
-            <div
-              key={index}
-              onClick={() => setSelectedTimeSlot(hour)}
-              style={{
-                padding: '12px',
-                border: '1px solid #dee2e6',
-                borderRadius: '8px',
-                textAlign: 'center',
-                cursor: 'pointer',
-                backgroundColor: selectedTimeSlot === hour ? '#0d6efd' : '#f8f9fa',
-                color: selectedTimeSlot === hour ? 'white' : 'black',
-                fontWeight: selectedTimeSlot === hour ? '600' : 'normal',
-                transition: 'all 0.3s ease',
-              }}
-              onMouseEnter={(e) => {
-                if (selectedTimeSlot !== hour) {
-                  e.currentTarget.style.backgroundColor = '#e9ecef';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (selectedTimeSlot !== hour) {
-                  e.currentTarget.style.backgroundColor = '#f8f9fa';
-                }
-              }}
-            >
-              {hour}
-            </div>
-          ))}
-        {selectedDay && mentorData.availability[selectedDay]?.length === 0 && (
-          <p style={{ color: '#6c757d', fontStyle: 'italic' }}>
-            No available time slots for {selectedDay}.
-          </p>
-        )}
-      </div>
-    </div>
+{selectedDate && (
+  <div className="text-center mt-3">
+    <button
+      className="btn btn-outline-secondary btn-sm"
+      onClick={handleClearSelection}
+    >
+      ❌ Clear All
+    </button>
+  </div>
+)}
 
-    {/* Pay Button */}
-    <div style={{ textAlign: 'center' }}>
+
       <button
-        onClick={RazorpayPayment}
+        onClick={handlePayNow}
         style={{
-          padding: '10px 24px',
-          backgroundColor: '#198754',
-          color: 'white',
-          border: 'none',
-          borderRadius: '6px',
-          fontWeight: '600',
-          fontSize: '1rem',
-          cursor: 'pointer',
-          transition: 'background-color 0.3s ease',
+          marginTop: "1.5rem",
+          width: "100%",
+          padding: "12px",
+          backgroundColor: "#198754",
+          color: "white",
+          border: "none",
+          borderRadius: "6px",
+          fontWeight: "600",
+          fontSize: "1rem",
+          cursor: "pointer",
         }}
-        onMouseEnter={(e) => (e.target.style.backgroundColor = '#157347')}
-        onMouseLeave={(e) => (e.target.style.backgroundColor = '#198754')}
       >
         💳 Pay Now
       </button>
+
+
+    
     </div>
-  </div>
-</div>
+  );
+
+  return (
+    <>
+      <HomeFiveHeader />
+
+      <div style={{ maxWidth: "1100px", margin: "2rem auto", padding: "0 1rem" }}>
+
+        <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: "2rem" }}>
+          <div style={{ flex: 2 }}>
+            {/* Profile Section */}
+
+            {/* <div
+              style={{
+                background: "white",
+                border: "1px solid #dee2e6",
+                borderRadius: "10px",
+                padding: isMobile ? "1.2rem" : "2rem",
+                display: "flex",
+                flexDirection: isMobile ? "column" : "row",
+                alignItems: isMobile ? "flex-start" : "center",
+                gap: "1rem",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+                position: "sticky",
+                top: "80px",
+                zIndex: 100,
+                backgroundColor: "white",
+              }}
+            >
+              <img
+                src={mentorData.user.profile_picture}
+                alt="Profile"
+                style={{
+                  width: isMobile ? "70px" : "90px",
+                  height: isMobile ? "70px" : "90px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+              />
+              <div style={{ flex: 1 }}>
+                <h2 style={{ fontSize: "1.3rem", fontWeight: "600", marginBottom: "0.3rem" }}>
+                  {mentorData.user.first_name} {mentorData.user.last_name}
+                </h2>
+                <p style={{ fontSize: "0.95rem", color: "#666" }}>{mentorData.university}</p>
+                <p style={{ fontSize: "0.95rem", color: "#444" }}>
+                  {mentorData.degree} {mentorData.major}
+                </p>
+              </div>
+            </div> */}
+
+            <div
+              style={{
+                background: "white",
+                border: "1px solid #dee2e6",
+                borderRadius: "10px",
+                padding: isMobile ? "1rem" : "2rem",
+                display: "flex",
+                flexDirection: "row", // ← row even on mobile
+                alignItems: "center",
+                gap: "1rem",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+                position: "sticky",
+                top: "80px",
+                zIndex: 100,
+                backgroundColor: "white",
+              }}
+            >
+              <img
+                src={mentorData.user.profile_picture}
+                alt="Profile"
+                style={{
+                  width: isMobile ? "50px" : "90px",
+                  height: isMobile ? "50px" : "90px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+              />
+              <div style={{ flex: 1 }}>
+                <h2
+                  style={{
+                    fontSize: isMobile ? "1rem" : "1.3rem",
+                    fontWeight: "600",
+                    marginBottom: "0.2rem",
+                  }}
+                >
+                  {mentorData.user.first_name} {mentorData.user.last_name}
+                </h2>
+                <p
+                  style={{
+                    fontSize: isMobile ? "0.8rem" : "0.95rem",
+                    color: "#666",
+                    margin: 0,
+                  }}
+                >
+                  {mentorData.university}
+                </p>
+                <p
+                  style={{
+                    fontSize: isMobile ? "0.8rem" : "0.95rem",
+                    color: "#444",
+                    margin: 0,
+                  }}
+                >
+                  {mentorData.degree} {mentorData.major}
+                </p>
+              </div>
+            </div>
+
+
+            {/* Booking for mobile */}
+            {isMobile && <div style={{ marginTop: "1.5rem" }}>{bookingCard}</div>}
+
+            {/* About Me */}
+            <div
+              style={{
+                marginTop: "2rem",
+                background: "white",
+                border: "1px solid #dee2e6",
+                borderRadius: "10px",
+                padding: "2rem",
+                boxShadow: "0 1px 6px rgba(0,0,0,0.03)",
+              }}
+            >
+              <h3 style={{ fontWeight: "600", fontSize: "1.25rem", marginBottom: "1rem" }}>🙋 About Me</h3>
+              <p style={{ fontSize: "1rem", lineHeight: "1.6", color: "#333", whiteSpace: "pre-wrap" }}>
+                {mentorData.about || "No bio available."}
+              </p>
+            </div>
+
+            {/* Posts Section */}
+            <div
+              style={{
+                marginTop: "2rem",
+                background: "#ffffff",
+                border: "1px solid #dee2e6",
+                borderRadius: "10px",
+                padding: "2rem",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+              }}
+            >
 
 
 
-      {/* /Availability Section */}
+              <h3 style={{ fontWeight: "600", fontSize: "1.25rem", marginBottom: "1.5rem" }}>
+                📝 Posts by {mentorData.user.first_name}
+              </h3>
+              {posts.length === 0 && <p style={{ color: "#777" }}>No posts yet.</p>}
+              {posts.map((post) => (
+                <div key={post.id} style={{ marginBottom: "2rem", borderBottom: "1px solid #eee", paddingBottom: "1rem" }}>
+                  <p style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>{post.content}</p>
+                  <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+                    <button
+                      onClick={() => handleLikeToggle(post.id)}
+                      style={{
+                        padding: "5px 12px",
+                        backgroundColor: post.liked_by_user ? "#0d6efd" : "#f0f0f0",
+                        color: post.liked_by_user ? "#fff" : "#000",
+                        border: "none",
+                        borderRadius: "20px",
+                        cursor: "pointer",
+                        fontSize: "0.85rem",
+                        fontWeight: "500",
+                      }}
+                    >
+                      👍 {post.likes_count} Like
+                    </button>
+                    {/* <span style={{ fontSize: "0.85rem", color: "#888" }}>{post.comments.length} Comments</span> */}
 
+                    <button
+                      onClick={() => toggleComments(post.id)}
+                      style={{
+                        fontSize: "0.85rem",
+                        backgroundColor: "#f0f2f5",
+                        border: "1px solid #d0d7de",
+                        color: "#0a66c2",
+                        cursor: "pointer",
+                        borderRadius: "20px",
+                        padding: "6px 12px",
+                        transition: "all 0.2s ease-in-out",
+                        fontWeight: 500,
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = "#e7f3ff";
+                        e.currentTarget.style.borderColor = "#b6d4fe";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = "#f0f2f5";
+                        e.currentTarget.style.borderColor = "#d0d7de";
+                      }}
+                    >
+                      {openComments[post.id]?.open ? "Hide Comments" : `${post.comments.length} Comments`}
+                    </button>
 
+                  </div>
 
+                  {/* Comments */}
 
+                  {openComments[post.id]?.open && (
+                    <>
+                      <div style={{ marginTop: "1rem" }}>
+                        {post.comments
+                          .slice(0, openComments[post.id]?.visibleCount || 2)
+                          .map((comment) => {
+                            const relativeTime = getRelativeTime(comment.created_at);
+                            return (
+                              <div
+                                key={comment.id}
+                                style={{
+                                  display: "flex",
+                                  gap: "10px",
+                                  backgroundColor: "#fff",
+                                  padding: "12px",
+                                  borderRadius: "12px",
+                                  marginBottom: "12px",
+                                  boxShadow: "0 1px 3px rgba(0, 0, 0, 0.08)",
+                                  fontSize: "0.95rem",
+                                  border: "1px solid #e4e6eb",
+                                }}
+                              >
+                                <img
+                                  src={comment.author_image}
+                                  alt={comment.author_name}
+                                  style={{
+                                    width: "36px",
+                                    height: "36px",
+                                    borderRadius: "50%",
+                                    objectFit: "cover",
+                                    flexShrink: 0,
+                                  }}
+                                />
+                                <div style={{ flex: 1 }}>
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "space-between",
+                                      alignItems: "center",
+                                      marginBottom: "4px",
+                                    }}
+                                  >
+                                    <span style={{ fontWeight: "600", color: "#050505" }}>
+                                      {comment.author_username}
+                                    </span>
+                                    <span
+                                      style={{
+                                        fontSize: "0.8rem",
+                                        color: "#65676b",
+                                        whiteSpace: "nowrap",
+                                      }}
+                                    >
+                                      {relativeTime}
+                                    </span>
+                                  </div>
+                                  <div style={{ color: "#4b4f56" }}>{comment.text}</div>
+                                </div>
+                              </div>
+                            );
+                          })}
 
+                        {post.comments.length > (openComments[post.id]?.visibleCount || 2) && (
+                          <button
+                            onClick={() =>
+                              setOpenComments((prev) => ({
+                                ...prev,
+                                [post.id]: {
+                                  ...prev[post.id],
+                                  visibleCount: (prev[post.id]?.visibleCount || 2) + 2,
+                                },
+                              }))
+                            }
+                            style={{
+                              marginTop: "0.5rem",
+                              backgroundColor: "#e7f3ff",
+                              border: "1px solid #b6d4fe",
+                              color: "#0a66c2",
+                              padding: "6px 12px",
+                              borderRadius: "20px",
+                              fontSize: "0.85rem",
+                              fontWeight: 500,
+                              cursor: "pointer",
+                            }}
+                          >
+                            Load more comments
+                          </button>
+                        )}
+                      </div>
+                    </>
+                  )}
 
+                  {/* Add Comment */}
+                  <div style={{ marginTop: "0.5rem", display: "flex", gap: "0.5rem" }}>
+                    <input
+                      type="text"
+                      placeholder="Write a comment..."
+                      value={commentText[post.id] || ""}
+                      onChange={(e) =>
+                        setCommentText({ ...commentText, [post.id]: e.target.value })
+                      }
+                      style={{
+                        flex: 1,
+                        padding: "8px 12px",
+                        borderRadius: "6px",
+                        border: "1px solid #ccc",
+                      }}
+                    />
+                    <button
+                      onClick={() => handleCommentSubmit(post.id)}
+                      style={{
+                        backgroundColor: "#198754",
+                        color: "white",
+                        padding: "8px 14px",
+                        borderRadius: "6px",
+                        border: "none",
+                        fontSize: "0.9rem",
+                        fontWeight: "600",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Send
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
-
-
-
-
-
-          {/* /Mentor Details Tab */}
+          {/* RIGHT COLUMN */}
+          {!isMobile && <div style={{ flex: 1 }}>{bookingCard}</div>}
         </div>
+
       </div>
-      {/* <Footer {...props} /> */}
-    </div>
+      <HomeFiveFooter />
+    </>
   );
 };
 
 export default MentorProfile;
+
+
+

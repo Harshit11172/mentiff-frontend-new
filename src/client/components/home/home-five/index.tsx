@@ -338,7 +338,9 @@ const HomeFive = ({ isLoggedIn, user }) => {
                     </h1>
 
                     <p className="mt-3" style={{ fontSize: '18px', color: '#555' }}>
-                      Get real insights from seniors of your dream college. Understand placements, campus life, and what truly matters — straight from someone who knows.
+                      Get real insights from seniors of your dream college. 
+                      
+                      Understand placements, campus life, and what truly matters — straight from someone who knows.
                     </p>
 
                     <div className="mt-4">

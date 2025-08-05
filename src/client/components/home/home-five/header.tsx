@@ -413,6 +413,20 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { logo } from "../../../../admin/components/imagepath";
@@ -602,175 +616,7 @@ const HomeOneHeader = () => {
 
 
   return (
-    // <header className="header">
-    //   <div className="header-fixed">
-        
-    //     <nav className="navbar navbar-expand-lg header-nav">
-    //       <div className="navbar-header">
-    //         <Link id="mobile_btn" to="#" onClick={() => onHandleMobileMenu()}>
-    //           <span className="bar-icon">
-    //             <span />
-    //             <span />
-    //             <span />
-    //           </span>
-    //         </Link>
 
-    //         <Link to="/" className="navbar-brand logo">
-    //           <ImageWithBasePath
-    //             src="assets/img/logo_mentiff.png"
-    //             className="img-fluid"
-    //             alt="Logo"
-    //           />
-    //         </Link>
-
-    //       </div>
-
-
-    //       <div className="main-menu-wrapper">
-    //         <div className="menu-header">
-    //           <Link to="/" className="menu-logo">
-    //             <ImageWithBasePath
-    //               src="assets/img/logo_mentiff.png"
-    //               className="img-fluid"
-    //               alt="Logo"
-    //             />
-    //           </Link>
-    //           <Link id="menu_close" className="menu-close" to="#" onClick={() => onhandleCloseMenu()}>
-    //             <i className="fas fa-times" />
-    //           </Link>
-    //         </div>
-
-    //         <ul className="main-nav">
-    //           {!user && (
-    //             <li className="login-link">
-    //               <Link to="/login">Login / Signup</Link>
-    //             </li>
-    //           )}
-    //         </ul>
-    //       </div>
-
-          
-
-
-    //       <ul className="nav header-navbar-rht">
-    //         {user ? (
-    //           <>
-    //             <li className="nav-item dropdown has-arrow logged-item">
-    //               <Link
-    //                 to="#"
-    //                 className="dropdown-toggle nav-link"
-    //                 data-bs-toggle="dropdown"
-    //               >
-    //                 <span className="user-img">
-    //                   <img
-    //                     className="rounded-circle"
-    //                     src={user.profile_picture}
-    //                     width="31"
-    //                     alt={user.username}
-    //                   />
-    //                 </span>
-
-
-
-
-
-    //               </Link>
-    //               <div className="dropdown-menu dropdown-menu-end">
-    //                 <div className="user-header">
-    //                   <div className="avatar avatar-sm">
-    //                     <img
-    //                       src={user.profile_picture}
-    //                       alt="User Image"
-    //                       className="avatar-img rounded-circle"
-    //                     />
-    //                   </div>
-    //                   <div className="user-text">
-    //                     <h6>{user.first_name} {user.last_name}</h6>
-    //                     <p className="text-muted mb-0">{user.user_type}</p>
-    //                   </div>
-    //                 </div>
-
-
-    //                 {user.user_type === "mentor" ? (
-    //                   <Link className="dropdown-item" to="/mentor/mentor-dashboard">
-    //                     Dashboard
-    //                   </Link>
-
-    //                 ) : user.user_type === "mentee" ? (
-    //                   <Link className="dropdown-item" to="/mentee/dashboard">
-    //                     Dashboard
-    //                   </Link>
-    //                 ) : null /* Optional: handle other user types or show nothing */}
-
-    //                 {user.user_type === "mentor" ? (
-    //                   <Link className="dropdown-item" to="/mentor/profile-setting">
-    //                     Profile Settings
-    //                   </Link>
-
-    //                 ) : user.user_type === "mentee" ? (
-    //                   <Link className="dropdown-item" to="/mentee/profile">
-    //                     Profile Settings
-    //                   </Link>
-    //                 ) : null /* Optional: handle other user types or show nothing */}
-
-
-    //                 {/* <Link className="dropdown-item" to="/mentee/dashboard">
-    //                   Dashboard
-    //                 </Link>
-
-    //                 <Link className="dropdown-item" to="/mentee/profile">
-    //                   Profile Settings
-    //                 </Link> */}
-
-    //                 {/* <Link className="dropdown-item" to="/login">
-    //                       Logout
-    //                     </Link> */}
-    //                 <button className="dropdown-item" onClick={logout}>Logout</button>
-    //               </div>
-    //             </li>
-    //           </>
-
-
-    //         ) : (
-
-    //           <li className="nav-item">
-    //             <div className="d-flex gap-3">
-
-    //               <Link
-    //                 to="/login"
-    //                 className="nav-link header-login text-white px-3 py-2 rounded"
-    //                 style={{
-    //                   backgroundColor: '#69db7c',
-    //                   transition: 'background-color 0.3s',
-    //                 }}
-    //                 onMouseOver={e => (e.currentTarget.style.backgroundColor = '#40c057')}
-    //                 onMouseOut={e => (e.currentTarget.style.backgroundColor = '#69db7c')}
-    //               >
-    //                 Register
-    //               </Link>
-
-
-    //               <Link
-    //                 to="/login"
-    //                 className="nav-link header-login text-white px-3 py-2 rounded"
-    //                 style={{
-    //                   backgroundColor: '#4dabf7',
-    //                   transition: 'background-color 0.3s',
-    //                 }}
-    //                 onMouseOver={e => (e.currentTarget.style.backgroundColor = '#228be6')}
-    //                 onMouseOut={e => (e.currentTarget.style.backgroundColor = '#4dabf7')}
-    //               >
-    //                 Login
-    //               </Link>
-    //             </div>
-    //           </li>
-
-    //         )}
-    //       </ul>
-
-    //     </nav>
-    //   </div>
-    // </header>
     <header className="header">
   <div className="header-fixed">
     <nav className="navbar navbar-expand-lg header-nav">
