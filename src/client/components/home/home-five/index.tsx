@@ -687,7 +687,7 @@ const HomeFive = ({ isLoggedIn, user }) => {
                           to={`/mentee/mentor-profile/${mentor.id}`}
                           className="btn btn-sm btn-outline-primary rounded-pill px-3"
                         >
-                          Book a Call
+                          Call
                         </Link>
                       </div>
                     </div>

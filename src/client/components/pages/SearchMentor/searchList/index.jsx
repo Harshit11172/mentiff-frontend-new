@@ -88,7 +88,7 @@ const SearchList = ({ mentors }) => {
 
                   <div className="clinic-booking">
                     <Link className="apt-btn" to={`/mentee/mentor-profile/${mentor.id}`}>
-                      Book a Call
+                      Call
                     </Link>
                   </div>
                 </div>

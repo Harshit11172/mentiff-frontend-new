@@ -31,6 +31,31 @@ const UniversityChatGroup = () => {
   const chatSocket = useRef(null);
   const chatScrollRef = useRef(null);
 
+
+  const [darkMode, setDarkMode] = useState(false); // NEW
+
+  const lightTheme = {
+    pageBg: "#f9fafb",
+    chatBg: "#f5f6fa",
+    bubbleSelf: "#d1f5d3",
+    bubbleOther: "#ffffff",
+    textColor: "#000",
+    dateColor: "#888",
+    typingColor: "#555",
+  };
+
+  const darkTheme = {
+    pageBg: "#18191a",
+    chatBg: "#242526",
+    bubbleSelf: "#3a3b3c",
+    bubbleOther: "#4a4b4d",
+    textColor: "#e4e6eb",
+    dateColor: "#b0b3b8",
+    typingColor: "#b0b3b8",
+  };
+
+  const theme = darkMode ? darkTheme : lightTheme;
+
   const getUserData = () => {
     const userDataString = localStorage.getItem("userData");
     try {
@@ -200,7 +225,7 @@ const UniversityChatGroup = () => {
     }));
   };
 
-
+  
 
   const sendMessage = () => {
     if (inputValue.trim() === "") return;
@@ -232,6 +257,7 @@ const UniversityChatGroup = () => {
       {/* <div> */}
 
       <HomeFiveHeader />
+      
 
       <div
         className="content mentor-chat"
@@ -246,154 +272,191 @@ const UniversityChatGroup = () => {
 
           <div className="row" style={{ margin: 0 }}>
             {/* Left Panel */}
-            {!showChatWindow || !isMobile ? (
-              <div className="col-md-4" style={{ padding: 10 }}>
-                <form
-                  className="chat-search d-flex align-items-center mb-2"
-                  style={{ padding: 10 }}
-                >
-                  {/* <div className="avatar avatar-online me-3">
-                    <img
-                      src={groupData?.logo || "default-avatar.png"}
-                      className="avatar-img rounded-circle"
-                      alt="Logo"
-                      style={{ width: 50, height: 50 }}
-                    />
-                  </div> */}
-                  <input
-                    type="text"
-                    className="form-control rounded-pill"
-                    placeholder="Search mentors..."
-                    style={{ padding: 10 }}
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
-                  />
-                </form>
+            {/* LEFT PANEL */}
+{(!showChatWindow || !isMobile) && (
+  <div
+    className="col-md-4"
+    style={{
+      padding: 0,
+      borderRight: "1px solid #e5e7eb",
+      background: theme.pageBg,
+      display: "flex",
+      flexDirection: "column",
+      height: "100%",
+    }}
+  >
+    {/* Search Bar */}
+    <div
+      style={{
+        padding: "0.75rem",
+        background: theme.chatBg,
+        position: "sticky",
+        top: 0,
+        zIndex: 5,
+        borderBottom: `1px solid ${theme.dateColor}30`,
+      }}
+    >
+      <input
+        type="text"
+        className="form-control"
+        placeholder="Search mentors..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
+        style={{
+          padding: "0.6rem 1rem",
+          borderRadius: "999px",
+          border: "1px solid #d1d5db",
+          fontSize: "0.9rem",
+        }}
+      />
+    </div>
 
-                <div style={{ padding: "5px" }}>
-                  {loading ? "Loading..." : error || <h5>Mentors Available</h5>}
-                </div>
+    {/* Title */}
+    <div style={{ padding: "0.75rem 1rem", fontWeight: 600, fontSize: "0.95rem", color: theme.textColor }}>
+      Mentors Available
+    </div>
 
-                <div
+    {/* Mentor List */}
+    <div
+      style={{
+        flex: 1,
+        overflowY: "auto",
+        padding: "0.5rem 0.75rem",
+      }}
+    >
+      {loading ? (
+        <div style={{ padding: "1rem", color: theme.dateColor }}>Loading...</div>
+      ) : error ? (
+        <div style={{ padding: "1rem", color: "red" }}>{error}</div>
+      ) : (
+        groupData?.members
+          ?.filter(
+            (m) =>
+              m.user_type === "mentor" &&
+              `${m.first_name} ${m.last_name}`.toLowerCase().includes(searchTerm)
+          )
+          .map((member) => (
+            <Link
+              to={`/mentee/mentor-profile/${member.mentor_id}`}
+              key={member.mentor_id}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                padding: "0.6rem 0.8rem",
+                marginBottom: "0.5rem",
+                borderRadius: "12px",
+                background: theme.chatBg,
+                color: theme.textColor,
+                textDecoration: "none",
+                transition: "background 0.2s ease",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = darkMode ? "#3a3b3c" : "#f3f4f6")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = theme.chatBg)}
+            >
+              {/* Avatar */}
+              <div style={{ position: "relative", marginRight: "0.75rem" }}>
+                <img
+                  src={member.profile_picture}
+                  alt=""
                   style={{
-                    maxHeight: "60vh",
-                    overflowY: "auto",
-                    padding: 10,
-                    background: "#fff",
-                    borderRadius: 8,
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+                    width: 44,
+                    height: 44,
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    border: `2px solid ${theme.pageBg}`,
+                  }}
+                />
+                <span
+                  style={{
+                    position: "absolute",
+                    bottom: -2,
+                    right: -2,
+                    backgroundColor: "#198754",
+                    color: "#fff",
+                    fontSize: "10px",
+                    padding: "2px 6px",
+                    borderRadius: "10px",
+                    whiteSpace: "nowrap",
+                    boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)",
                   }}
                 >
-                  {groupData?.members
-                    ?.filter(
-                      (m) =>
-                        m.user_type === "mentor" &&
-                        `${m.first_name} ${m.last_name}`.toLowerCase().includes(searchTerm)
-                    )
-                    .map((member) => (
-                      <Link
-                        to={`/mentee/mentor-profile/${member.mentor_id}`}
-                        key={member.mentor_id}
-                        className="d-flex align-items-center mb-3"
-                        style={{ textDecoration: "none", color: "inherit" }}
-                      >
-                        {/* <img
-                          src={member.profile_picture}
-                          alt=""
-                          style={{
-                            width: 40,
-                            height: 40,
-                            borderRadius: "50%",
-                            marginRight: 10,
-                          }}
-                        /> */}
-
-
-                        <div
-                          style={{
-                            position: "relative",
-                            width: 40,
-                            height: 40,
-                            marginRight: 10,
-                          }}
-                        >
-                          <img
-                            src={member.profile_picture}
-                            alt=""
-                            style={{
-                              width: "100%",
-                              height: "100%",
-                              borderRadius: "50%",
-                              display: "block",
-                            }}
-                          />
-                          <span
-                            style={{
-                              position: "absolute",
-                              bottom: -3,
-                              right: -3,
-                              backgroundColor: "#198754",
-                              color: "#fff",
-                              fontSize: "10px",
-                              padding: "2px 6px",
-                              borderRadius: "12px",
-                              whiteSpace: "nowrap",
-                              boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)",
-                            }}
-                          >
-                            M
-                          </span>
-                        </div>
-
-
-
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-                          <div>
-                            <div style={{ fontWeight: "500" }}>{member.first_name} {member.last_name}</div>
-                            <div style={{ fontSize: 12, color: "#555" }}>{member.degree} {member.major}</div>
-                          </div>
-                          <div>
-                            <div className="badge badge-success" style={{ whiteSpace: "nowrap" }}>Book a Call</div>
-                          </div>
-                        </div>
-
-                      </Link>
-                    ))}
-                </div>
-
-                {isMobile && (
-                  <button
-                    onClick={() => setShowChatWindow(true)}
-                    className="btn btn-primary mt-3 w-100"
-                  >
-                    Open Chat
-                  </button>
-                )}
+                  M
+                </span>
               </div>
-            ) : null}
+
+              {/* Name & Degree */}
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 500 }}>{member.first_name} {member.last_name}</div>
+                <div style={{ fontSize: "0.8rem", color: theme.dateColor }}>
+                  {member.degree} {member.major}
+                </div>
+              </div>
+
+              {/* Book Button */}
+              <div
+                style={{
+                  padding: "0.25rem 0.6rem",
+                  background: "#4a81f8ff",
+                  color: "#fff",
+                  fontSize: "0.75rem",
+                  borderRadius: "8px",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Call
+              </div>
+            </Link>
+          ))
+      )}
+    </div>
+
+    {/* Mobile Button */}
+    {isMobile && (
+      <div style={{ padding: "0.75rem" }}>
+        <button
+          onClick={() => setShowChatWindow(true)}
+          className="btn btn-primary w-100"
+          style={{ borderRadius: "8px" }}
+        >
+          Open Chat
+        </button>
+      </div>
+    )}
+  </div>
+)}
+
 
             {/* Right Panel */}
             {(showChatWindow || !isMobile) && (
+
+    
               <div className="col-md-8" style={{ padding: 0 }}>
+
+
                 <div
-                  className="chat-header d-flex align-items-center justify-content-between p-2"
-                  style={{ background: "#fff", borderBottom: "1px solid #ddd" }}
-                >
-                  {isMobile && (
-                    <button className="btn btn-link" onClick={() => setShowChatWindow(false)}>
-                      <i className="fas fa-arrow-left" />
-                    </button>
-                  )}
-                  <div className="d-flex align-items-center">
-                    <img
-                      src={groupData?.logo || "default-avatar.png"}
-                      className="avatar-img rounded-circle me-2"
-                      alt=""
-                      style={{ width: 50, height: 50 }}
-                    />
-                    <h5><div>{groupData?.college || "Loading..."}</div></h5>
-                  </div>
-                </div>
+  className="chat-header d-flex align-items-center justify-content-between p-2"
+  style={{ background: theme.bubbleOther, borderBottom: "1px solid #ddd" }}
+>
+  {isMobile && (
+    <button className="btn btn-link" onClick={() => setShowChatWindow(false)}>
+      <i className="fas fa-arrow-left" />
+    </button>
+  )}
+  <div className="d-flex align-items-center">
+    <img
+      src={groupData?.logo || "default-avatar.png"}
+      className="avatar-img rounded-circle me-2"
+      alt=""
+      style={{ width: 50, height: 50 }}
+    />
+    <h5 style={{ color: theme.textColor }}>
+      {groupData?.college || "Loading..."}
+    </h5>
+  </div>
+
+
+</div>
+
 
                 <div
                   style={{
@@ -405,65 +468,8 @@ const UniversityChatGroup = () => {
                   }}
                   ref={chatScrollRef}
                 >
-                  {/* <ul className="list-unstyled">
-                    {messages.map((msg, idx) => (
-                      <li
-                        key={idx}
-                        style={{
-                          display: "flex",
-                          flexDirection:
-                            msg.sender === userData.current?.username ? "row-reverse" : "row",
-                          alignItems: "flex-start",
-                          marginBottom: 12,
-                        }}
-                      >
-                        <img
-                          src={msg.profile_picture}
-                          alt=""
-                          style={{
-                            width: 36,
-                            height: 36,
-                            borderRadius: "50%",
-                            margin: "0 8px",
-                          }}
-                        />
-                        <div
-                          style={{
-                            background:
-                              msg.sender === userData.current?.username
-                                ? "#d1f5d3"
-                                : "#ffffff",
-                            borderRadius: "16px",
-                            padding: "10px 14px",
-                            maxWidth: "75%",
-                            boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
-                          }}
-                        >
-                          <p style={{ margin: 0, fontSize: 14 }}>
-                            {msg.sender !== userData.current?.username && (
-                              <strong>{msg.sender}: </strong>
-                            )}
-                            {msg.message}
-                          </p>
-                          <div
-                            style={{
-                              fontSize: 10,
-                              color: "#999",
-                              marginTop: 4,
-                              textAlign:
-                                msg.sender === userData.current?.username ? "right" : "left",
-                            }}
-                          >
-                            {parseTimestamp(msg.timestamp)?.toLocaleTimeString([], {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            }) || "Invalid time"}
-
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul> */}
+        
+              
 
                   {Object.entries(groupedMessages).map(([dateLabel, msgs]) => (
                     <div key={dateLabel}>
@@ -486,7 +492,7 @@ const UniversityChatGroup = () => {
                           >
 
 
-                            {/* Avatar + Overlapping Mentor badge */}
+                          
                             <div
                               style={{
                                 position: "relative",
@@ -526,7 +532,7 @@ const UniversityChatGroup = () => {
                             </div>
 
 
-                            {/* Message bubble */}
+                          
                             <div
                               style={{
                                 background: isCurrentUser ? "#d1f5d3" : "#ffffff",
@@ -575,6 +581,8 @@ const UniversityChatGroup = () => {
 
 
                 </div>
+
+                
 
                 <div
                   style={{

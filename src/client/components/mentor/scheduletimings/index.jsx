@@ -2,347 +2,544 @@ import React, { useEffect, useState } from "react";
 import DoctorSidebar from "../sidebar";
 import { Link } from "react-router-dom";
 import Footer from "../../footer";
-// import { Modal } from "react-bootstrap";
 import StickyBox from "react-sticky-box";
 import HomeFiveHeader from "../../home/home-five/header";
-
 import Header from "../../header";
 
 const ScheduleTiming = (props) => {
-  const [addListEmp, setAddListEmp] = useState([""]);
+  const [scheduleData, setScheduleData] = useState([]);
+  const [activeDay, setActiveDay] = useState(0); // Monday = 0
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [editingSlots, setEditingSlots] = useState([]);
+  const [newSlots, setNewSlots] = useState([]);
 
-  const handelAddEmp = () => {
-    setAddListEmp([...addListEmp, " "]);
-  };
-  useEffect(() => { }, []);
+  const daysOfWeek = [
+    { id: 0, name: 'Monday', display: 'Monday' },
+    { id: 1, name: 'Tuesday', display: 'Tuesday' },
+    { id: 2, name: 'Wednesday', display: 'Wednesday' },
+    { id: 3, name: 'Thursday', display: 'Thursday' },
+    { id: 4, name: 'Friday', display: 'Friday' },
+    { id: 5, name: 'Saturday', display: 'Saturday' },
+    { id: 6, name: 'Sunday', display: 'Sunday' }
+  ];
 
-  const handelRemoveEmp = (index) => {
-    const listEmp = [...addListEmp];
-    listEmp.splice(index, 1);
-    setAddListEmp(listEmp);
+  // Generate time options for dropdowns
+  const generateTimeOptions = () => {
+    const times = [];
+    for (let hour = 0; hour < 24; hour++) {
+      for (let minute = 0; minute < 60; minute += 30) {
+        const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+        const displayTime = new Date(`2000-01-01T${timeString}`).toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        });
+        times.push({ value: timeString, display: displayTime });
+      }
+    }
+    return times;
   };
+
+  const timeOptions = generateTimeOptions();
+
+  // Get auth token from localStorage
+  const getAuthToken = () => {
+    return localStorage.getItem('authToken');
+  };
+
+  // Get auth headers
+  const getAuthHeaders = () => {
+    const token = getAuthToken();
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': token ? `Token ${token}` : ''
+    };
+  };
+
+  // Fetch schedule data from API
+  const fetchScheduleData = async () => {
+    try {
+      setLoading(true);
+      const token = getAuthToken();
+
+      if (!token) {
+        console.error('No auth token found');
+        alert('Please login to access schedule data');
+        setLoading(false);
+        return;
+      }
+
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/mentor/availability/`, {
+        method: 'GET',
+        headers: getAuthHeaders()
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setScheduleData(data);
+      } else if (response.status === 401) {
+        console.error('Unauthorized - invalid token');
+        alert('Session expired. Please login again.');
+      } else {
+        console.error('Failed to fetch schedule data', response.status);
+        alert('Failed to load schedule data. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error fetching schedule data:', error);
+      alert('Network error. Please check your connection and try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Save schedule data to API
+  const saveScheduleData = async (availabilities) => {
+    try {
+      setSaving(true);
+      const token = getAuthToken();
+
+      if (!token) {
+        console.error('No auth token found');
+        alert('Please login to save schedule data');
+        setSaving(false);
+        return false;
+      }
+
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/mentor/availability/`, {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ availabilities }),
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+        // Update local state immediately instead of refetching
+        setScheduleData(Array.isArray(responseData) ? responseData : responseData.availabilities || availabilities);
+        alert('Schedule updated successfully!');
+
+        // Close any open modals
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+          const modalInstance = window.bootstrap?.Modal?.getInstance(modal);
+          if (modalInstance) {
+            modalInstance.hide();
+          }
+        });
+
+        return true;
+      } else if (response.status === 401) {
+        console.error('Unauthorized - invalid token');
+        alert('Session expired. Please login again.');
+        return false;
+      } else {
+        console.error('Failed to save schedule data', response.status);
+        alert('Failed to save schedule. Please try again.');
+        return false;
+      }
+    } catch (error) {
+      console.error('Error saving schedule data:', error);
+      alert('Network error. Please check your connection and try again.');
+      return false;
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchScheduleData();
+  }, []);
+
+  // Get slots for a specific day
+  const getSlotsForDay = (dayOfWeek) => {
+    return scheduleData.filter(slot => slot.day_of_week === dayOfWeek);
+  };
+
+  // Format time for display (HH:MM:SS to HH:MM AM/PM)
+  const formatTimeForDisplay = (timeString) => {
+    const [hours, minutes] = timeString.split(':');
+    const date = new Date(`2000-01-01T${hours}:${minutes}:00`);
+    return date.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+  };
+
+  // Convert time format from HH:MM:SS to HH:MM
+  const convertTimeFormat = (timeString) => {
+    return timeString.substring(0, 5);
+  };
+
+  // Validate time slot
+  const validateTimeSlot = (startTime, endTime) => {
+    const start = new Date(`2000-01-01T${startTime}:00`);
+    const end = new Date(`2000-01-01T${endTime}:00`);
+    return start < end;
+  };
+
+  // Check for overlapping time slots
+  const hasOverlappingSlots = (slots) => {
+    const sortedSlots = slots.sort((a, b) => a.start_time.localeCompare(b.start_time));
+
+    for (let i = 0; i < sortedSlots.length - 1; i++) {
+      const currentEnd = new Date(`2000-01-01T${sortedSlots[i].end_time}:00`);
+      const nextStart = new Date(`2000-01-01T${sortedSlots[i + 1].start_time}:00`);
+
+      if (currentEnd > nextStart) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  // Delete a time slot
+  const deleteSlot = async (slotId) => {
+    if (window.confirm('Are you sure you want to delete this time slot?')) {
+      const updatedSlots = scheduleData.filter(slot => slot.id !== slotId);
+      const availabilities = updatedSlots.map(slot => ({
+        id: slot.id,
+        day_of_week: slot.day_of_week,
+        start_time: convertTimeFormat(slot.start_time),
+        end_time: convertTimeFormat(slot.end_time)
+      }));
+
+      const success = await saveScheduleData(availabilities);
+      if (!success) {
+        // If save failed, revert the local state by refetching
+        await fetchScheduleData();
+      }
+    }
+  };
+
+  // Add slot to editing list
+  const addEditingSlot = () => {
+    setEditingSlots([...editingSlots, {
+      day_of_week: activeDay,
+      start_time: '09:00',
+      end_time: '17:00',
+      isNew: true // Flag to identify new slots
+    }]);
+  };
+
+  // Remove slot from editing list
+  const removeEditingSlot = (index) => {
+    const updated = editingSlots.filter((_, i) => i !== index);
+    setEditingSlots(updated);
+  };
+
+  // Initialize editing slots when modal opens
+  const initializeEditingSlots = (dayOfWeek) => {
+    const daySlots = getSlotsForDay(dayOfWeek);
+    setEditingSlots(daySlots.map(slot => ({
+      id: slot.id,
+      day_of_week: slot.day_of_week,
+      start_time: convertTimeFormat(slot.start_time),
+      end_time: convertTimeFormat(slot.end_time),
+      isNew: false
+    })));
+  };
+
+  // Initialize new slots when add modal opens
+  const initializeNewSlots = (dayOfWeek) => {
+    setNewSlots([{
+      day_of_week: dayOfWeek,
+      start_time: '09:00',
+      end_time: '17:00'
+    }]);
+  };
+
+  // Add new slot to temporary list
+  const addNewSlot = () => {
+    setNewSlots([...newSlots, {
+      day_of_week: activeDay,
+      start_time: '09:00',
+      end_time: '17:00'
+    }]);
+  };
+
+  // Remove slot from temporary list
+  const removeNewSlot = (index) => {
+    const updated = newSlots.filter((_, i) => i !== index);
+    setNewSlots(updated);
+  };
+
+  // Update new slot
+  const updateNewSlot = (index, field, value) => {
+    const updated = [...newSlots];
+    updated[index][field] = value;
+    setNewSlots(updated);
+  };
+
+  // Update editing slot
+  const updateEditingSlot = (index, field, value) => {
+    const updated = [...editingSlots];
+    updated[index][field] = value;
+    setEditingSlots(updated);
+  };
+
+  // Save new slots
+  const saveNewSlots = async () => {
+    // Validate all new slots
+    for (let slot of newSlots) {
+      if (!validateTimeSlot(slot.start_time, slot.end_time)) {
+        alert('End time must be after start time for all slots.');
+        return;
+      }
+    }
+
+    // Check for overlapping slots within new slots
+    if (hasOverlappingSlots(newSlots)) {
+      alert('Time slots cannot overlap.');
+      return;
+    }
+
+    // Get existing slots for the same day
+    const daySlots = getSlotsForDay(newSlots[0].day_of_week);
+    const existingSlotsForDay = daySlots.map(slot => ({
+      start_time: convertTimeFormat(slot.start_time),
+      end_time: convertTimeFormat(slot.end_time)
+    }));
+
+    // Check for overlaps with existing slots
+    const allSlotsForDay = [...existingSlotsForDay, ...newSlots];
+    if (hasOverlappingSlots(allSlotsForDay)) {
+      alert('New time slots overlap with existing slots.');
+      return;
+    }
+
+    // Prepare all slots for saving
+    const existingSlots = scheduleData
+      .filter(slot => slot.day_of_week !== newSlots[0].day_of_week)
+      .map(slot => ({
+        id: slot.id,
+        day_of_week: slot.day_of_week,
+        start_time: convertTimeFormat(slot.start_time),
+        end_time: convertTimeFormat(slot.end_time)
+      }));
+
+    const existingSlotsForSameDay = scheduleData
+      .filter(slot => slot.day_of_week === newSlots[0].day_of_week)
+      .map(slot => ({
+        id: slot.id,
+        day_of_week: slot.day_of_week,
+        start_time: convertTimeFormat(slot.start_time),
+        end_time: convertTimeFormat(slot.end_time)
+      }));
+
+    // Format new slots without IDs (backend will assign them)
+    const formattedNewSlots = newSlots.map(slot => ({
+      day_of_week: slot.day_of_week,
+      start_time: slot.start_time,
+      end_time: slot.end_time
+    }));
+
+    const allSlots = [...existingSlots, ...existingSlotsForSameDay, ...formattedNewSlots];
+
+    const success = await saveScheduleData(allSlots);
+    if (success) {
+      setNewSlots([]);
+    }
+  };
+
+  // Save edited slots
+  const saveEditedSlots = async () => {
+    // Validate all editing slots
+    for (let slot of editingSlots) {
+      if (!validateTimeSlot(slot.start_time, slot.end_time)) {
+        alert('End time must be after start time for all slots.');
+        return;
+      }
+    }
+
+    // Check for overlapping slots within editing slots
+    if (hasOverlappingSlots(editingSlots)) {
+      alert('Time slots cannot overlap.');
+      return;
+    }
+
+    // Get slots for other days (unchanged)
+    const currentDayId = editingSlots.length > 0 ? editingSlots[0].day_of_week : activeDay;
+    const otherDaysSlots = scheduleData
+      .filter(slot => slot.day_of_week !== currentDayId)
+      .map(slot => ({
+        id: slot.id,
+        day_of_week: slot.day_of_week,
+        start_time: convertTimeFormat(slot.start_time),
+        end_time: convertTimeFormat(slot.end_time)
+      }));
+
+    // Separate existing slots from new slots in editing
+    const existingEditedSlots = editingSlots
+      .filter(slot => slot.id && !slot.isNew)
+      .map(slot => ({
+        id: slot.id,
+        day_of_week: slot.day_of_week,
+        start_time: slot.start_time,
+        end_time: slot.end_time
+      }));
+
+    // New slots from editing (those marked as isNew or without ID)
+    const newSlotsFromEditing = editingSlots
+      .filter(slot => slot.isNew || !slot.id)
+      .map(slot => ({
+        day_of_week: slot.day_of_week,
+        start_time: slot.start_time,
+        end_time: slot.end_time
+      }));
+
+    const allSlots = [...otherDaysSlots, ...existingEditedSlots, ...newSlotsFromEditing];
+
+    const success = await saveScheduleData(allSlots);
+    if (success) {
+      setEditingSlots([]);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: '400px' }}>
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">Loading schedule...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
-      {/* <Header {...props} /> */}
-
       <HomeFiveHeader />
-
-      {/* Breadcrumb */}
-      {/* <div className="breadcrumb-bar-two">
-        <div className="container-fluid">
-          <div className="row align-items-start inner-banner">
-            <div className="col-md-12 col-12 text-start">
-              <nav aria-label="breadcrumb" className="page-breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <Link to="/index">Home</Link>
-                  </li>
-                  <li className="breadcrumb-item" aria-current="page">
-                    Schedule Timings
-                  </li>
-                </ol>
-              </nav>
-              <h2 className="breadcrumb-title">Schedule Timings</h2>
-            </div>
-          </div>
-        </div>
-      </div> */}
-      {/* /Breadcrumb */}
 
       <div className="content">
         <div className="container-fluid">
           <div className="row">
-
             <div className="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
               <StickyBox offsetTop={50} offsetBottom={20}>
                 <div className="appointments">
                   <DoctorSidebar />
                 </div>
               </StickyBox>
-              </div>
+            </div>
 
+            <div className="col-md-7 col-lg-8 col-xl-9">    
+              <div className="row">
+                <div className="col-sm-12">
+                  <div className="card">  
+                    <div className="card-body">
+                      <h4 className="card-title">Set Your Availability</h4>
+                      <div className="profile-box">
+                        <div className="row">
+                          
+                          {/* <div className="col-lg-4">
+                            <div className="form-group">
 
-              {/* <div className="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
-              <DoctorSidebar />
-            </div> */}
-
-              <div className="col-md-7 col-lg-8 col-xl-9">
-                <div className="row">
-                  <div className="col-sm-12">
-                    <div className="card">
-                      <div className="card-body">
-                        <h4 className="card-title">Schedule Timings</h4>
-                        <div className="profile-box">
-                          <div className="row">
-                            <div className="col-lg-4">
-                              <div className="form-group">
-                                <label>Timing Slot Duration</label>
-                                <select className="form-select form-control">
-                                  <option>30 mins</option>
-                                  <option>15 mins</option>
-                                  <option defaultValue="defaultValue">
-                                    30 mins
-                                  </option>
-                                  <option>45 mins</option>
-                                  <option>1 Hour</option>
-                                </select>
-                              </div>
+                              <label>Timing Slot Duration</label>
+                              <select className="form-select form-control">
+                                <option value="30">30 mins</option>
+                                <option value="15">15 mins</option>
+                               
+                              </select>
                             </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-md-12">
-                              <div className="card schedule-widget mb-0">
-                                {/* <!-- Schedule Header --> */}
-                                <div className="schedule-header">
-                                  {/* <!-- Schedule Nav --> */}
-                                  <div className="schedule-nav">
-                                    <ul className="nav nav-tabs nav-justified">
-                                      <li className="nav-item">
-                                        <Link
-                                          className="nav-link"
-                                          // data-bs-toggle="tab"
-                                          to="#slot_sunday"
+                            <div className="form-group">
+
+                              <label>Fee</label>
+                              <select className="form-select form-control">
+                                <option value="30">200 INR</option>
+                                <option value="15">300 INR</option>
+                            
+                              </select>
+                            </div>
+
+                          </div> */}
+                        
+                        
+                        
+                        </div>
+                                  {/* <h4 className="card-title">Available Timings</h4> */}
+                        <div className="row">
+                          <div className="col-md-12">
+                            
+                            <div className="card schedule-widget mb-0">
+                              
+                              <div className="schedule-header">
+                                
+                                <div className="schedule-nav">
+                                  <ul className="nav nav-tabs nav-justified">
+                                    {daysOfWeek.map((day) => (
+                                      <li key={day.id} className="nav-item">
+                                        <button
+                                          className={`nav-link ${activeDay === day.id ? 'active' : ''}`}
+                                          onClick={() => setActiveDay(day.id)}
+                                          type="button"
                                         >
-                                          Sunday
-                                        </Link>
+                                          {day.display}
+                                        </button>
                                       </li>
-                                      <li className="nav-item">
-                                        <Link
-                                          className="nav-link active"
-                                          data-bs-toggle="tab"
-                                          to="#slot_monday"
-                                        >
-                                          Monday
-                                        </Link>
-                                      </li>
-                                      <li className="nav-item">
-                                        <Link
-                                          className="nav-link"
-                                          data-bs-toggle="tab"
-                                          to="#slot_tuesday"
-                                        >
-                                          Tuesday
-                                        </Link>
-                                      </li>
-                                      <li className="nav-item">
-                                        <Link
-                                          className="nav-link"
-                                          data-bs-toggle="tab"
-                                          to="#slot_wednesday"
-                                        >
-                                          Wednesday
-                                        </Link>
-                                      </li>
-                                      <li className="nav-item">
-                                        <Link
-                                          className="nav-link"
-                                          data-bs-toggle="tab"
-                                          to="#slot_thursday"
-                                        >
-                                          Thursday
-                                        </Link>
-                                      </li>
-                                      <li className="nav-item">
-                                        <Link
-                                          className="nav-link"
-                                          data-bs-toggle="tab"
-                                          to="#slot_friday"
-                                        >
-                                          Friday
-                                        </Link>
-                                      </li>
-                                      <li className="nav-item">
-                                        <Link
-                                          className="nav-link"
-                                          data-bs-toggle="tab"
-                                          to="#slot_saturday"
-                                        >
-                                          Saturday
-                                        </Link>
-                                      </li>
-                                    </ul>
-                                  </div>
-                                  {/* <!-- /Schedule Nav --> */}
+                                    ))}
+                                  </ul>
                                 </div>
-                                {/* <!-- /Schedule Header -->
-															
-															<!-- Schedule Content --> */}
-                                <div className="tab-content schedule-cont">
-                                  {/* <!-- Sunday Slot --> */}
-                                  <div id="slot_sunday" className="tab-pane fade">
-                                    <h4 className="card-title d-flex justify-content-between">
-                                      <span>Time Slots</span>
-                                      <Link
-                                        className="edit-link"
-                                        data-bs-toggle="modal"
-                                        to="#add_time_slot"
-                                      >
-                                        <i className="fa fa-plus-circle"></i> Add
-                                        Slot
-                                      </Link>
-                                    </h4>
-                                    <p className="text-muted mb-0">
-                                      Not Available
-                                    </p>
-                                  </div>
-                                  {/* <!-- /Sunday Slot -->
+                              </div>
 
-																<!-- Monday Slot --> */}
+                              <div className="tab-content schedule-cont">
+                                {daysOfWeek.map((day) => (
                                   <div
-                                    id="slot_monday"
-                                    className="tab-pane fade show active"
+                                    key={day.id}
+                                    className={`tab-pane fade ${activeDay === day.id ? 'show active' : ''}`}
                                   >
                                     <h4 className="card-title d-flex justify-content-between">
                                       <span>Time Slots</span>
-                                      <Link
-                                        className="edit-link"
-                                        data-bs-toggle="modal"
-                                        to="#edit_time_slot"
-                                      >
-                                        <i className="fa fa-edit me-1"></i>
-                                        Edit
-                                      </Link>
+                                      {getSlotsForDay(day.id).length > 0 ? (
+                                        <div>
+                                          <button
+                                            className="btn btn-link edit-link p-0 me-2"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#edit_time_slot"
+                                            onClick={() => initializeEditingSlots(day.id)}
+                                          >
+                                            <i className="fa fa-edit me-1"></i>
+                                            Edit
+                                          </button>
+                                          <button
+                                            className="btn btn-link edit-link p-0"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#add_time_slot"
+                                            onClick={() => initializeNewSlots(day.id)}
+                                          >
+                                            <i className="fa fa-plus-circle"></i> Add More
+                                          </button>
+                                        </div>
+                                      ) : (
+                                        <button
+                                          className="btn btn-link edit-link p-0"
+                                          data-bs-toggle="modal"
+                                          data-bs-target="#add_time_slot"
+                                          onClick={() => initializeNewSlots(day.id)}
+                                        >
+                                          <i className="fa fa-plus-circle"></i> Add Slot
+                                        </button>
+                                      )}
                                     </h4>
 
-                                    {/* <!-- Slot List --> */}
-                                    <div className="doc-times">
-                                      <div className="doc-slot-list">
-                                        8:00 pm - 11:30 pm
-                                        <Link to="#" className="delete_schedule">
-                                          <i className="fa fa-times"></i>
-                                        </Link>
+                                    {getSlotsForDay(day.id).length > 0 ? (
+                                      <div className="doc-times">
+                                        {getSlotsForDay(day.id).map((slot) => (
+                                          <div key={slot.id} className="doc-slot-list">
+                                            {formatTimeForDisplay(slot.start_time)} - {formatTimeForDisplay(slot.end_time)}
+                                            <button
+                                              type="button"
+                                              className="delete_schedule btn p-0"
+                                              onClick={() => deleteSlot(slot.id)}
+                                            >
+                                              <i className="fa fa-times"></i>
+                                            </button>
+                                          </div>
+                                        ))}
                                       </div>
-                                      <div className="doc-slot-list">
-                                        11:30 pm - 1:30 pm
-                                        <Link to="#" className="delete_schedule">
-                                          <i className="fa fa-times"></i>
-                                        </Link>
-                                      </div>
-                                      <div className="doc-slot-list">
-                                        3:00 pm - 5:00 pm
-                                        <Link to="#" className="delete_schedule">
-                                          <i className="fa fa-times"></i>
-                                        </Link>
-                                      </div>
-                                      <div className="doc-slot-list">
-                                        6:00 pm - 11:00 pm
-                                        <Link to="#" className="delete_schedule">
-                                          <i className="fa fa-times"></i>
-                                        </Link>
-                                      </div>
-                                    </div>
-                                    {/* <!-- /Slot List --> */}
+                                    ) : (
+                                      <p className="text-muted mb-0">Not Available</p>
+                                    )}
                                   </div>
-                                  {/* <!-- /Monday Slot -->
-
-																<!-- Tuesday Slot --> */}
-                                  <div
-                                    id="slot_tuesday"
-                                    className="tab-pane fade"
-                                  >
-                                    <h4 className="card-title d-flex justify-content-between">
-                                      <span>Time Slots</span>
-                                      <Link
-                                        className="edit-link"
-                                        data-bs-toggle="modal"
-                                        to="#add_time_slot"
-                                      >
-                                        <i className="fa fa-plus-circle"></i> Add
-                                        Slot
-                                      </Link>
-                                    </h4>
-                                    <p className="text-muted mb-0">
-                                      Not Available
-                                    </p>
-                                  </div>
-                                  {/* <!-- /Tuesday Slot -->
-
-																<!-- Wednesday Slot --> */}
-                                  <div
-                                    id="slot_wednesday"
-                                    className="tab-pane fade"
-                                  >
-                                    <h4 className="card-title d-flex justify-content-between">
-                                      <span>Time Slots</span>
-                                      <Link
-                                        className="edit-link"
-                                        data-bs-toggle="modal"
-                                        to="#add_time_slot"
-                                      >
-                                        <i className="fa fa-plus-circle"></i> Add
-                                        Slot
-                                      </Link>
-                                    </h4>
-                                    <p className="text-muted mb-0">
-                                      Not Available
-                                    </p>
-                                  </div>
-                                  {/* <!-- /Wednesday Slot --> */}
-
-                                  {/* <!-- Thursday Slot --> */}
-                                  <div
-                                    id="slot_thursday"
-                                    className="tab-pane fade"
-                                  >
-                                    <h4 className="card-title d-flex justify-content-between">
-                                      <span>Time Slots</span>
-                                      <Link
-                                        className="edit-link"
-                                        data-bs-toggle="modal"
-                                        to="#add_time_slot"
-                                      >
-                                        <i className="fa fa-plus-circle"></i> Add
-                                        Slot
-                                      </Link>
-                                    </h4>
-                                    <p className="text-muted mb-0">
-                                      Not Available
-                                    </p>
-                                  </div>
-                                  {/* <!-- /Thursday Slot --> */}
-
-                                  {/* <!-- Friday Slot --> */}
-                                  <div id="slot_friday" className="tab-pane fade">
-                                    <h4 className="card-title d-flex justify-content-between">
-                                      <span>Time Slots</span>
-                                      <Link
-                                        className="edit-link"
-                                        data-bs-toggle="modal"
-                                        to="#add_time_slot"
-                                      >
-                                        <i className="fa fa-plus-circle"></i> Add
-                                        Slot
-                                      </Link>
-                                    </h4>
-                                    <p className="text-muted mb-0">
-                                      Not Available
-                                    </p>
-                                  </div>
-                                  {/* <!-- /Friday Slot --> */}
-
-                                  {/* <!-- Saturday Slot --> */}
-                                  <div
-                                    id="slot_saturday"
-                                    className="tab-pane fade"
-                                  >
-                                    <h4 className="card-title d-flex justify-content-between">
-                                      <span>Time Slots</span>
-                                      <Link
-                                        className="edit-link"
-                                        data-bs-toggle="modal"
-                                        to="#add_time_slot"
-                                      >
-                                        <i className="fa fa-plus-circle"></i> Add
-                                        Slot
-                                      </Link>
-                                    </h4>
-                                    <p className="text-muted mb-0">
-                                      Not Available
-                                    </p>
-                                  </div>
-                                  {/* <!-- /Saturday Slot --> */}
-                                </div>
-                                {/* <!-- /Schedule Content --> */}
+                                ))}
                               </div>
                             </div>
                           </div>
@@ -353,12 +550,13 @@ const ScheduleTiming = (props) => {
                 </div>
               </div>
             </div>
+          
+          
+          
           </div>
         </div>
 
-        {/* <Footer {...props} /> */}
-
-        {/* <!-- Add Time Slot Modal --> */}
+        {/* Add Time Slot Modal */}
         <div className="modal fade custom-modal" id="add_time_slot">
           <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
@@ -366,72 +564,87 @@ const ScheduleTiming = (props) => {
                 <h5 className="modal-title">Add Time Slots</h5>
                 <button
                   type="button"
-                  className="close"
+                  className="btn-close"
                   data-bs-dismiss="modal"
                   aria-label="Close"
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
+                  onClick={() => setNewSlots([])}
+                ></button>
               </div>
               <div className="modal-body">
-                <form>
+                <form onSubmit={(e) => { e.preventDefault(); saveNewSlots(); }}>
                   <div className="hours-info">
-                    {addListEmp.map((add, index) => (
-                      <>
-                        <div key={index} className="row form-row hours-cont">
-                          <div className="col-12 col-md-10">
-                            <div className="row form-row">
-                              <div className="col-12 col-md-6">
-                                <div className="form-group">
-                                  <label>Start Time</label>
-                                  <select className="form-select form-control">
-                                    <option>30 mins</option>
-                                    <option>12.00 am</option>
-                                    <option>12.30 am</option>
-                                    <option>1.00 am</option>
-                                    <option>1.30 am</option>
-                                  </select>
-                                </div>
+                    {newSlots.map((slot, index) => (
+                      <div key={index} className="row form-row hours-cont mb-3">
+                        <div className="col-12 col-md-10">
+                          <div className="row form-row">
+                            <div className="col-12 col-md-6">
+                              <div className="form-group">
+                                <label>Start Time</label>
+                                <select
+                                  className="form-select form-control"
+                                  value={slot.start_time}
+                                  onChange={(e) => updateNewSlot(index, 'start_time', e.target.value)}
+                                  required
+                                >
+                                  {timeOptions.map((time) => (
+                                    <option key={time.value} value={time.value}>
+                                      {time.display}
+                                    </option>
+                                  ))}
+                                </select>
                               </div>
-                              <div className="col-12 col-md-6">
-                                <div className="form-group">
-                                  <label>End Time</label>
-                                  <select className="form-select form-control">
-                                    <option>30 mins</option>
-                                    <option>12.00 am</option>
-                                    <option>12.30 am</option>
-                                    <option>1.00 am</option>
-                                    <option>1.30 am</option>
-                                  </select>
-                                </div>
+                            </div>
+                            <div className="col-12 col-md-6">
+                              <div className="form-group">
+                                <label>End Time</label>
+                                <select
+                                  className="form-select form-control"
+                                  value={slot.end_time}
+                                  onChange={(e) => updateNewSlot(index, 'end_time', e.target.value)}
+                                  required
+                                >
+                                  {timeOptions.map((time) => (
+                                    <option key={time.value} value={time.value}>
+                                      {time.display}
+                                    </option>
+                                  ))}
+                                </select>
                               </div>
                             </div>
                           </div>
-                          <div className="col-12 col-md-2">
-                            <label className="d-md-block d-sm-none d-none">
-                              &nbsp;
-                            </label>
-                            <Link
-                              to="#"
-                              className="btn btn-danger trash"
-                              onClick={() => handelRemoveEmp(index)}
-                            >
-                              <i className="far fa-trash-alt"></i>
-                            </Link>
-                          </div>
                         </div>
-                      </>
+                        <div className="col-12 col-md-2">
+                          <label className="d-md-block d-sm-none d-none">&nbsp;</label>
+                          <button
+                            type="button"
+                            className="btn btn-danger trash"
+                            onClick={() => removeNewSlot(index)}
+                            disabled={newSlots.length === 1}
+                          >
+                            <i className="far fa-trash-alt"></i>
+                          </button>
+                        </div>
+                      </div>
                     ))}
                   </div>
 
                   <div className="add-more mb-3">
-                    <Link to="#" className="add-hours" onClick={handelAddEmp}>
+                    <button
+                      type="button"
+                      className="btn btn-link add-hours p-0"
+                      onClick={addNewSlot}
+                    >
                       <i className="fa fa-plus-circle"></i> Add More
-                    </Link>
+                    </button>
                   </div>
+
                   <div className="submit-section text-center">
-                    <button type="submit" className="btn btn-primary submit-btn">
-                      Save Changes
+                    <button
+                      type="submit"
+                      className="btn btn-primary submit-btn"
+                      disabled={saving}
+                    >
+                      {saving ? 'Adding...' : 'Add Time Slots'}
                     </button>
                   </div>
                 </form>
@@ -439,154 +652,95 @@ const ScheduleTiming = (props) => {
             </div>
           </div>
         </div>
-        {/* <!-- /Add Time Slot Modal -->
-		
-		<!-- Edit Time Slot Modal --> */}
-        <div
-          className="modal fade custom-modal"
-          id="edit_time_slot"
-          style={{ marginTop: "50px" }}
-        >
+
+        {/* Edit Time Slot Modal */}
+        <div className="modal fade custom-modal" id="edit_time_slot">
           <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">Edit Time Slots</h5>
                 <button
                   type="button"
-                  className="close"
+                  className="btn-close"
                   data-bs-dismiss="modal"
                   aria-label="Close"
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
+                  onClick={() => setEditingSlots([])}
+                ></button>
               </div>
               <div className="modal-body">
-                <form>
+                <form onSubmit={(e) => { e.preventDefault(); saveEditedSlots(); }}>
                   <div className="hours-info">
-                    <div className="row form-row hours-cont">
-                      <div className="col-12 col-md-10">
-                        <div className="row form-row">
-                          <div className="col-12 col-md-6">
-                            <div className="form-group">
-                              <label>Start Time</label>
-                              <select className="form-select form-control">
-                                <option>30 mins</option>
-                                <option defaultValue>12.00 am</option>
-                                <option>12.30 am</option>
-                                <option>1.00 am</option>
-                                <option>1.30 am</option>
-                              </select>
-                            </div>
-                          </div>
-                          <div className="col-12 col-md-6">
-                            <div className="form-group">
-                              <label>End Time</label>
-                              <select className="form-select form-control">
-                                <option>30 mins</option>
-                                <option>12.00 am</option>
-                                <option defaultValue>12.30 am</option>
-                                <option>1.00 am</option>
-                                <option>1.30 am</option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="row form-row hours-cont">
-                      <div className="col-12 col-md-10">
-                        <div className="row form-row">
-                          <div className="col-12 col-md-6">
-                            <div className="form-group">
-                              <label>Start Time</label>
-                              <select className="form-select form-control">
-                                <option>30 mins</option>
-                                <option>12.00 am</option>
-                                <option defaultValue>12.30 am</option>
-                                <option>1.00 am</option>
-                                <option>1.30 am</option>
-                              </select>
-                            </div>
-                          </div>
-                          <div className="col-12 col-md-6">
-                            <div className="form-group">
-                              <label>End Time</label>
-                              <select className="form-select form-control">
-                                <option>30 mins</option>
-                                <option>12.00 am</option>
-                                <option>12.30 am</option>
-                                <option defaultValue>1.00 am</option>
-                                <option>1.30 am</option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-12 col-md-2">
-                        <label className="d-md-block d-sm-none d-none">
-                          &nbsp;
-                        </label>
-                        <Link to="#" className="btn btn-danger trash">
-                          <i className="far fa-trash-alt"></i>
-                        </Link>
-                      </div>
-                    </div>
-                    {addListEmp.map((add, index) => (
-                      <div key={index} className="row form-row hours-cont">
+                    {editingSlots.map((slot, index) => (
+                      <div key={slot.id || `new-${index}`} className="row form-row hours-cont mb-3">
                         <div className="col-12 col-md-10">
                           <div className="row form-row">
                             <div className="col-12 col-md-6">
                               <div className="form-group">
                                 <label>Start Time</label>
-                                <select className="form-select form-control">
-                                  <option>30 mins</option>
-                                  <option>12.00 am</option>
-                                  <option>12.30 am</option>
-                                  <option defaultValue>1.00 am</option>
-                                  <option>1.30 am</option>
+                                <select
+                                  className="form-select form-control"
+                                  value={slot.start_time}
+                                  onChange={(e) => updateEditingSlot(index, 'start_time', e.target.value)}
+                                  required
+                                >
+                                  {timeOptions.map((time) => (
+                                    <option key={time.value} value={time.value}>
+                                      {time.display}
+                                    </option>
+                                  ))}
                                 </select>
                               </div>
                             </div>
-
-                            <div key={index} className="col-12 col-md-6">
+                            <div className="col-12 col-md-6">
                               <div className="form-group">
                                 <label>End Time</label>
-                                <select className="form-select form-control">
-                                  <option>30 mins</option>
-                                  <option>12.00 am</option>
-                                  <option>12.30 am</option>
-                                  <option>1.00 am</option>
-                                  <option defaultValue>1.30 am</option>
+                                <select
+                                  className="form-select form-control"
+                                  value={slot.end_time}
+                                  onChange={(e) => updateEditingSlot(index, 'end_time', e.target.value)}
+                                  required
+                                >
+                                  {timeOptions.map((time) => (
+                                    <option key={time.value} value={time.value}>
+                                      {time.display}
+                                    </option>
+                                  ))}
                                 </select>
                               </div>
                             </div>
                           </div>
                         </div>
                         <div className="col-12 col-md-2">
-                          <label className="d-md-block d-sm-none d-none">
-                            &nbsp;
-                          </label>
-                          <Link
-                            to="#"
+                          <label className="d-md-block d-sm-none d-none">&nbsp;</label>
+                          <button
+                            type="button"
                             className="btn btn-danger trash"
-                            onClick={() => handelRemoveEmp(index)}
+                            onClick={() => removeEditingSlot(index)}
                           >
                             <i className="far fa-trash-alt"></i>
-                          </Link>
+                          </button>
                         </div>
                       </div>
                     ))}
                   </div>
 
                   <div className="add-more mb-3">
-                    <Link to="#" className="add-hours" onClick={handelAddEmp}>
+                    <button
+                      type="button"
+                      className="btn btn-link add-hours p-0"
+                      onClick={addEditingSlot}
+                    >
                       <i className="fa fa-plus-circle"></i> Add More
-                    </Link>
+                    </button>
                   </div>
+
                   <div className="submit-section text-center">
-                    <button type="submit" className="btn btn-primary submit-btn">
-                      Save Changes
+                    <button
+                      type="submit"
+                      className="btn btn-primary submit-btn"
+                      disabled={saving}
+                    >
+                      {saving ? 'Updating...' : 'Update Schedule'}
                     </button>
                   </div>
                 </form>
@@ -595,7 +749,10 @@ const ScheduleTiming = (props) => {
           </div>
         </div>
       </div>
-      );
+    </div>
+  );
 };
 
-      export default ScheduleTiming;
+export default ScheduleTiming;
+
+
