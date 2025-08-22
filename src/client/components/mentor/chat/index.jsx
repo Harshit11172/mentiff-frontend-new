@@ -283,7 +283,7 @@ const UniversityChatGroup = () => {
 
 
 
-  
+
   // Generate a consistent color from a string
   // const stringToColor = (str) => {
   //   let hash = 0;
@@ -296,14 +296,14 @@ const UniversityChatGroup = () => {
 
 
 
-const stringToColor = (str = "") => {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const color = (hash & 0xffffff).toString(16).padStart(6, "0");
-  return `#${color}`;
-};
+  const stringToColor = (str = "") => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const color = (hash & 0xffffff).toString(16).padStart(6, "0");
+    return `#${color}`;
+  };
 
 
 
@@ -369,6 +369,8 @@ const stringToColor = (str = "") => {
             {/* Left Panel */}
             {/* LEFT PANEL */}
             {(!showChatWindow || !isMobile) && (
+
+
               <div
                 className="col-md-4"
                 style={{
@@ -377,7 +379,9 @@ const stringToColor = (str = "") => {
                   background: theme.pageBg,
                   display: "flex",
                   flexDirection: "column",
-                  height: "100%",
+                  // height: isMobile ? "100vh" : "100%", // full height on mobile
+                  height: "100vh", // ✅ always full viewport height
+                  maxHeight: "85vh", // ✅ prevent overflow
                 }}
               >
                 {/* Search Bar */}
@@ -411,7 +415,7 @@ const stringToColor = (str = "") => {
                   Mentors Available
                 </div>
 
-                {/* Mentor List */}
+                {/* Mentor List (scrollable area) */}
                 <div
                   style={{
                     flex: 1,
@@ -505,9 +509,17 @@ const stringToColor = (str = "") => {
                   )}
                 </div>
 
-                {/* Mobile Button */}
+                {/* Mobile Button (fixed at bottom) */}
                 {isMobile && (
-                  <div style={{ padding: "0.75rem" }}>
+                  <div
+                    style={{
+                      position: "sticky",
+                      bottom: 0,
+                      background: theme.pageBg,
+                      padding: "0.75rem",
+                      borderTop: `1px solid ${theme.dateColor}30`,
+                    }}
+                  >
                     <button
                       onClick={() => setShowChatWindow(true)}
                       className="btn btn-primary w-100"
@@ -518,6 +530,9 @@ const stringToColor = (str = "") => {
                   </div>
                 )}
               </div>
+
+
+
             )}
 
 
@@ -529,7 +544,7 @@ const stringToColor = (str = "") => {
 
 
                 <div
-                  className="chat-header d-flex align-items-center justify-content-between p-2"
+                  className="chat-header d-flex align-items-center justify-content-start p-2"
                   style={{ background: theme.bubbleOther, borderBottom: "1px solid #ddd" }}
                 >
                   {isMobile && (
