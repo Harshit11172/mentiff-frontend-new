@@ -92,7 +92,7 @@ export const DashboardSidebar = () => {
             </li>
 
             {/* Show Bookings for Mentee only */}
-            {isMentee && (
+            {/* {isMentee && (
               <li className={pathnames.includes("/medicalrecords") ? "active" : ""}>
                 <Link to="/mentee/medicalrecords">
                   <i className="fas fa-clock" />
@@ -114,7 +114,7 @@ export const DashboardSidebar = () => {
                   </span>
                 </Link>
               </li>
-            )}
+            )} */}
 
 
             {/* Show Message for both Mentor and Mentee */}
@@ -128,8 +128,11 @@ export const DashboardSidebar = () => {
               </Link>
             </li> */}
 
+
+
+
             {/* Show Favourites for Mentee only */}
-            {isMentee && (
+            {/* {isMentee && (
               <li className={pathnames.includes("/favourites") ? "active" : ""}>
                 <Link to="/mentee/favourites">
                   <i className="fas fa-star" />
@@ -139,7 +142,11 @@ export const DashboardSidebar = () => {
                   </span>
                 </Link>
               </li>
-            )}
+            )} */}
+            
+            
+            
+            
             {/* Show Profile for both Mentor and Mentee */}
             <li className={pathnames.includes("/mentee/mentor-profile") ? "active" : ""}>
               <Link to="/mentee/profile">

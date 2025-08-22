@@ -14,6 +14,15 @@ const ScheduleTiming = (props) => {
   const [editingSlots, setEditingSlots] = useState([]);
   const [newSlots, setNewSlots] = useState([]);
 
+  const [selectedDuration, setSelectedDuration] = useState('30'); // default 30 mins
+  const [selectedCurrency, setSelectedCurrency] = useState('INR'); // default currency
+  const [fees, setFees] = useState('200'); // default fee amount
+
+  const [sessionOptions, setSessionOptions] = useState([]);
+  const [selectedSessionOptionId, setSelectedSessionOptionId] = useState(null);
+
+
+
   const daysOfWeek = [
     { id: 0, name: 'Monday', display: 'Monday' },
     { id: 1, name: 'Tuesday', display: 'Tuesday' },
@@ -23,6 +32,55 @@ const ScheduleTiming = (props) => {
     { id: 5, name: 'Saturday', display: 'Saturday' },
     { id: 6, name: 'Sunday', display: 'Sunday' }
   ];
+
+  const getMentorIdFromLocalStorage = () => {
+    try {
+      const user = JSON.parse(localStorage.getItem('userData'));
+      return user?.id || null;
+    } catch {
+      return null;
+    }
+  };
+
+  const saveSessionOption = async () => {
+    const optionToSave = sessionOptions.find(opt => opt.id === selectedSessionOptionId);
+
+    if (!optionToSave) {
+      alert('Please select a session option.');
+      return;
+    }
+
+
+
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/users/session-options/mentor/${mentorId}/${selectedSessionOptionId}/`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(optionToSave),
+        }
+      );
+
+      if (response.ok) {
+        alert('Session option updated successfully!');
+        // Optionally re-fetch sessionOptions here to sync state
+      } else {
+        alert('Failed to update session option.');
+      }
+    } catch (error) {
+      console.error('Error saving session option:', error);
+      alert('Error saving session option.');
+    }
+  };
+
+
+
+
+
+
 
   // Generate time options for dropdowns
   const generateTimeOptions = () => {
@@ -92,6 +150,34 @@ const ScheduleTiming = (props) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const mentorId = getMentorIdFromLocalStorage(); // Retrieve here
+    if (!mentorId) {
+      console.error('Mentor ID not found in localStorage');
+      return;
+    }
+
+    const fetchSessionOptions = async () => {
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/api/users/session-options/mentor/${mentorId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setSessionOptions(data);
+          if (data.length > 0) setSelectedSessionOptionId(data[0].id);
+        } else {
+          console.error('Failed to fetch session options');
+        }
+      } catch (err) {
+        console.error('Error fetching session options:', err);
+      }
+    };
+
+    fetchSessionOptions();
+  }, []);
+
+
+
 
   // Save schedule data to API
   const saveScheduleData = async (availabilities) => {
@@ -421,15 +507,15 @@ const ScheduleTiming = (props) => {
               </StickyBox>
             </div>
 
-            <div className="col-md-7 col-lg-8 col-xl-9">    
+            <div className="col-md-7 col-lg-8 col-xl-9">
               <div className="row">
                 <div className="col-sm-12">
-                  <div className="card">  
+                  <div className="card">
                     <div className="card-body">
-                      <h4 className="card-title">Set Your Availability</h4>
+                      <h4 className="card-title">Set Availability</h4>
                       <div className="profile-box">
                         <div className="row">
-                          
+
                           {/* <div className="col-lg-4">
                             <div className="form-group">
 
@@ -451,18 +537,193 @@ const ScheduleTiming = (props) => {
                             </div>
 
                           </div> */}
-                        
-                        
-                        
+
+                          {/* <div className="row mb-3">
+                            <div className="col-md-4">
+                              <label>Time Duration</label>
+                              <select
+                                className="form-select"
+                                value={selectedDuration}
+                                onChange={(e) => setSelectedDuration(e.target.value)}
+                              >
+                                <option value="15">15 mins</option>
+                                <option value="30">30 mins</option>
+                              </select>
+                            </div>
+                            <div className="col-md-4">
+                              <label>Currency</label>
+                              <select
+                                className="form-select"
+                                value={selectedCurrency}
+                                onChange={(e) => setSelectedCurrency(e.target.value)}
+                              >
+                                <option value="INR">INR</option>
+                                <option value="USD">USD</option>
+                                <option value="EUR">EUR</option>
+                               
+                              </select>
+                            </div>
+                            <div className="col-md-4">
+                              <label>Fees</label>
+                              <input
+                                type="number"
+                                className="form-control"
+                                value={fees}
+                                onChange={(e) => setFees(e.target.value)}
+                                min="0"
+                              />
+                            </div>
+                          </div> */}
+
+                          {/* <div className="row mb-3">
+                            <div className="col-md-4">
+                              <label>Time Duration</label>
+                              <select
+                                className="form-select"
+                                value={selectedSessionOptionId} 
+                                onChange={(e) => setSelectedSessionOptionId(Number(e.target.value))}
+                              >
+                                {sessionOptions.map(opt => (
+                                  <option key={opt.id} value={opt.id}>
+                                    {opt.duration_minutes} mins
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                            <div className="col-md-4">
+                              <label>Currency</label>
+                              <select
+                                className="form-select"
+                                value={
+                                  sessionOptions.find(opt => opt.id === selectedSessionOptionId)?.currency || ''
+                                }
+                                onChange={(e) => {
+                                 
+                                  const updatedOptions = sessionOptions.map(opt =>
+                                    opt.id === selectedSessionOptionId
+                                      ? { ...opt, currency: e.target.value }
+                                      : opt
+                                  );
+                                  setSessionOptions(updatedOptions);
+                                }}
+                              >
+                             
+                                {[...new Set(sessionOptions.map(opt => opt.currency))].map(curr => (
+                                  <option key={curr} value={curr}>{curr}</option>
+                                ))}
+                              </select>
+                            </div>
+                            <div className="col-md-4">
+                              <label>Fees</label>
+                              <input
+                                type="number"
+                                className="form-control"
+                                value={
+                                  sessionOptions.find(opt => opt.id === selectedSessionOptionId)?.fee || ''
+                                }
+                                onChange={(e) => {
+                                  
+                                  const updatedOptions = sessionOptions.map(opt =>
+                                    opt.id === selectedSessionOptionId
+                                      ? { ...opt, fee: e.target.value }
+                                      : opt
+                                  );
+                                  setSessionOptions(updatedOptions);
+                                }}
+                                min="0"
+                              />
+                            </div>
+                          </div> */}
+
+                          <div className="row mb-3 align-items-end">
+                            <div className="col-md-4">
+                              <label>Time Duration</label>
+                              <select
+                                className="form-select"
+                                value={selectedSessionOptionId}
+                                onChange={(e) => setSelectedSessionOptionId(Number(e.target.value))}
+                              >
+                                {sessionOptions.map(opt => (
+                                  <option key={opt.id} value={opt.id}>
+                                    {opt.duration_minutes} mins
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+
+                            <div className="col-md-4">
+                              <label>Currency</label>
+                              <input
+                                type="text"
+                                className="form-control"
+                                value={sessionOptions.find(opt => opt.id === selectedSessionOptionId)?.currency || ''}
+                                readOnly
+                                style={{ backgroundColor: '#f5f5f5', color: '#6c757d', cursor: 'not-allowed' }}
+                              />
+                            </div>
+
+                            <div className="col-md-4">
+                              <label>Fees</label>
+                              <input
+                                type="number"
+                                className="form-control"
+                                value={sessionOptions.find(opt => opt.id === selectedSessionOptionId)?.fee || ''}
+                                readOnly
+                                style={{ backgroundColor: '#f5f5f5', color: '#6c757d', cursor: 'not-allowed' }}
+                                min="0"
+                              />
+                            </div>
+                          </div>  
+                          <p>New mentors cannot update fees!</p>
+
+
+
+
+                          {/* <div className="mb-3">
+
+                            {sessionOptions.map((opt) => (
+                              <div
+                                key={opt.id}
+                                className="d-flex align-items-center mb-2"
+                                style={{ gap: '1rem' }}
+                              >
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  value={`${opt.duration_minutes} mins`}
+                                  readOnly
+                                  style={{ backgroundColor: '#f5f5f5', color: '#6c757d', cursor: 'not-allowed', width: '120px' }}
+                                />
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  value={opt.currency}
+                                  readOnly
+                                  style={{ backgroundColor: '#f5f5f5', color: '#6c757d', cursor: 'not-allowed', width: '80px' }}
+                                />
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  value={opt.fee}
+                                  readOnly
+                                  style={{ backgroundColor: '#f5f5f5', color: '#6c757d', cursor: 'not-allowed', width: '100px' }}
+                                />
+                              </div>
+
+                            ))}
+                            <p>New mentors can not edit the fees and time duration!</p>
+                          </div> */}
+
+
                         </div>
-                                  {/* <h4 className="card-title">Available Timings</h4> */}
+                        {/* <h4 className="card-title">Available Timings</h4> */}
                         <div className="row">
                           <div className="col-md-12">
-                            
+
                             <div className="card schedule-widget mb-0">
-                              
+
                               <div className="schedule-header">
-                                
+
                                 <div className="schedule-nav">
                                   <ul className="nav nav-tabs nav-justified">
                                     {daysOfWeek.map((day) => (
@@ -550,9 +811,9 @@ const ScheduleTiming = (props) => {
                 </div>
               </div>
             </div>
-          
-          
-          
+
+
+
           </div>
         </div>
 

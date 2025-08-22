@@ -1,3 +1,5 @@
+
+
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { doctor_thumb_02 } from "../../imagepath";
@@ -55,7 +57,7 @@ const DoctorSidebar = () => {
       <div className="profile-sidebar">
         <div className="widget-profile pro-widget-content">
           <div className="profile-info-widget">
-            <Link to="#" className="booking-doc-img">
+            <Link to={`/mentee/mentor-profile/${userData.mentor_id}`} className="booking-doc-img">
               <img src={userData.profile_picture} alt="User Image" />
             </Link>
             <div className="profile-det-info">
@@ -100,13 +102,22 @@ const DoctorSidebar = () => {
                     {userData.groups[0].group_name}
                   </span> */}
                   <span style={{ fontSize: '12px', wordWrap: 'break-word', whiteSpace: 'normal' }}>
-                  {userData?.groups?.[0]?.group_name || "No Group"}
+                    {userData?.groups?.[0]?.group_name || "No Group"}
                   </span>
 
                 </Link>
 
 
               </li>
+              <li
+                className={pathnames.includes("mentee/mentor-profile/") ? "active" : ""}
+              >
+                <Link to={`/mentee/mentor-profile/${userData.mentor_id}`}>
+                  <i className="fas fa-star" />
+                  <span>Profile view</span>
+                </Link>
+              </li>
+
 
               {/* <li
                 className={
@@ -142,7 +153,9 @@ const DoctorSidebar = () => {
                   <span>Schedule Timings</span>
                 </Link>
               </li>
-              <li
+
+
+              {/* <li
                 className={
                   pathnames.includes("/mentor/available-timing") ? "active" : ""
                 }
@@ -151,7 +164,7 @@ const DoctorSidebar = () => {
                   <i className="fas fa-clock" />
                   <span>Available Timings</span>
                 </Link>
-              </li>
+              </li> */}
 
               {/* <li
                 className={pathnames.includes("/pages/invoice") ? "active" : ""}
@@ -172,14 +185,21 @@ const DoctorSidebar = () => {
                   <span>Accounts</span>
                 </Link>
               </li>
-              <li
+
+              {/* <li
                 className={pathnames.includes("/mentor/review") ? "active" : ""}
               >
                 <Link to="/mentor/review">
                   <i className="fas fa-star" />
                   <span>Reviews</span>
                 </Link>
-              </li>
+              </li> */}
+
+
+
+
+
+
               {/* <li
                 className={
                   pathnames.includes("/mentor/chat-mentor") ? "active" : ""
@@ -191,6 +211,9 @@ const DoctorSidebar = () => {
                   <small className="unread-msg">23</small>
                 </Link>
               </li> */}
+              
+              
+                      
               <li
                 className={
                   pathnames.includes("/mentor/profile-setting") ? "active" : ""
@@ -200,7 +223,8 @@ const DoctorSidebar = () => {
                   <i className="fas fa-user-cog" />
                   <span>Profile Settings</span>
                 </Link>
-              </li>
+              </li> 
+              
 
               {/* <li
                 className={
@@ -216,7 +240,7 @@ const DoctorSidebar = () => {
               </li> */}
 
 
-              <li
+              {/* <li
                 className={
                   pathnames.includes("/mentor/social-media") ? "active" : ""
                 }
@@ -225,7 +249,7 @@ const DoctorSidebar = () => {
                   <i className="fas fa-share-alt" />
                   <span>Social Media</span>
                 </Link>
-              </li>
+              </li> */}
 
               {/* <li className={pathnames.includes("/index-2") ? "active" : ""}>
                 <Link to="/index-2">
@@ -233,15 +257,40 @@ const DoctorSidebar = () => {
                   <span>Logout</span>
                 </Link>
               </li> */}
+
             </ul>
           </nav>
         </div>
       </div>
 
 
-      {/* /Profile Sidebar */}
 
-      {/* <div className="new-sidebar">
+    </>
+  );
+};
+
+export default DoctorSidebar;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{/* /Profile Sidebar */ }
+
+{/* <div className="new-sidebar">
         <div className="profile-sidebar">
           <div className="user-widget">
             <div className="pro-avatar">JD</div>
@@ -378,9 +427,3 @@ const DoctorSidebar = () => {
           </div>
         </div>
       </div> */}
-
-    </>
-  );
-};
-
-export default DoctorSidebar;

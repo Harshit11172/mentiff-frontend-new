@@ -3,10 +3,47 @@
 
 
 import React, { useEffect, useState, useRef } from "react";
+
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import HomeFiveHeader from "../../home/home-five/header";
 import HomeFiveFooter from "../../home/home-five/footer";
+
+
+// const getRandomColor = (seed) => {
+//   // Generate pseudo-random consistent color for each seed (shortName)
+//   let hash = 0;
+//   for (let i = 0; i < seed.length; i++) {
+//     hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+//   }
+//   const c = (hash & 0x00ffffff).toString(16).toUpperCase();
+//   return "#" + "00000".substring(0, 6 - c.length) + c;
+// };
+
+// const DummyLogo = ({ shortName, size = 50 }) => {
+//   const bgColor = getRandomColor(shortName || "X");
+
+//   return (
+//     <div
+//       style={{
+//         width: size,
+//         height: size,
+//         borderRadius: "50%",
+//         backgroundColor: bgColor,
+//         display: "flex",
+//         alignItems: "center",
+//         justifyContent: "center",
+//         color: "white",
+//         fontWeight: "bold",
+//         fontSize: size / 2.5,
+//         textTransform: "uppercase",
+//       }}  
+//     >
+//       {groupData.group_name?.slice(0, 3) || "?"}
+//     </div>
+//   );
+// };
+
 
 const UniversityChatGroup = () => {
   const [groupData, setGroupData] = useState(null);
@@ -225,7 +262,53 @@ const UniversityChatGroup = () => {
     }));
   };
 
+
+  // Corrected helper function - shows full group_name if it exists
+  const generateLogoText = (groupData) => {
+    if (groupData?.group_name) {
+      // If group_name exists, show the full name (like "NITB")
+      return groupData.group_name.toUpperCase();
+    } else if (groupData?.college) {
+      // Fallback to college name - take first letter of each word, max 4 letters
+      return groupData.college
+        .split(' ')
+        .map(word => word[0])
+        .join('')
+        .slice(0, 4)
+        .toUpperCase();
+    }
+    return "NA";
+  };
+
+
+
+
   
+  // Generate a consistent color from a string
+  // const stringToColor = (str) => {
+  //   let hash = 0;
+  //   for (let i = 0; i < str.length; i++) {
+  //     hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  //   }
+  //   const c = (hash & 0x00ffffff).toString(16).toUpperCase();
+  //   return "#" + "000000".substring(0, 6 - c.length) + c;
+  // };
+
+
+
+const stringToColor = (str = "") => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const color = (hash & 0xffffff).toString(16).padStart(6, "0");
+  return `#${color}`;
+};
+
+
+
+
+
 
   const sendMessage = () => {
     if (inputValue.trim() === "") return;
@@ -236,6 +319,8 @@ const UniversityChatGroup = () => {
       timestamp: new Date().toISOString(),
       profile_picture: userData.current.profile_picture,
     };
+    console.log(" DPPPPPPPPPP ISSSSSS")
+    console.log(userData.current.profile_picture)
 
     setMessages((prev) => [...prev, newMessage]);
     chatSocket.current.send(JSON.stringify(newMessage));
@@ -250,19 +335,29 @@ const UniversityChatGroup = () => {
     return acc;
   }, {});
 
+  const shortName =
+    groupData?.group_name ||
+    groupData?.college
+      ?.split(" ")
+      .map((w) => w[0])
+      .join("")
+      .slice(0, 4);
 
   return (
-    
+
     <div style={{ height: "100vh", overflow: "hidden" }}>
       {/* <div> */}
 
       <HomeFiveHeader />
-      
+
 
       <div
         className="content mentor-chat"
         style={{ background: "#f9fafb", minHeight: "100vh", padding: 10 }}
       >
+
+
+
         <div className="container-fluid px-2">
           {/* <div className="settings-back mb-3">
             <button onClick={() => history.goBack()} className="btn">
@@ -273,189 +368,265 @@ const UniversityChatGroup = () => {
           <div className="row" style={{ margin: 0 }}>
             {/* Left Panel */}
             {/* LEFT PANEL */}
-{(!showChatWindow || !isMobile) && (
-  <div
-    className="col-md-4"
-    style={{
-      padding: 0,
-      borderRight: "1px solid #e5e7eb",
-      background: theme.pageBg,
-      display: "flex",
-      flexDirection: "column",
-      height: "100%",
-    }}
-  >
-    {/* Search Bar */}
-    <div
-      style={{
-        padding: "0.75rem",
-        background: theme.chatBg,
-        position: "sticky",
-        top: 0,
-        zIndex: 5,
-        borderBottom: `1px solid ${theme.dateColor}30`,
-      }}
-    >
-      <input
-        type="text"
-        className="form-control"
-        placeholder="Search mentors..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
-        style={{
-          padding: "0.6rem 1rem",
-          borderRadius: "999px",
-          border: "1px solid #d1d5db",
-          fontSize: "0.9rem",
-        }}
-      />
-    </div>
-
-    {/* Title */}
-    <div style={{ padding: "0.75rem 1rem", fontWeight: 600, fontSize: "0.95rem", color: theme.textColor }}>
-      Mentors Available
-    </div>
-
-    {/* Mentor List */}
-    <div
-      style={{
-        flex: 1,
-        overflowY: "auto",
-        padding: "0.5rem 0.75rem",
-      }}
-    >
-      {loading ? (
-        <div style={{ padding: "1rem", color: theme.dateColor }}>Loading...</div>
-      ) : error ? (
-        <div style={{ padding: "1rem", color: "red" }}>{error}</div>
-      ) : (
-        groupData?.members
-          ?.filter(
-            (m) =>
-              m.user_type === "mentor" &&
-              `${m.first_name} ${m.last_name}`.toLowerCase().includes(searchTerm)
-          )
-          .map((member) => (
-            <Link
-              to={`/mentee/mentor-profile/${member.mentor_id}`}
-              key={member.mentor_id}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                padding: "0.6rem 0.8rem",
-                marginBottom: "0.5rem",
-                borderRadius: "12px",
-                background: theme.chatBg,
-                color: theme.textColor,
-                textDecoration: "none",
-                transition: "background 0.2s ease",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = darkMode ? "#3a3b3c" : "#f3f4f6")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = theme.chatBg)}
-            >
-              {/* Avatar */}
-              <div style={{ position: "relative", marginRight: "0.75rem" }}>
-                <img
-                  src={member.profile_picture}
-                  alt=""
-                  style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                    border: `2px solid ${theme.pageBg}`,
-                  }}
-                />
-                <span
-                  style={{
-                    position: "absolute",
-                    bottom: -2,
-                    right: -2,
-                    backgroundColor: "#198754",
-                    color: "#fff",
-                    fontSize: "10px",
-                    padding: "2px 6px",
-                    borderRadius: "10px",
-                    whiteSpace: "nowrap",
-                    boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)",
-                  }}
-                >
-                  M
-                </span>
-              </div>
-
-              {/* Name & Degree */}
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 500 }}>{member.first_name} {member.last_name}</div>
-                <div style={{ fontSize: "0.8rem", color: theme.dateColor }}>
-                  {member.degree} {member.major}
-                </div>
-              </div>
-
-              {/* Book Button */}
+            {(!showChatWindow || !isMobile) && (
               <div
+                className="col-md-4"
                 style={{
-                  padding: "0.25rem 0.6rem",
-                  background: "#4a81f8ff",
-                  color: "#fff",
-                  fontSize: "0.75rem",
-                  borderRadius: "8px",
-                  whiteSpace: "nowrap",
+                  padding: 0,
+                  borderRight: "1px solid #e5e7eb",
+                  background: theme.pageBg,
+                  display: "flex",
+                  flexDirection: "column",
+                  height: "100%",
                 }}
               >
-                Call
-              </div>
-            </Link>
-          ))
-      )}
-    </div>
+                {/* Search Bar */}
+                <div
+                  style={{
+                    padding: "0.75rem",
+                    background: theme.chatBg,
+                    position: "sticky",
+                    top: 0,
+                    zIndex: 5,
+                    borderBottom: `1px solid ${theme.dateColor}30`,
+                  }}
+                >
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search mentors..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
+                    style={{
+                      padding: "0.6rem 1rem",
+                      borderRadius: "999px",
+                      border: "1px solid #d1d5db",
+                      fontSize: "0.9rem",
+                    }}
+                  />
+                </div>
 
-    {/* Mobile Button */}
-    {isMobile && (
-      <div style={{ padding: "0.75rem" }}>
-        <button
-          onClick={() => setShowChatWindow(true)}
-          className="btn btn-primary w-100"
-          style={{ borderRadius: "8px" }}
-        >
-          Open Chat
-        </button>
-      </div>
-    )}
-  </div>
-)}
+                {/* Title */}
+                <div style={{ padding: "0.75rem 1rem", fontWeight: 600, fontSize: "0.95rem", color: theme.textColor }}>
+                  Mentors Available
+                </div>
+
+                {/* Mentor List */}
+                <div
+                  style={{
+                    flex: 1,
+                    overflowY: "auto",
+                    padding: "0.5rem 0.75rem",
+                  }}
+                >
+                  {loading ? (
+                    <div style={{ padding: "1rem", color: theme.dateColor }}>Loading...</div>
+                  ) : error ? (
+                    <div style={{ padding: "1rem", color: "red" }}>{error}</div>
+                  ) : (
+                    groupData?.members
+                      ?.filter(
+                        (m) =>
+                          m.user_type === "mentor" &&
+                          `${m.first_name} ${m.last_name}`.toLowerCase().includes(searchTerm)
+                      )
+                      .map((member) => (
+                        <Link
+                          to={`/mentee/mentor-profile/${member.mentor_id}`}
+                          key={member.mentor_id}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            padding: "0.6rem 0.8rem",
+                            marginBottom: "0.5rem",
+                            borderRadius: "12px",
+                            background: theme.chatBg,
+                            color: theme.textColor,
+                            textDecoration: "none",
+                            transition: "background 0.2s ease",
+                          }}
+                          onMouseEnter={(e) => (e.currentTarget.style.background = darkMode ? "#3a3b3c" : "#f3f4f6")}
+                          onMouseLeave={(e) => (e.currentTarget.style.background = theme.chatBg)}
+                        >
+                          {/* Avatar */}
+                          <div style={{ position: "relative", marginRight: "0.75rem" }}>
+                            <img
+                              src={member.profile_picture}
+                              alt=""
+                              style={{
+                                width: 44,
+                                height: 44,
+                                borderRadius: "50%",
+                                objectFit: "cover",
+                                border: `2px solid ${theme.pageBg}`,
+                              }}
+                            />
+                            <span
+                              style={{
+                                position: "absolute",
+                                bottom: -2,
+                                right: -2,
+                                backgroundColor: "#198754",
+                                color: "#fff",
+                                fontSize: "10px",
+                                padding: "2px 6px",
+                                borderRadius: "10px",
+                                whiteSpace: "nowrap",
+                                boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)",
+                              }}
+                            >
+                              M
+                            </span>
+                          </div>
+
+                          {/* Name & Degree */}
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontWeight: 500 }}>{member.first_name} {member.last_name}</div>
+                            <div style={{ fontSize: "0.8rem", color: theme.dateColor }}>
+                              {member.degree} {member.major}
+                            </div>
+                          </div>
+
+                          {/* Book Button */}
+                          <div
+                            style={{
+                              padding: "0.25rem 0.6rem",
+                              background: "#4a81f8ff",
+                              color: "#fff",
+                              fontSize: "0.75rem",
+                              borderRadius: "8px",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            Call
+                          </div>
+                        </Link>
+                      ))
+                  )}
+                </div>
+
+                {/* Mobile Button */}
+                {isMobile && (
+                  <div style={{ padding: "0.75rem" }}>
+                    <button
+                      onClick={() => setShowChatWindow(true)}
+                      className="btn btn-primary w-100"
+                      style={{ borderRadius: "8px" }}
+                    >
+                      Open Chat
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
 
 
             {/* Right Panel */}
             {(showChatWindow || !isMobile) && (
 
-    
+
               <div className="col-md-8" style={{ padding: 0 }}>
 
 
                 <div
-  className="chat-header d-flex align-items-center justify-content-between p-2"
-  style={{ background: theme.bubbleOther, borderBottom: "1px solid #ddd" }}
->
-  {isMobile && (
-    <button className="btn btn-link" onClick={() => setShowChatWindow(false)}>
-      <i className="fas fa-arrow-left" />
-    </button>
-  )}
-  <div className="d-flex align-items-center">
-    <img
-      src={groupData?.logo || "default-avatar.png"}
-      className="avatar-img rounded-circle me-2"
-      alt=""
-      style={{ width: 50, height: 50 }}
-    />
-    <h5 style={{ color: theme.textColor }}>
-      {groupData?.college || "Loading..."}
-    </h5>
-  </div>
+                  className="chat-header d-flex align-items-center justify-content-between p-2"
+                  style={{ background: theme.bubbleOther, borderBottom: "1px solid #ddd" }}
+                >
+                  {isMobile && (
+                    <button className="btn btn-link" onClick={() => setShowChatWindow(false)}>
+                      <i className="fas fa-arrow-left" />
+                    </button>
+                  )}
+                  {/* <div className="d-flex align-items-center">
+                    <img
+                      src={groupData?.logo || "default-avatar.png"}
+                      className="avatar-img rounded-circle me-2"
+                      alt=""
+                      style={{ width: 50, height: 50 }}
+                    />
+                    <h5 style={{ color: theme.textColor }}>
+                      {groupData?.college || "Loading..."}
+                    </h5>
+                  </div> */}
+
+                  {/* {groupData?.logo ? (
+                    <img
+                      src={groupData.logo}
+                      className="avatar-img rounded-circle me-2"
+                      alt=""
+                      style={{ width: 50, height: 50 }}
+                    />
+                    
+                  ) : (
+                    <DummyLogo shortName={shortName} size={50} />
+                  )} */}
+
+                  {/* <div className="d-flex align-items-center">
+                    {groupData?.logo ? (
+                      <img
+                        src={groupData.logo}
+                        className="avatar-img rounded-circle me-2"
+                        alt=""
+                        style={{ width: 50, height: 50 }}
+                      />
+                    ) : (
+                      <div
+                        className="avatar-img rounded-circle me-2 d-flex align-items-center justify-content-center"
+                        style={{
+                          width: 50,
+                          height: 50,
+                          backgroundColor: stringToColor(
+                            groupData?.group_name ||
+                            groupData?.college
+                              ?.split(" ")
+                              .map((w) => w[0])
+                              .join("")
+                              .slice(0, 4) ||
+                            "NA"
+                          ),
+                          color: "white",
+                          fontWeight: "bold",
+                          fontSize: "16px",
+                        }}
+                      >
+                        {groupData?.group_name ||
+                          groupData?.college
+                            ?.split(" ")
+                            .map((w) => w[0])
+                            .join("")
+                            .slice(0, 4) ||
+                          "NA"}
+                      </div>
+                    )}
+                    <h5 style={{ color: theme.textColor }}>
+                      {groupData?.college || "Loading..."}
+                    </h5>
+                  </div> */}
+
+                  <div className="d-flex align-items-center">
+                    <div
+                      className="avatar-img rounded-circle me-2 d-flex align-items-center justify-content-center"
+                      style={{
+                        width: 50,
+                        height: 50,
+                        backgroundColor: stringToColor(generateLogoText(groupData)),
+                        color: "white",
+                        fontWeight: "bold",
+                        fontSize: "16px",
+                      }}
+                    >
+                      {generateLogoText(groupData)}
+                    </div>
+
+                    <h5 style={{ color: theme.textColor }}>
+                      {groupData?.college || "Loading..."}
+                    </h5>
+                  </div>
 
 
-</div>
+
+
+                </div>
 
 
                 <div
@@ -468,8 +639,8 @@ const UniversityChatGroup = () => {
                   }}
                   ref={chatScrollRef}
                 >
-        
-              
+
+
 
                   {Object.entries(groupedMessages).map(([dateLabel, msgs]) => (
                     <div key={dateLabel}>
@@ -492,7 +663,7 @@ const UniversityChatGroup = () => {
                           >
 
 
-                          
+
                             <div
                               style={{
                                 position: "relative",
@@ -532,7 +703,7 @@ const UniversityChatGroup = () => {
                             </div>
 
 
-                          
+
                             <div
                               style={{
                                 background: isCurrentUser ? "#d1f5d3" : "#ffffff",
@@ -582,7 +753,7 @@ const UniversityChatGroup = () => {
 
                 </div>
 
-                
+
 
                 <div
                   style={{
