@@ -845,6 +845,8 @@ const MentorProfile = () => {
       try {
         const parsedUser = JSON.parse(storedUser);
         setCurrentUser(parsedUser);
+        console.log("current user is:::")
+        console.log(currentUser)
       } catch (error) {
         console.error("Error parsing userData from localStorage:", error);
       }
@@ -1290,12 +1292,14 @@ const MentorProfile = () => {
 
   // Check if current user is the mentor
   const isCurrentUserMentor = currentUser && mentorData && currentUser.id === mentorData.user.id;
+
   console.log("MENTOR DATA IS ")
   console.log(mentorData)
 
   console.log("CURRENT USER DATA IS ")
   console.log(currentUser)
   const isLoggedIn = !!localStorage.getItem("authToken");
+
 
 
   const renderStars = (rating) => {
@@ -2245,7 +2249,7 @@ const MentorProfile = () => {
             </h3>
 
             {/* Post Review Section - Only show if user is logged in and is not the mentor */}
-            {isLoggedIn && !isCurrentUserMentor && (
+            {isLoggedIn && !isCurrentUserMentor && !currentUser.user_type === "mentor" && (
               <div style={{
                 background: "#f8f9fa",
                 border: "1px solid #dee2e6",
@@ -2363,6 +2367,28 @@ const MentorProfile = () => {
                   fontSize: "0.95rem"
                 }}>
                   ℹ️ You cannot review your own profile.
+                </p>
+              </div>
+            )}
+
+
+            {/* Note for mentor viewing as a mentor profile */}
+
+            {currentUser.user_type === "mentor" && !isCurrentUserMentor && (
+              <div style={{
+                background: "#d1ecf1",
+                border: "1px solid #bee5eb",
+                borderRadius: "12px",
+                padding: "1.5rem",
+                marginBottom: "2rem",
+                textAlign: "center"
+              }}>
+                <p style={{
+                  color: "#0c5460",
+                  margin: 0,
+                  fontSize: "0.95rem"
+                }}>
+                  ℹ️ You cannot review profile being a mentor.
                 </p>
               </div>
             )}
@@ -2702,39 +2728,39 @@ const MentorProfile = () => {
 
 
       <button
-  onClick={() => {
-    if (!currentUser) {
-      alert("⚠️ Please login to book a session!");
-      window.location.href = "/login";  
-      return;
-    }
+        onClick={() => {
+          if (!currentUser) {
+            alert("⚠️ Please login to book a session!");
+            window.location.href = "/login";
+            return;
+          }
 
-    if (currentUser?.mentor_id === mentorData?.id) {
-      alert("❌ You cannot book a session with yourself.");
-      return;
-    }
+          if (currentUser?.mentor_id === mentorData?.id) {
+            alert("❌ You cannot book a session with yourself.");
+            return;
+          }
 
-    handlePayNow();
-  }}
-  style={{
-    marginTop: "1.5rem",
-    width: "100%",
-    padding: "12px",
-    backgroundColor:
-      currentUser?.mentor_id === mentorData?.id ? "#ccc" : "#198754",
-    color: "white",
-    border: "none",
-    borderRadius: "6px",
-    fontWeight: "600",
-    fontSize: "1rem",
-    cursor:
-      !currentUser || currentUser?.mentor_id === mentorData?.id
-        ? "not-allowed"
-        : "pointer",
-  }}
->
-  💳 Pay Now
-</button>
+          handlePayNow();
+        }}
+        style={{
+          marginTop: "1.5rem",
+          width: "100%",
+          padding: "12px",
+          backgroundColor:
+            currentUser?.mentor_id === mentorData?.id ? "#ccc" : "#198754",
+          color: "white",
+          border: "none",
+          borderRadius: "6px",
+          fontWeight: "600",
+          fontSize: "1rem",
+          cursor:
+            !currentUser || currentUser?.mentor_id === mentorData?.id
+              ? "not-allowed"
+              : "pointer",
+        }}
+      >
+        💳 Pay Now
+      </button>
 
 
 
