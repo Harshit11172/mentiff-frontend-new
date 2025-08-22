@@ -264,22 +264,51 @@ const UniversityChatGroup = () => {
 
 
   // Corrected helper function - shows full group_name if it exists
-  const generateLogoText = (groupData) => {
-    if (groupData?.group_name) {
-      // If group_name exists, show the full name (like "NITB")
-      return groupData.group_name.toUpperCase();
-    } else if (groupData?.college) {
-      // Fallback to college name - take first letter of each word, max 4 letters
-      return groupData.college
-        .split(' ')
-        .map(word => word[0])
-        .join('')
-        .slice(0, 4)
-        .toUpperCase();
-    }
-    return "NA";
-  };
+  // const generateLogoText = (groupData) => {
+  //   if (groupData?.group_name) {
+  //     // If group_name exists, show the full name (like "NITB")
+  //     return groupData.group_name.toUpperCase();
+  //   } else if (groupData?.college) {
+  //     // Fallback to college name - take first letter of each word, max 4 letters
+  //     return groupData.college
+  //       .split(' ')
+  //       .map(word => word[0])
+  //       .join('')
+  //       .slice(0, 4)
+  //       .toUpperCase();
+  //   }
+  //   return "NA";
+  // };
 
+
+  const generateLogoText = (groupData) => {
+  if (groupData?.group_name) {
+    const name = groupData.group_name.trim();
+
+    if (name.length <= 10) {
+      // Short group name, show full
+      return name.toUpperCase();
+    }
+
+    // Long group name, take initials (first letter of each word, max 4 chars)
+    return name
+      .split(" ")
+      .map(word => word[0])
+      .join("")
+      .slice(0, 4)
+      .toUpperCase();
+  } else if (groupData?.college) {
+    // Fallback to college initials
+    return groupData.college
+      .split(" ")
+      .map(word => word[0])
+      .join("")
+      .slice(0, 4)
+      .toUpperCase();
+  }
+
+  return "NA";
+};
 
 
 
@@ -297,12 +326,13 @@ const UniversityChatGroup = () => {
 
 
   const stringToColor = (str = "") => {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const color = (hash & 0xffffff).toString(16).padStart(6, "0");
-    return `#${color}`;
+    // let hash = 0;
+    // for (let i = 0; i < str.length; i++) {
+    //   hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    // }
+    // const color = (hash & 0xffffff).toString(16).padStart(6, "0");
+    // return `#${color}`;
+    return "#f6fafeff";
   };
 
 
@@ -552,72 +582,7 @@ const UniversityChatGroup = () => {
                       <i className="fas fa-arrow-left" />
                     </button>
                   )}
-                  {/* <div className="d-flex align-items-center">
-                    <img
-                      src={groupData?.logo || "default-avatar.png"}
-                      className="avatar-img rounded-circle me-2"
-                      alt=""
-                      style={{ width: 50, height: 50 }}
-                    />
-                    <h5 style={{ color: theme.textColor }}>
-                      {groupData?.college || "Loading..."}
-                    </h5>
-                  </div> */}
-
-                  {/* {groupData?.logo ? (
-                    <img
-                      src={groupData.logo}
-                      className="avatar-img rounded-circle me-2"
-                      alt=""
-                      style={{ width: 50, height: 50 }}
-                    />
-                    
-                  ) : (
-                    <DummyLogo shortName={shortName} size={50} />
-                  )} */}
-
-                  {/* <div className="d-flex align-items-center">
-                    {groupData?.logo ? (
-                      <img
-                        src={groupData.logo}
-                        className="avatar-img rounded-circle me-2"
-                        alt=""
-                        style={{ width: 50, height: 50 }}
-                      />
-                    ) : (
-                      <div
-                        className="avatar-img rounded-circle me-2 d-flex align-items-center justify-content-center"
-                        style={{
-                          width: 50,
-                          height: 50,
-                          backgroundColor: stringToColor(
-                            groupData?.group_name ||
-                            groupData?.college
-                              ?.split(" ")
-                              .map((w) => w[0])
-                              .join("")
-                              .slice(0, 4) ||
-                            "NA"
-                          ),
-                          color: "white",
-                          fontWeight: "bold",
-                          fontSize: "16px",
-                        }}
-                      >
-                        {groupData?.group_name ||
-                          groupData?.college
-                            ?.split(" ")
-                            .map((w) => w[0])
-                            .join("")
-                            .slice(0, 4) ||
-                          "NA"}
-                      </div>
-                    )}
-                    <h5 style={{ color: theme.textColor }}>
-                      {groupData?.college || "Loading..."}
-                    </h5>
-                  </div> */}
-
+                  
                   <div className="d-flex align-items-center">
                     <div
                       className="avatar-img rounded-circle me-2 d-flex align-items-center justify-content-center"
@@ -625,9 +590,9 @@ const UniversityChatGroup = () => {
                         width: 50,
                         height: 50,
                         backgroundColor: stringToColor(generateLogoText(groupData)),
-                        color: "white",
-                        fontWeight: "bold",
-                        fontSize: "16px",
+                        color: "black",
+                        // fontWeight: "bold",
+                        fontSize: "12px",
                       }}
                     >
                       {generateLogoText(groupData)}
@@ -664,8 +629,11 @@ const UniversityChatGroup = () => {
                       </div>
                       {msgs.map((msg, idx) => {
                         const isCurrentUser = msg.sender === userData.current?.username;
-                        const isMentor = usernameToRole[msg.sender] === "mentor";
-
+                        // const isMentor = usernameToRole[msg.sender] === "mentor";
+                        // check if this user is the mentor of THIS group
+                        const isMentorOfThisGroup = groupData?.members?.some(
+                          (m) => m.user.username === msg.sender && m.user_type === "mentor"
+                        );
                         return (
                           <li
                             key={idx}
@@ -697,7 +665,7 @@ const UniversityChatGroup = () => {
                                   display: "block",
                                 }}
                               />
-                              {isMentor && (
+                              {isMentorOfThisGroup && (
                                 <span
                                   style={{
                                     position: "absolute",
