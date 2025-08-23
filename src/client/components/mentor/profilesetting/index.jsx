@@ -2012,7 +2012,7 @@ const Profile = (props) => {
                             className={`form-control ${errors.user?.username ? 'is-invalid' : ''}`}
                             name="username"
                             value={userData.username}
-                            onChange={handleChange}
+                            
                             readOnly
                             style={{ color: 'grey', backgroundColor: '#f8f9fa' }}
                           />

@@ -106,7 +106,7 @@ export const DashboardSidebar = () => {
             
             {isMentor && (
               <li className={pathnames.includes("/medicalrecords") ? "active" : ""}>
-                <Link to="/mentee/mentee-bookings">
+                <Link to="/univ/universities">
                 <i className="fas fa-comments" />
                   Community Chat
                   <span>

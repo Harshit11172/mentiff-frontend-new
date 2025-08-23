@@ -389,7 +389,7 @@ const HomeFive = ({ isLoggedIn, user }) => {
           <h2>Enter Student Community Chat Groups</h2>
         </div>
         <div className="view-all ">
-          <Link to="/mentee/mentee-bookings">View All Groups</Link>
+          <Link to="/univ/universities">View All Groups</Link>
         </div>
       </div>
       <div className="popular-categories aos" data-aos="fade-up" >
@@ -448,7 +448,8 @@ const HomeFive = ({ isLoggedIn, user }) => {
                 </div>
                 <div className="col-md-4 col-sm-12 text-md-end text-start mt-3 mt-md-0">
                   <div className="view-all">
-                    <Link to="/mentee/mentee-bookings">View All</Link>
+                    <Link to="/univ/universities">View All</Link>
+                    {/* /mentee/mentee-bookings was replaced by /univ/universities */}
                   </div>
                 </div>
               </div>

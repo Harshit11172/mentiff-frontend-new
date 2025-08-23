@@ -1,23 +1,23 @@
 [
     {
-        "name": "Test University",
-        "short_name": "Test Uni @gmail.com",
+        "name": "Test University @gmail.com",
+        "short_name": "TU ",
         "country": "India",
         "state": "Test State",
         "city": "Test City",
         "domain": "gmail.com"
     },
     {
-        "name": "Mock College",
-        "short_name": "Mock College @yahoo.com",
+        "name": "Mock College  @yahoo.com",
+        "short_name": "MCY",
         "country": "Canada",   
         "state": "California",
         "city": "San Francisco",
         "domain": "yahoo.com"
     },
     {
-        "name": "Test-2 College",
-        "short_name": "Test-2 College @yopmail.com",
+        "name": "Test-2 College  @yopmail.com",
+        "short_name": "TC",
         "country": "France",
         "state": "California",
         "city": "San Francisco",

@@ -629,7 +629,7 @@ const HomeOneHeader = () => {
                       }
                     >
                       <Link
-                        to="/mentee/mentee-bookings"
+                        to="/univ/universities"
                         onClick={() => onhandleCloseMenu()}
                       >
                         Bookings

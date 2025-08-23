@@ -2834,6 +2834,16 @@ const Register = (props) => {
     return { displayName: '', universityData: null };
   };
 
+  const findUniversityData = (collegeName) => {
+    return universitiesData.find((university) =>
+      university.name === collegeName
+    );
+  };
+
+
+
+
+
   // Handle email input change
   const handleEmailChange = (e) => {
     const email = e.target.value;
@@ -3106,10 +3116,28 @@ const Register = (props) => {
         console.log("Creating a new group if group not available and adding the mentor to it...");
         console.log("UserDetails found: ")
         console.log(userDetails)
-        let body = {}
-        body.mentor_id = userDetails.id
-        body.country = formData.country
-        body.college = formData.college
+        // Find complete university data
+        const universityData = matchedUniversityData || findUniversityData(formData.college);
+
+        let body = {
+          mentor_id: userDetails.id,
+          country: formData.country,
+          college: formData.college,
+          // Add all university fields if university data is found
+          ...(universityData && {
+            university_name: universityData.name,
+            university_city: universityData.city,
+            university_state: universityData.state,
+            university_country: universityData.country,
+            university_domain: universityData.domain,
+            university_url: universityData.url,
+            university_short_name: universityData.short_name,
+            university_category: universityData.category
+          })
+        };
+
+
+
         console.log('body to send in add mentor or create group is: ')
         console.log(body)
         const responseAddMentor = await fetch(apiUrlCreateGroup, {
@@ -3361,7 +3389,7 @@ const Register = (props) => {
 
       {/* <div className="bg-pattern-style bg-pattern-style-register"> */}
       <div >
-      {/* <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-50 to-indigo-100 px-4 sm:px-6 lg:px-8"> */}
+        {/* <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-50 to-indigo-100 px-4 sm:px-6 lg:px-8"> */}
 
         <div className="content">
           <div className="account-content">

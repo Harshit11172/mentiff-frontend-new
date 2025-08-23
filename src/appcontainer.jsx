@@ -328,7 +328,7 @@ const AppContainer = function (props) {
                 component={Appointments}
               />
               <Route
-                path="/mentee/mentee-bookings"
+                path="/univ/universities"
                 exact
                 component={AppointmentsMentee}
               />

@@ -288,7 +288,7 @@ const HomeSixHeader = () => {
                     <Link to="/mentee/mentor-profile">Mentor Profile</Link>
                   </li>
                   <li>
-                    <Link to="/mentee/mentee-bookings">Bookings</Link>
+                    <Link to="/univ/universities">Bookings</Link>
                   </li>
                   <li>
                     <Link to="/mentee/checkout">Checkout</Link>
