@@ -122,7 +122,7 @@
 //       <div className="content">
 //         <div className="container-fluid">
 //           <div className="row">
-            
+
 //             {/* Profile Sidebar */}
 //             <div className="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
 //               <StickyBox offsetTop={20} offsetBottom={20}>
@@ -347,22 +347,19 @@ import HomeFiveFooter from "../../../home/home-five/footer";
 
 const Profile = (props) => {
   const [userData, setUserData] = useState({
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    last_name: '',
     username: '',
-    dob: '',
-    bloodGroup: '',
+
+
     email: '',
     mobile: '',
-    address: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    country: '',
+
+
     profile_picture: '',
     mentee_id: '',
     user_type: '',
-    university: ''
+
   });
 
   const [previewImage, setPreviewImage] = useState('');
@@ -423,14 +420,14 @@ const Profile = (props) => {
     try {
       // Create FormData object for file upload
       const formData = new FormData();
-      
+
       // Add all form fields to FormData
       Object.keys(userData).forEach(key => {
         if (key !== 'profile_picture' && userData[key] !== null && userData[key] !== undefined) {
           formData.append(key, userData[key]);
         }
       });
-      
+
       // Add the file if a new one was selected
       if (selectedFile) {
         formData.append('profile_picture', selectedFile);
@@ -455,12 +452,12 @@ const Profile = (props) => {
 
       // Update userData with the response data (in case backend returns updated data)
       const updatedUserData = { ...userData, ...result };
-      
+
       // Update local storage with the new data
       localStorage.setItem('userData', JSON.stringify(updatedUserData));
 
       setMessage('Profile updated successfully!');
-      
+
       // Reload the page to show changes
       setTimeout(() => {
         window.location.reload();
@@ -481,7 +478,7 @@ const Profile = (props) => {
       <div className="content">
         <div className="container-fluid">
           <div className="row">
-            
+
             {/* Profile Sidebar */}
             <div className="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
               <StickyBox offsetTop={20} offsetBottom={20}>
@@ -507,9 +504,9 @@ const Profile = (props) => {
                         <div className="form-group">
                           <div className="change-avatar">
                             <div className="profile-img">
-                              <img 
-                                src={previewImage || userData.profile_picture || IMG01} 
-                                alt="User" 
+                              <img
+                                src={previewImage || userData.profile_picture || IMG01}
+                                alt="User"
                                 style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '50%' }}
                               />
                             </div>
@@ -539,8 +536,8 @@ const Profile = (props) => {
                           <input
                             type="text"
                             className="form-control"
-                            name="firstName"
-                            value={userData.firstName || userData.first_name || ''}
+                            name="first_name"
+                            value={userData.first_name || ''}
                             onChange={handleChange}
                           />
                         </div>
@@ -552,25 +549,13 @@ const Profile = (props) => {
                           <input
                             type="text"
                             className="form-control"
-                            name="lastName"
-                            value={userData.lastName || userData.last_name || ''}
+                            name="last_name"
+                            value={userData.last_name || ''}
                             onChange={handleChange}
                           />
                         </div>
                       </div>
 
-                      <div className="col-12 col-md-6">
-                        <div className="form-group">
-                          <label>Username</label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            name="username"
-                            value={userData.username || ''}
-                            onChange={handleChange}
-                          />
-                        </div>
-                      </div>
 
                       <div className="col-12 col-md-6">
                         <div className="form-group">
@@ -582,8 +567,31 @@ const Profile = (props) => {
                             value={userData.mobile || ''}
                             onChange={handleChange}
                           />
+
                         </div>
                       </div>
+
+
+
+                      <div className="col-12 col-md-6">
+                        <div className="form-group">
+                          <label>Username</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            name="username"
+                            value={userData.username || ''}
+                            readOnly
+                            style={{ color: 'grey', backgroundColor: '#f8f9fa' }}
+                          />
+
+                          <small className="form-text text-muted">
+                            Username cannot be changed
+                          </small>
+                        </div>
+                      </div>
+
+
 
                       <div className="col-12 col-md-6">
                         <div className="form-group">
@@ -595,6 +603,10 @@ const Profile = (props) => {
                             readOnly
                             style={{ color: 'grey', backgroundColor: '#f8f9fa' }}
                           />
+
+                          <small className="form-text text-muted">
+                            Email cannot be changed
+                          </small>
                         </div>
                       </div>
 

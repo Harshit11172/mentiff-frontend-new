@@ -1621,8 +1621,8 @@ import HomeFiveHeader from "../../home/home-five/header";
 
 const Profile = (props) => {
   const [userData, setUserData] = useState({
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    last_name: '',
     dob: '',
     bloodGroup: '',
     email: '',
@@ -1633,8 +1633,6 @@ const Profile = (props) => {
     zipCode: '',
     country: '',
     profile_picture: '',
-    first_name: '',
-    last_name: '',
     username: '',
     about: '',
     currency: 'INR',

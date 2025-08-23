@@ -628,11 +628,11 @@
 //                                   </div>
 //                                 </div>
 
-                                
-                                
-                                
-                                
-                                
+
+
+
+
+
 //                                 <div className="col-lg-6">
 //                                   <div className="form-group">
 //                                     <label className="form-control-label">College Email</label>
@@ -647,10 +647,10 @@
 //                                     />
 //                                   </div>
 //                                 </div>
-                              
-                              
-                              
-                              
+
+
+
+
 //                               </div>
 //                             </>
 //                           )}
@@ -1020,7 +1020,7 @@
 //     // Find matching university by domain
 //     const matchedUniversity = universitiesData.find((university) => {
 //       if (!university.domain) return false;
-      
+
 //       // Check if email domain matches university domain
 //       // This handles cases like:
 //       // - email: user@iitd.ac.in, domain: iitd.ac.in (exact match)
@@ -1040,7 +1040,7 @@
 //   const handleEmailChange = (e) => {
 //     const email = e.target.value;
 //     setCollegeEmail(email);
-    
+
 //     const detectedName = detectCollegeFromEmail(email);
 //     setDetectedCollege(detectedName);
 //   };
@@ -1319,32 +1319,32 @@
 //           font-size: 14px;
 //           font-weight: 500;
 //         }
-        
+
 //         .college-detected {
 //           color: #28a745;
 //           display: flex;
 //           align-items: center;
 //         }
-        
+
 //         .college-not-detected {
 //           color: #dc3545;
 //         }
-        
+
 //         .college-detection-icon {
 //           margin-right: 5px;
 //           font-size: 16px;
 //         }
-        
+
 //         @keyframes fadeIn {
 //           from { opacity: 0; transform: translateY(-10px); }
 //           to { opacity: 1; transform: translateY(0); }
 //         }
-        
+
 //         .college-detection {
 //           animation: fadeIn 0.3s ease-in;
 //         }
 //       `}</style>
-      
+
 //       <div className="bg-pattern-style bg-pattern-style-register">
 //         <div className="content">
 //           <div className="account-content">
@@ -1865,7 +1865,7 @@
 //     // Find matching university by domain
 //     const matchedUniversity = universitiesData.find((university) => {
 //       if (!university.domain) return false;
-      
+
 //       // Check if email domain matches university domain
 //       // This handles cases like:
 //       // - email: user@iitd.ac.in, domain: iitd.ac.in (exact match)
@@ -1887,7 +1887,7 @@
 //   const handleEmailChange = (e) => {
 //     const email = e.target.value;
 //     setCollegeEmail(email);
-    
+
 //     const detectedName = detectCollegeFromEmail(email);
 //     setDetectedCollege(detectedName);
 //     setIsCollegeDetected(!!detectedName); // Set to true if college is detected, false otherwise
@@ -2183,22 +2183,22 @@
 //           font-size: 14px;
 //           font-weight: 500;
 //         }
-        
+
 //         .college-detected {
 //           color: #28a745;
 //           display: flex;
 //           align-items: center;
 //         }
-        
+
 //         .college-not-detected {
 //           color: #dc3545;
 //         }
-        
+
 //         .college-detection-icon {
 //           margin-right: 5px;
 //           font-size: 16px;
 //         }
-        
+
 //         .contact-message {
 //           margin-top: 8px;
 //           padding: 8px 12px;
@@ -2208,22 +2208,22 @@
 //           font-size: 13px;
 //           color: #856404;
 //         }
-        
+
 //         .contact-email {
 //           color: #0066cc;
 //           font-weight: 600;
 //           text-decoration: none;
 //         }
-        
+
 //         .contact-email:hover {
 //           text-decoration: underline;
 //         }
-        
+
 //         @keyframes fadeIn {
 //           from { opacity: 0; transform: translateY(-10px); }
 //           to { opacity: 1; transform: translateY(0); }
 //         }
-        
+
 //         .college-detection {
 //           animation: fadeIn 0.3s ease-in;
 //         }
@@ -2233,7 +2233,7 @@
 //           cursor: not-allowed;
 //         }
 //       `}</style>
-      
+
 //       <div className="bg-pattern-style bg-pattern-style-register">
 //         <div className="content">
 //           <div className="account-content">
@@ -2440,7 +2440,7 @@
 //                               </div>
 //                             </>
 //                           )}
-            
+
 //                           <div className="row">
 //                             {verifiedStatus == "pending" && (
 //                               <>
@@ -2694,6 +2694,41 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import loginBanner from "../../assets/images/login-banner.png";
@@ -2729,12 +2764,14 @@ const Register = (props) => {
   const [isUniversityLocked, setIsUniversityLocked] = useState(false); // Track if university is locked
   const [matchedUniversityData, setMatchedUniversityData] = useState(null); // Store matched university data
 
+  const [showTerms, setShowTerms] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
 
 
 
   // Filter countries that have at least one university with non-empty domain
   const countriesWithUniversities = countriesData.filter((country) => {
-    return universitiesData.some((university) => 
+    return universitiesData.some((university) =>
       university.country === country.label && university.domain !== ""
     );
   });
@@ -2751,10 +2788,10 @@ const Register = (props) => {
 
   const filteredUnivOptions = selectedCountry
     ? universitiesData.filter(
-        (university) =>
-          university.country === selectedCountry.label &&
-          university.domain !== ""
-      )
+      (university) =>
+        university.country === selectedCountry.label &&
+        university.domain !== ""
+    )
     : universitiesData.filter((university) => university.domain !== "");
 
   const universityOptions = filteredUnivOptions.map((university) => ({
@@ -2776,7 +2813,7 @@ const Register = (props) => {
     // Find matching university by domain
     const matchedUniversity = universitiesData.find((university) => {
       if (!university.domain) return false;
-      
+
       // Check if email domain matches university domain
       // This handles cases like:
       // - email: user@iitd.ac.in, domain: iitd.ac.in (exact match)
@@ -2801,7 +2838,7 @@ const Register = (props) => {
   const handleEmailChange = (e) => {
     const email = e.target.value;
     setCollegeEmail(email);
-    
+
     const detectionResult = detectCollegeFromEmail(email);
     setDetectedCollege(detectionResult.displayName);
     setMatchedUniversityData(detectionResult.universityData);
@@ -2862,17 +2899,17 @@ const Register = (props) => {
       // Auto-select country and university based on user's email
       if (data.email && data.verification_status === "pending") {
         console.log("Starting auto-selection for email:", data.email);
-        
+
         setTimeout(() => {
           const detectionResult = detectCollegeFromEmail(data.email);
           console.log("Detection result:", detectionResult);
-          
+
           if (detectionResult.universityData) {
             console.log("University data found:", detectionResult.universityData);
-            
+
             // Filter countries that have at least one university with non-empty domain
             const availableCountries = countriesData.filter((country) => {
-              return universitiesData.some((university) => 
+              return universitiesData.some((university) =>
                 university.country === country.label && university.domain !== ""
               );
             });
@@ -2886,13 +2923,13 @@ const Register = (props) => {
             console.log("Looking for country:", detectionResult.universityData.country);
 
             // Try multiple matching strategies
-            let countryOption = availableCountryOptions.find(country => 
+            let countryOption = availableCountryOptions.find(country =>
               country.value === detectionResult.universityData.country
             );
 
             if (!countryOption) {
               // Try case-insensitive match
-              countryOption = availableCountryOptions.find(country => 
+              countryOption = availableCountryOptions.find(country =>
                 country.value.toLowerCase() === detectionResult.universityData.country.toLowerCase()
               );
               console.log("Case-insensitive match found:", countryOption);
@@ -2900,15 +2937,15 @@ const Register = (props) => {
 
             // If still not found, try partial matching
             if (!countryOption) {
-              countryOption = availableCountryOptions.find(country => 
+              countryOption = availableCountryOptions.find(country =>
                 country.value.includes(detectionResult.universityData.country) ||
                 detectionResult.universityData.country.includes(country.value)
               );
               console.log("Partial match found:", countryOption);
             }
-            
+
             console.log("Final country option:", countryOption);
-            
+
             if (countryOption) {
               setSelectedCountry(countryOption);
               setIsCountryLocked(true);
@@ -2917,7 +2954,7 @@ const Register = (props) => {
               console.error("❌ No matching country found!");
               console.log("University country:", detectionResult.universityData.country);
               console.log("Available countries:", availableCountryOptions.map(c => c.value));
-              
+
               // ⚠️ TEMPORARY FIX: If country not found, add it temporarily for testing
               const tempCountryOption = {
                 value: detectionResult.universityData.country,
@@ -2932,7 +2969,7 @@ const Register = (props) => {
             const filteredUniversities = universitiesData.filter(
               (university) =>
                 (university.country === detectionResult.universityData.country ||
-                 university.country.toLowerCase() === detectionResult.universityData.country.toLowerCase()) &&
+                  university.country.toLowerCase() === detectionResult.universityData.country.toLowerCase()) &&
                 university.domain !== ""
             );
 
@@ -2941,7 +2978,7 @@ const Register = (props) => {
               label: `${university.name} - ${university.city}, ${university.state}`,
             }));
 
-            const universityOption = availableUniversityOptions.find(uni => 
+            const universityOption = availableUniversityOptions.find(uni =>
               uni.value === detectionResult.universityData.name
             );
 
@@ -3194,6 +3231,27 @@ const Register = (props) => {
     return loading;
   };
 
+  const Modal = ({ title, open, onClose, children }) => {
+    if (!open) return null;
+    const stop = (e) => e.stopPropagation();
+    return (
+      <div className="modal-backdrop-mentiff" onClick={onClose} role="dialog" aria-modal="true" aria-label={title}>
+        <div className="modal-card-mentiff" onClick={stop}>
+          <div className="modal-header-mentiff">
+            <h5 className="modal-title-mentiff">{title}</h5>
+            <button className="modal-close-btn" aria-label="Close" onClick={onClose}>×</button>
+          </div>
+          <div className="modal-body-mentiff">{children}</div>
+          <div className="modal-footer-mentiff">
+            <button className="btn btn-secondary" type="button" onClick={onClose}>Close</button>
+            <button className="btn btn-primary" type="button" onClick={onClose}>I Agree</button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+
   return (
     <>
       <style>{`
@@ -3263,9 +3321,48 @@ const Register = (props) => {
           margin-top: 3px;
           font-style: italic;
         }
+
+
+        /* Modal */
+.modal-backdrop-mentiff {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1050;
+}
+.modal-card-mentiff {
+  background: #fff; border-radius: 12px;
+  width: min(860px, 92vw); max-height: 80vh;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.modal-header-mentiff {
+  padding: 14px 18px; border-bottom: 1px solid #eee;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.modal-title-mentiff { margin: 0; font-size: 18px; font-weight: 600; }
+.modal-body-mentiff { padding: 16px 18px; overflow: auto; }
+.modal-footer-mentiff {
+  padding: 12px 18px; border-top: 1px solid #eee;
+  display: flex; gap: 8px; justify-content: flex-end;
+}
+.modal-close-btn {
+  border: none; background: transparent; font-size: 22px; line-height: 1;
+  cursor: pointer; padding: 0 6px;
+}
+.link-button {
+  background: none; border: none; padding: 0; margin: 0 4px;
+  color: #0d6efd; text-decoration: underline; cursor: pointer;
+  font: inherit;
+}
+.link-button:hover { text-decoration: none; }
+
       `}</style>
-      
-      <div className="bg-pattern-style bg-pattern-style-register">
+
+      {/* <div className="bg-pattern-style bg-pattern-style-register"> */}
+      <div >
+      {/* <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-50 to-indigo-100 px-4 sm:px-6 lg:px-8"> */}
+
         <div className="content">
           <div className="account-content">
             <div className="account-box">
@@ -3336,6 +3433,9 @@ const Register = (props) => {
                               className="form-control"
                               required
                             />
+                            <small className="form-text text-muted">
+                              Username cannot be changed later.
+                            </small>
                           </div>
 
                           <div className="form-group">
@@ -3346,6 +3446,9 @@ const Register = (props) => {
                               className="form-control"
                               required
                             />
+                            <small className="form-text text-muted">
+                              Email cannot be changed later.
+                            </small>
                           </div>
 
                           <div className="row">
@@ -3421,6 +3524,9 @@ const Register = (props) => {
                                       name="username"
                                       required
                                     />
+                                    <small className="form-text text-muted">
+                                      Username cannot be changed later.
+                                    </small>
                                   </div>
                                 </div>
 
@@ -3436,6 +3542,9 @@ const Register = (props) => {
                                       onChange={handleEmailChange}
                                       required
                                     />
+                                    <small className="form-text text-muted">
+                                      Email cannot be changed later.
+                                    </small>
                                     {/* College detection display */}
                                     {collegeEmail && (
                                       <div className="college-detection">
@@ -3452,7 +3561,7 @@ const Register = (props) => {
                                             </div>
                                             <div className="contact-message">
                                               <strong>Need to add your college?</strong> Drop us an email at{' '}
-                                              <a 
+                                              <a
                                                 href="mailto:mentiff5@gmail.com?subject=Add My College - College Name&body=Hi,%0A%0AI would like to add my college to Mentiff's database.%0A%0ACollege Name: [Your College Name]%0ACollege Email Domain: [e.g., xyz.edu]%0ALocation: [City, State/Country]%0A%0AThank you!"
                                                 className="contact-email"
                                                 target="_blank"
@@ -3631,7 +3740,7 @@ const Register = (props) => {
 
                       {verifiedStatus !== "verified" && (
                         <>
-                          <div className="form-group">
+                          {/* <div className="form-group">
                             <div className="form-check form-check-xs custom-checkbox">
                               <input
                                 type="checkbox"
@@ -3651,7 +3760,128 @@ const Register = (props) => {
                                 Terms.
                               </Link>
                             </div>
+                          </div> */}
+
+
+                          <div className="form-group">
+                            <div className="form-check form-check-xs custom-checkbox">
+                              <input
+                                type="checkbox"
+                                className="form-check-input"
+                                name="agreeCheckboxUser"
+                                id="agree_checkbox_user"
+                                required
+                              />
+                              <label className="form-check-label" htmlFor="agree_checkbox_user">
+                                I agree to Mentiff
+                              </label>{" "}
+                              <button type="button" className="link-button" onClick={() => setShowPrivacy(true)}>
+                                Privacy Policy
+                              </button>
+                              &amp;
+                              <button type="button" className="link-button" onClick={() => setShowTerms(true)}>
+                                Terms &amp; Conditions
+                              </button>
+                              .
+                            </div>
                           </div>
+                          <Modal title="Privacy Policy" open={showPrivacy} onClose={() => setShowPrivacy(false)}>
+                            <h6>1. Introduction</h6>
+                            <p>
+                              This Privacy Policy explains how Mentiff collects, uses, and protects your personal
+                              information when you use our services and website.
+                            </p>
+
+                            <h6>2. Information We Collect</h6>
+                            <ul>
+                              <li>Account details (name, username, email)</li>
+                              <li>Mentor/mentee profile data (university, degree, year)</li>
+                              <li>Usage data (log data, device info, approximate location)</li>
+                            </ul>
+
+                            <h6>3. How We Use Information</h6>
+                            <ul>
+                              <li>Create and manage your account</li>
+                              <li>Enable mentor–mentee discovery, booking, and chat</li>
+                              <li>Improve, secure, and analyze our services</li>
+                              <li>Communicate updates and service notifications</li>
+                            </ul>
+
+                            <h6>4. Sharing & Disclosure</h6>
+                            <p>
+                              We do not sell your data. We may share limited information with service providers,
+                              comply with legal requests, and facilitate core features (e.g., scheduling/video).
+                            </p>
+
+                            <h6>5. Data Security & Retention</h6>
+                            <p>
+                              We use reasonable safeguards to protect data and retain it only as long as needed
+                              for the purposes described or as required by law.
+                            </p>
+
+                            <h6>6. Your Rights</h6>
+                            <p>
+                              You may access, update, or delete certain data via your account, or contact us at
+                              <a href="mailto:mentiff5@gmail.com"> mentiff5@gmail.com</a>.
+                            </p>
+
+                            <h6>7. Children</h6>
+                            <p>Mentiff is not directed to children under 13.</p>
+
+                            <h6>8. Changes</h6>
+                            <p>We may update this policy; continued use means you accept the updated terms.</p>
+                          </Modal>
+
+                          <Modal title="Terms & Conditions" open={showTerms} onClose={() => setShowTerms(false)}>
+                            <h6>1. Acceptance of Terms</h6>
+                            <p>
+                              By creating an account or using Mentiff, you agree to these Terms & Conditions.
+                            </p>
+
+                            <h6>2. Accounts & Eligibility</h6>
+                            <ul>
+                              <li>Provide accurate information and keep credentials secure</li>
+                              <li>You are responsible for activity on your account</li>
+                            </ul>
+
+                            <h6>3. Use of Service</h6>
+                            <ul>
+                              <li>Follow applicable laws and be respectful in interactions</li>
+                              <li>No spamming, harassment, or misuse of platform features</li>
+                            </ul>
+
+                            <h6>4. Mentor–Mentee Interactions</h6>
+                            <p>
+                              Mentiff facilitates connections; mentors are independent. We are not liable for
+                              outcomes of sessions. Report issues to <a href="mailto:mentiff5@gmail.com">mentiff5@gmail.com</a>.
+                            </p>
+
+                            <h6>5. Payments & Bookings (if applicable)</h6>
+                            <p>
+                              Booking, pricing, and refund terms will be displayed where relevant and may be
+                              updated from time to time.
+                            </p>
+
+                            <h6>6. IP & Content</h6>
+                            <p>
+                              You retain rights to your content. You grant Mentiff a license to host and display
+                              it for service operation. Do not upload content you don’t have rights to.
+                            </p>
+
+                            <h6>7. Disclaimers & Liability</h6>
+                            <p>
+                              Services are provided “as is”. To the extent permitted by law, Mentiff’s liability
+                              is limited.
+                            </p>
+
+                            <h6>8. Termination</h6>
+                            <p>We may suspend or terminate accounts for policy violations or misuse.</p>
+
+                            <h6>9. Governing Law</h6>
+                            <p>These terms are governed by applicable laws of India.</p>
+                          </Modal>
+
+
 
                           <button
                             className="btn btn-primary login-btn"
@@ -3731,3 +3961,53 @@ const Register = (props) => {
 };
 
 export default Register;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

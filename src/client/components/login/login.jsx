@@ -44,7 +44,7 @@ const LoginContainer = (props) => {
     setLoading(true);
 
     try {
-      await axios.post(`${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/request-otp/`,  {
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/request-otp/`, {
         email,
       });
       setOtpRequested(true);
@@ -61,7 +61,7 @@ const LoginContainer = (props) => {
     setError(""); // Clear previous errors
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/login/`,{
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/login/`, {
         email,
         otp,
       });
@@ -86,7 +86,7 @@ const LoginContainer = (props) => {
       const redirectPath = localStorage.getItem("redirectAfterLogin");
       localStorage.removeItem("redirectAfterLogin");
 
-      if (redirectPath && user.user_type!="mentor") {
+      if (redirectPath && user.user_type != "mentor") {
         history.push(redirectPath);
       } else {
         if (user.user_type == "mentor") {
@@ -118,9 +118,24 @@ const LoginContainer = (props) => {
 
   return (
     <>
-      <div className="bg-pattern-style">
+      <div>
 
-        <div className="content">
+
+        {/* <div className="content"> */}
+        {/* <div> */}
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "#fdfdfdff", // light gray background, optional
+          }}
+        >
           <div className="account-content">
             <div className="account-box">
               <div className="login-right">
@@ -213,21 +228,27 @@ const LoginContainer = (props) => {
                       Join as Mentee
                     </Link>
                   </div> */}
-                  <div className="text-center mt-3">
+
+                  <div
+                    className="text-center mt-3"
+                    style={{ display: "flex", justifyContent: "center", gap: "12px", flexWrap: "wrap" }}
+                  >
                     <button
-                      className="btn btn-secondary mx-2"
+                      className="btn btn-secondary"
                       onClick={() => handleRoleSelect("mentor")}
                     >
                       Join as Mentor
                     </button>
                     <button
-                      className="btn btn-secondary mx-2"
+                      className="btn btn-secondary"
                       onClick={() => handleRoleSelect("mentee")}
                     >
                       Join as Mentee
                     </button>
                   </div>
-                  {/* /New Buttons */}
+
+                  {
+                  /* /New Buttons */}
                 </form>
               </div>
             </div>

@@ -2831,7 +2831,7 @@ const MentorProfile = () => {
                     margin: 0,
                   }}
                 >
-                  🎓 {mentorData.degree} • {mentorData.major}
+                  🎓 {mentorData.degree} • {mentorData.major} 
                 </p>
               </div>
             </div>
