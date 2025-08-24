@@ -600,7 +600,7 @@ const HomeFive = ({ isLoggedIn, user }) => {
                           style={{ width: '70px', height: '70px', objectFit: 'cover' }}
                         />
                       </div>
-
+                      
                       {/* Name & Rating */}
                       <div className="text-center">
                         <h4
@@ -616,23 +616,6 @@ const HomeFive = ({ isLoggedIn, user }) => {
                           {mentor.user.first_name} {mentor.user.last_name}
                         </h4>
 
-
-
-                        {/* <h5
-                  className="fw-semibold mb-1 text-truncate"
-                  title={`${mentor.user.first_name} ${mentor.user.last_name}`}
-                >
-                  {mentor.user.first_name} {mentor.user.last_name}
-                </h5> */}
-                        {/* <div className="text-warning mb-2">
-                  {[...Array(5)].map((_, i) => (
-                    <i
-                      key={i}
-                      className={`fas fa-star ${i < Math.round(mentor.rating) ? '' : 'text-muted'}`}
-                    ></i>
-                  ))}
-                  <small className="text-muted ms-1">({mentor.rating.toFixed(1)})</small>
-                </div> */}
                       </div>
 
                       {/* University with tooltip/ellipsis */}
@@ -640,7 +623,7 @@ const HomeFive = ({ isLoggedIn, user }) => {
                         className="text-center mb-3"
                         title={mentor.university}
                       >
-
+                        {mentor.university_short_name || ' '}
 
                         <p
                           className="text-muted m-0"
@@ -654,6 +637,7 @@ const HomeFive = ({ isLoggedIn, user }) => {
                           }}
                         >
                           {mentor.university || ' '}
+                          
                         </p>
                       </div>
 

@@ -90,7 +90,7 @@ const UniversityChatGroup = () => {
     dateColor: "#b0b3b8",
     typingColor: "#b0b3b8",
   };
-
+  
   const theme = darkMode ? darkTheme : lightTheme;
 
   const getUserData = () => {
@@ -445,6 +445,27 @@ const UniversityChatGroup = () => {
                   Mentors Available
                 </div>
 
+                {/* Mobile Button (fixed at bottom) */}
+                {isMobile && (
+                  <div
+                    style={{
+                      position: "sticky",
+                      bottom: 0,
+                      background: theme.pageBg,
+                      padding: "0.75rem",
+                      borderTop: `1px solid ${theme.dateColor}30`,
+                    }}
+                  >
+                    <button
+                      onClick={() => setShowChatWindow(true)}
+                      className="btn btn-primary w-100"
+                      style={{ borderRadius: "8px" }}
+                    >
+                      Open Chat
+                    </button>
+                  </div>
+                )}
+
                 {/* Mentor List (scrollable area) */}
                 <div
                   style={{
@@ -539,26 +560,7 @@ const UniversityChatGroup = () => {
                   )}
                 </div>
 
-                {/* Mobile Button (fixed at bottom) */}
-                {isMobile && (
-                  <div
-                    style={{
-                      position: "sticky",
-                      bottom: 0,
-                      background: theme.pageBg,
-                      padding: "0.75rem",
-                      borderTop: `1px solid ${theme.dateColor}30`,
-                    }}
-                  >
-                    <button
-                      onClick={() => setShowChatWindow(true)}
-                      className="btn btn-primary w-100"
-                      style={{ borderRadius: "8px" }}
-                    >
-                      Open Chat
-                    </button>
-                  </div>
-                )}
+                
               </div>
 
 
@@ -567,8 +569,10 @@ const UniversityChatGroup = () => {
 
 
             {/* Right Panel */}
-            {(showChatWindow || !isMobile) && (
+            
+             {/* Prev used this!!!! */}
 
+            {/* {(showChatWindow || !isMobile) && (
 
               <div className="col-md-8" style={{ padding: 0 }}>
 
@@ -769,7 +773,228 @@ const UniversityChatGroup = () => {
                   </div>
                 </div>
               </div>
+            )} */}
+
+            {/* Right Panel */}
+            
+            {(showChatWindow || !isMobile) && (
+
+              <div className="col-md-8" style={{ padding: 0 }}>
+
+
+                <div
+                  className="chat-header d-flex align-items-center justify-content-start p-2"
+                  style={{ background: theme.bubbleOther, borderBottom: "1px solid #ddd" }}
+                >
+                  {isMobile && (
+                    <button className="btn btn-link" onClick={() => setShowChatWindow(false)}>
+                      <i className="fas fa-arrow-left" />
+                    </button>
+                  )}
+                  
+                  <div className="d-flex align-items-center">
+                    <div
+                      className="avatar-img rounded-circle me-2 d-flex align-items-center justify-content-center"
+                      style={{
+                        width: 50,
+                        height: 50,
+                        backgroundColor: stringToColor(generateLogoText(groupData)),
+                        color: "black",
+                        // fontWeight: "bold",
+                        fontSize: "12px",
+                      }}
+                    >
+                      {generateLogoText(groupData)}
+                    </div>
+
+                    <h5 style={{ color: theme.textColor }}>
+                      {groupData?.college || "Loading..."}
+                    </h5>
+                  </div>
+
+
+
+
+                </div>
+
+
+                <div
+                  style={{
+                    minHeight: "60vh",
+                    maxHeight: "70vh",
+                    overflowY: "auto",
+                    overflowX: "hidden", // Prevent horizontal scrolling
+                    padding: 10,
+                    background: "#f5f6fa",
+                  }}
+                  ref={chatScrollRef}
+                >
+
+
+
+                  {Object.entries(groupedMessages).map(([dateLabel, msgs]) => (
+                    <div key={dateLabel}>
+                      <div style={{ textAlign: "center", margin: "10px 0", fontSize: 12, color: "#888" }}>
+                        {dateLabel}
+                      </div>
+                      {msgs.map((msg, idx) => {
+                        const isCurrentUser = msg.sender === userData.current?.username;
+                        // const isMentor = usernameToRole[msg.sender] === "mentor";
+                        // check if this user is the mentor of THIS group
+                        const isMentorOfThisGroup = groupData?.members?.some(
+                          (m) => m.user.username === msg.sender && m.user_type === "mentor"
+                        );
+                        return (
+                          <li
+                            key={idx}
+                            style={{
+                              display: "flex",
+                              flexDirection: isCurrentUser ? "row-reverse" : "row",
+                              alignItems: "flex-start",
+                              marginBottom: 16,
+                            }}
+                          >
+
+
+
+                            <div
+                              style={{
+                                position: "relative",
+                                width: 36,
+                                height: 36,
+                                margin: "0 8px",
+                                flexShrink: 0, // Prevent avatar from shrinking
+                              }}
+                            >
+                              <img
+                                src={msg.profile_picture}
+                                alt=""
+                                style={{
+                                  width: "100%",
+                                  height: "100%",
+                                  borderRadius: "50%",
+                                  display: "block",
+                                }}
+                              />
+                              {isMentorOfThisGroup && (
+                                <span
+                                  style={{
+                                    position: "absolute",
+                                    bottom: -4,
+                                    right: -4,
+                                    backgroundColor: "#198754",
+                                    color: "#fff",
+                                    fontSize: "10px",
+                                    padding: "2px 5px",
+                                    borderRadius: "8px",
+                                    boxShadow: "0 1px 2px rgba(0, 0, 0, 0.15)",
+                                    zIndex: 1,
+                                  }}
+                                >
+                                  M
+                                </span>
+                              )}
+                            </div>
+
+
+
+                            <div
+                              style={{
+                                background: isCurrentUser ? "#d1f5d3" : "#ffffff",
+                                borderRadius: "16px",
+                                padding: "10px 14px",
+                                maxWidth: "75%",
+                                minWidth: 0, // Allow shrinking below content size
+                                boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
+                                overflow: "hidden", // Prevent content overflow
+                              }}
+                            >
+                              <p style={{ 
+                                margin: 0, 
+                                fontSize: 14,
+                                wordWrap: "break-word", // Break long words
+                                overflowWrap: "break-word", // Modern property for word breaking
+                                wordBreak: "break-word", // Additional word breaking
+                                whiteSpace: "pre-wrap", // Preserve whitespace and wrap
+                                hyphens: "auto", // Add hyphens for better breaking
+                              }}>
+                                {!isCurrentUser && (
+                                  <>
+                                    <strong>{msg.sender}</strong>:{" "}
+                                  </>
+                                )}
+                                {msg.message}
+                              </p>
+
+                              <div
+                                style={{
+                                  fontSize: 10,
+                                  color: "#999",
+                                  marginTop: 4,
+                                  textAlign: isCurrentUser ? "right" : "left",
+                                }}
+                              >
+                                {parseTimestamp(msg.timestamp)?.toLocaleTimeString([], {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                }) || "Invalid time"}
+                              </div>
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </div>
+                  ))}
+
+
+
+                  {typingUsers.length > 0 && (
+                    <div style={{ fontStyle: "italic", fontSize: 13, color: "#555", marginTop: 8 }}>
+                      {typingUsers.join(", ")} {typingUsers.length > 1 ? "are" : "is"} typing...
+                    </div>
+                  )}
+
+
+                </div>
+
+
+
+                <div
+                  style={{
+                    padding: 10,
+                    background: "#fff",
+                    borderTop: "1px solid #ddd",
+                    position: "sticky",
+                    bottom: 0,
+                    zIndex: 10,
+                  }}
+                >
+                  <div className="input-group">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Type something..."
+                      value={inputValue}
+                      // onChange={(e) => setInputValue(e.target.value)}
+                      onChange={(e) => {
+                        setInputValue(e.target.value);
+                        sendTypingEvent();  // Call this to emit "typing" event
+                      }}
+
+                      onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+                      style={{ padding: 10, fontSize: 14 }}
+                    />
+                    <button className="btn btn-primary" onClick={sendMessage}>
+                      Send
+                    </button>
+                  </div>
+                </div>
+              </div>
             )}
+
+
+          
+          
           </div>
         </div>
       </div>

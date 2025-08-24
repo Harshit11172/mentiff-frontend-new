@@ -2767,6 +2767,10 @@ const Register = (props) => {
   const [showTerms, setShowTerms] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
 
+  
+
+  // const [calendarConnected, setCalendarConnected] = useState(false);
+
 
 
   // Filter countries that have at least one university with non-empty domain
@@ -3095,15 +3099,38 @@ const Register = (props) => {
         console.log('calling verify email api with post request to enter extra mentor details')
         console.log(apiUrl)
 
-        formData.verification_status = 'verified';
-        console.log(formData)
+        // formData.verification_status = 'verified';
+        // console.log(formData)
+
+
+        // Find complete university data for the first API call
+        const universityData = matchedUniversityData || findUniversityData(formData.college);
+
+        // Combine formData with university data for verify-email endpoint
+        const verifyEmailData = {
+          ...formData,
+          verification_status: 'verified',
+          // Add all university fields if university data is found
+          ...(universityData && {
+            university_name: universityData.name,
+            university_city: universityData.city,
+            university_state: universityData.state,
+            university_country: universityData.country,
+            university_domain: universityData.domain,
+            university_url: universityData.url,
+            university_short_name: universityData.short_name,
+            university_category: universityData.category
+          })
+        };
+
+        console.log('Data to send to verify-email:', verifyEmailData);
 
         const response = await fetch(apiUrl, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(verifyEmailData),
         });
 
         const data = await response.json();
@@ -3116,8 +3143,7 @@ const Register = (props) => {
         console.log("Creating a new group if group not available and adding the mentor to it...");
         console.log("UserDetails found: ")
         console.log(userDetails)
-        // Find complete university data
-        const universityData = matchedUniversityData || findUniversityData(formData.college);
+        
 
         let body = {
           mentor_id: userDetails.id,

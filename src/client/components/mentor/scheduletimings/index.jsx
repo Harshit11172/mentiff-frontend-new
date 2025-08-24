@@ -36,7 +36,7 @@ const ScheduleTiming = (props) => {
   const getMentorIdFromLocalStorage = () => {
     try {
       const user = JSON.parse(localStorage.getItem('userData'));
-      return user?.id || null;
+      return user?.mentor_id || null;
     } catch {
       return null;
     }
@@ -153,6 +153,8 @@ const ScheduleTiming = (props) => {
 
   useEffect(() => {
     const mentorId = getMentorIdFromLocalStorage(); // Retrieve here
+    console.log('mentorId found is ')
+    console.log(mentorId)
     if (!mentorId) {
       console.error('Mentor ID not found in localStorage');
       return;
@@ -161,6 +163,7 @@ const ScheduleTiming = (props) => {
     const fetchSessionOptions = async () => {
       try {
         const response = await fetch(`http://127.0.0.1:8000/api/users/session-options/mentor/${mentorId}`);
+        console.log(`http://127.0.0.1:8000/api/users/session-options/mentor/${mentorId}`)
         if (response.ok) {
           const data = await response.json();
           setSessionOptions(data);
