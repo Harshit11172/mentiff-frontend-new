@@ -57,6 +57,9 @@ const UniversityChatGroup = () => {
   const [typingUsers, setTypingUsers] = useState([]);
   const typingTimeoutRef = useRef({});
 
+  const inputRef = useRef(null);
+
+
 
   const [usernameToRole, setUsernameToRole] = useState({});
 
@@ -340,22 +343,44 @@ const UniversityChatGroup = () => {
 
 
 
+  // const sendMessage = () => {
+  //   if (inputValue.trim() === "") return;
+
+  //   const newMessage = {
+  //     message: inputValue,
+  //     sender: userData.current.username,
+  //     timestamp: new Date().toISOString(),
+  //     profile_picture: userData.current.profile_picture,
+  //   };
+  //   console.log(" DPPPPPPPPPP ISSSSSS")
+  //   console.log(userData.current.profile_picture)
+
+  //   setMessages((prev) => [...prev, newMessage]);
+  //   chatSocket.current.send(JSON.stringify(newMessage));
+  //   setInputValue("");
+  // };
+
+
   const sendMessage = () => {
-    if (inputValue.trim() === "") return;
+  if (inputValue.trim() === "") return;
 
-    const newMessage = {
-      message: inputValue,
-      sender: userData.current.username,
-      timestamp: new Date().toISOString(),
-      profile_picture: userData.current.profile_picture,
-    };
-    console.log(" DPPPPPPPPPP ISSSSSS")
-    console.log(userData.current.profile_picture)
-
-    setMessages((prev) => [...prev, newMessage]);
-    chatSocket.current.send(JSON.stringify(newMessage));
-    setInputValue("");
+  const newMessage = {
+    message: inputValue,
+    sender: userData.current.username,
+    timestamp: new Date().toISOString(),
+    profile_picture: userData.current.profile_picture,
   };
+
+  setMessages((prev) => [...prev, newMessage]);
+  chatSocket.current.send(JSON.stringify(newMessage));
+  setInputValue("");
+  
+  // Keep keyboard open by refocusing
+  setTimeout(() => {
+    inputRef.current?.focus();
+  }, 100);
+};
+
 
   const groupedMessages = messages.reduce((acc, msg) => {
     const parsedDate = parseTimestamp(msg.timestamp);
@@ -984,6 +1009,7 @@ const UniversityChatGroup = () => {
                 >
                   <div className="input-group">
                     <input
+                      ref={inputRef}  // Add this line
                       type="text"
                       className="form-control"
                       placeholder="Type something..."
