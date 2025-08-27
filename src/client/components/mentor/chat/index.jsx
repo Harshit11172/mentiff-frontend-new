@@ -851,7 +851,7 @@ const UniversityChatGroup = () => {
                               display: "flex",
                               flexDirection: isCurrentUser ? "row-reverse" : "row",
                               alignItems: "flex-start",
-                              marginBottom: 16,
+                              marginBottom: 8,
                             }}
                           >
 
