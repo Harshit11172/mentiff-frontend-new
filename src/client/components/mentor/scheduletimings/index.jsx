@@ -54,7 +54,8 @@ const ScheduleTiming = (props) => {
 
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/api/users/session-options/mentor/${mentorId}/${selectedSessionOptionId}/`,
+        
+        `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/session-options/mentor/${mentorId}/${selectedSessionOptionId}/`,
         {
           method: 'PUT',
           headers: {
@@ -162,8 +163,9 @@ const ScheduleTiming = (props) => {
 
     const fetchSessionOptions = async () => {
       try {
-        const response = await fetch(`http://127.0.0.1:8000/api/users/session-options/mentor/${mentorId}`);
-        console.log(`http://127.0.0.1:8000/api/users/session-options/mentor/${mentorId}`)
+        
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/session-options/mentor/${mentorId}`);
+        console.log(`${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/session-options/mentor/${mentorId}`)
         if (response.ok) {
           const data = await response.json();
           setSessionOptions(data);

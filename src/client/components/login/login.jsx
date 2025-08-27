@@ -50,7 +50,7 @@ const LoginContainer = (props) => {
       setOtpRequested(true);
     } catch (error) {
       console.error("OTP request failed", error);
-      setError("Failed to send OTP");
+      setError("Failed to send OTP or account not found.");
     } finally {
       setLoading(false); // Stop loading
     }
@@ -171,13 +171,16 @@ const LoginContainer = (props) => {
                           required
                         />
                       </div>
+                      
                       <div className="text-end">
                         {/* <Link className="forgot-link" to="/forgot-password">
                           Resend OTP? 
                         </Link> */}
+                        
                         <Link className="forgot-link" to="/forgot-password">
                           Forgot Password?
                         </Link>
+                      
                       </div>
                     </>
                   )}
@@ -235,16 +238,19 @@ const LoginContainer = (props) => {
                   >
                     <button
                       className="btn btn-secondary"
-                      onClick={() => handleRoleSelect("mentor")}
-                    >
-                      Join as Mentor
-                    </button>
-                    <button
-                      className="btn btn-secondary"
                       onClick={() => handleRoleSelect("mentee")}
                     >
                       Join as Mentee
                     </button>
+
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => handleRoleSelect("mentor")}
+                    >
+                      Join as Mentor
+                    </button>
+
+
                   </div>
 
                   {

@@ -1548,7 +1548,8 @@ const MentorProfile = () => {
             </h3>
 
             {/* Post Review Section - Only show if user is logged in and is not the mentor */}
-            {isLoggedIn && !isCurrentUserMentor && !currentUser.user_type === "mentor" && (
+            {isLoggedIn && !isCurrentUserMentor && currentUser?.user_type !== "mentor" && (
+
               <div style={{
                 background: "#f8f9fa",
                 border: "1px solid #dee2e6",
@@ -1673,7 +1674,7 @@ const MentorProfile = () => {
 
             {/* Note for mentor viewing as a mentor profile */}
 
-            {currentUser.user_type === "mentor" && !isCurrentUserMentor && (
+            {currentUser?.user_type === "mentor" && !isCurrentUserMentor && (
               <div style={{
                 background: "#d1ecf1",
                 border: "1px solid #bee5eb",
