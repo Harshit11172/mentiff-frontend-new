@@ -995,7 +995,7 @@ const UniversityChatGroup = () => {
                       }}
 
                       onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-                      style={{ padding: 10, fontSize: 14 }}
+                      style={{ padding: 10, fontSize: 16 }}
                     />
                     <button className="btn btn-primary" onClick={sendMessage}>
                       Send
