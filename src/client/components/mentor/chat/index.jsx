@@ -90,7 +90,7 @@ const UniversityChatGroup = () => {
     dateColor: "#b0b3b8",
     typingColor: "#b0b3b8",
   };
-  
+
   const theme = darkMode ? darkTheme : lightTheme;
 
   const getUserData = () => {
@@ -282,33 +282,33 @@ const UniversityChatGroup = () => {
 
 
   const generateLogoText = (groupData) => {
-  if (groupData?.group_name) {
-    const name = groupData.group_name.trim();
+    if (groupData?.group_name) {
+      const name = groupData.group_name.trim();
 
-    if (name.length <= 10) {
-      // Short group name, show full
-      return name.toUpperCase();
+      if (name.length <= 10) {
+        // Short group name, show full
+        return name.toUpperCase();
+      }
+
+      // Long group name, take initials (first letter of each word, max 4 chars)
+      return name
+        .split(" ")
+        .map(word => word[0])
+        .join("")
+        .slice(0, 4)
+        .toUpperCase();
+    } else if (groupData?.college) {
+      // Fallback to college initials
+      return groupData.college
+        .split(" ")
+        .map(word => word[0])
+        .join("")
+        .slice(0, 4)
+        .toUpperCase();
     }
 
-    // Long group name, take initials (first letter of each word, max 4 chars)
-    return name
-      .split(" ")
-      .map(word => word[0])
-      .join("")
-      .slice(0, 4)
-      .toUpperCase();
-  } else if (groupData?.college) {
-    // Fallback to college initials
-    return groupData.college
-      .split(" ")
-      .map(word => word[0])
-      .join("")
-      .slice(0, 4)
-      .toUpperCase();
-  }
-
-  return "NA";
-};
+    return "NA";
+  };
 
 
 
@@ -560,7 +560,7 @@ const UniversityChatGroup = () => {
                   )}
                 </div>
 
-                
+
               </div>
 
 
@@ -569,8 +569,8 @@ const UniversityChatGroup = () => {
 
 
             {/* Right Panel */}
-            
-             {/* Prev used this!!!! */}
+
+            {/* Prev used this!!!! */}
 
             {/* {(showChatWindow || !isMobile) && (
 
@@ -776,7 +776,7 @@ const UniversityChatGroup = () => {
             )} */}
 
             {/* Right Panel */}
-            
+
             {(showChatWindow || !isMobile) && (
 
               <div className="col-md-8" style={{ padding: 0 }}>
@@ -791,7 +791,7 @@ const UniversityChatGroup = () => {
                       <i className="fas fa-arrow-left" />
                     </button>
                   )}
-                  
+
                   <div className="d-flex align-items-center">
                     <div
                       className="avatar-img rounded-circle me-2 d-flex align-items-center justify-content-center"
@@ -902,15 +902,15 @@ const UniversityChatGroup = () => {
                               style={{
                                 background: isCurrentUser ? "#d1f5d3" : "#ffffff",
                                 borderRadius: "16px",
-                                padding: "10px 14px",
+                                padding: "5px 10px",
                                 maxWidth: "75%",
                                 minWidth: 0, // Allow shrinking below content size
                                 boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
                                 overflow: "hidden", // Prevent content overflow
                               }}
                             >
-                              <p style={{ 
-                                margin: 0, 
+                              <p style={{
+                                margin: 0,
                                 fontSize: 14,
                                 wordWrap: "break-word", // Break long words
                                 overflowWrap: "break-word", // Modern property for word breaking
@@ -920,18 +920,29 @@ const UniversityChatGroup = () => {
                               }}>
                                 {!isCurrentUser && (
                                   <>
-                                    <strong>{msg.sender}</strong>:{" "}
+                                    {/* <strong>{msg.sender}</strong>{" "} */}
+                                    <strong
+                                      style={{
+                                        color: "#" + Math.floor(Math.random() * 16777215).toString(16),
+                                        fontSize: "12px"
+                                      }}
+                                    >
+                                      {msg.sender}
+                                    </strong>
+                                    <br></br>
                                   </>
                                 )}
+
                                 {msg.message}
                               </p>
 
                               <div
                                 style={{
-                                  fontSize: 10,
+                                  fontSize: 8,
                                   color: "#999",
-                                  marginTop: 4,
-                                  textAlign: isCurrentUser ? "right" : "left",
+                                  marginTop: -3,
+                                  // marginRight: -4,
+                                  textAlign: isCurrentUser ? "right" : "right",
                                 }}
                               >
                                 {parseTimestamp(msg.timestamp)?.toLocaleTimeString([], {
@@ -940,6 +951,8 @@ const UniversityChatGroup = () => {
                                 }) || "Invalid time"}
                               </div>
                             </div>
+
+
                           </li>
                         );
                       })}
@@ -993,8 +1006,7 @@ const UniversityChatGroup = () => {
             )}
 
 
-          
-          
+
           </div>
         </div>
       </div>

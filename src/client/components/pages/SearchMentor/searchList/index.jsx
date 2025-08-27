@@ -19,7 +19,7 @@ const SearchList = ({ mentors }) => {
         const rating = Math.round(mentor.rating || 0);// you can replace with real data when available
         const feedbackCount = mentor.feedback_count || 0; // replace with real reviews if present
         const callsBooked = mentor.calls_booked || 0;
-        const sessionFee = mentor.session_fee || 250;
+        const sessionFee = mentor.session_fee || 200;
 
         return (
           <div className="card" key={mentor.id}>

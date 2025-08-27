@@ -302,7 +302,7 @@ const SearchMentor = () => {
   useEffect(() => {
     if (filters.country) {
       const matched = allColleges.filter(
-        (college) => college.country === filters.country
+        (college) => college.country === filters.country && college.domain !== ""
       );
       setFilteredColleges(matched);
     } else {

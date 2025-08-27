@@ -16,7 +16,7 @@
 //   useEffect(() => {
 
 //     const token = localStorage.getItem('authToken'); // Check local storage for auth token
-    
+
 //     if (token) {
 //       setIsAuthenticated(true); // Update state if token exists
 //     }
@@ -57,7 +57,7 @@
 //     const isLoggedIn = isAuthenticated
 //     console.log("User has clicked join button: ")
 
-    
+
 //     if (!isLoggedIn) {
 //       // Store the intended route in localStorage
 //       localStorage.setItem('redirectAfterLogin', `/mentor/chat-mentor/`);
@@ -137,15 +137,15 @@
 //                               <tr key={group.id}>
 //                                 <td>
 //                                   <h2 className="table-avatar">
-                                    
+
 //                                     <Link to="mentee-bookings" className="avatar avatar-sm me-2">
 //                                       <img className="avatar-img rounded-circle" src={user_2} alt="User Image" />
 //                                     </Link>
-                                    
+
 //                                     <Link to="mentee-bookings">
 //                                       {group.college}<span>{group.group_name}</span>
 //                                     </Link>
-                              
+
 //                                   </h2>
 //                                 </td>
 //                                 <td className="text-center">
@@ -156,7 +156,7 @@
 //                                     <i className="far fa-eye" /> Join/View
 //                                   </button>
 //                                 </td>
-                              
+
 //                               </tr>
 //                             ))
 //                           ) : (
@@ -269,7 +269,7 @@
 
 //   const logoText = generateLogoText(groupData);
 //   const backgroundColor = stringToColor(logoText);
-  
+
 //   return (
 //     <div
 //       className={`d-flex align-items-center justify-content-center ${className}`}
@@ -300,7 +300,7 @@
 //           borderRadius: "50%",
 //         }}
 //       />
-      
+
 //       {/* Logo text */}
 //       <span style={{ position: "relative", zIndex: 1 }}>
 //         {logoText}
@@ -318,7 +318,7 @@
 
 //   useEffect(() => {
 //     const token = localStorage.getItem('authToken'); // Check local storage for auth token
-    
+
 //     if (token) {
 //       setIsAuthenticated(true); // Update state if token exists
 //     } else {
@@ -549,7 +549,7 @@
 //                 </div>
 //               </div>
 //               */}
-              
+
 //             </div>
 //             {/* /University Groups */}
 //           </div>
@@ -634,7 +634,7 @@ const UniversityLogo = ({ groupData, size = 40, className = "" }) => {
 
   const logoText = generateLogoText(groupData);
   const backgroundColor = stringToColor(logoText);
-  
+
   return (
     <div
       className={`avatar-img rounded-circle d-flex align-items-center justify-content-center ${className}`}
@@ -664,7 +664,7 @@ const UniversityLogo = ({ groupData, size = 40, className = "" }) => {
           borderRadius: "50%",
         }}
       />
-      
+
       {/* Logo text */}
       <span style={{ position: "relative", zIndex: 1 }}>
         {logoText}
@@ -679,10 +679,10 @@ const ViewAllGroups = (props) => {
   const [searchQuery, setSearchQuery] = useState(""); // State for search input
   const history = useHistory();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  
+
   useEffect(() => {
     const token = localStorage.getItem('authToken'); // Check local storage for auth token
-    
+
     if (token) {
       setIsAuthenticated(true); // Update state if token exists
     }
@@ -695,7 +695,7 @@ const ViewAllGroups = (props) => {
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/universities/groups/`
-        );        
+        );
         setGroups(response.data); // Set the groups data
         console.log("Fetched groups data:", response.data);
       } catch (error) {
@@ -709,7 +709,7 @@ const ViewAllGroups = (props) => {
   }, []);
 
   // Filter groups based on the search query
-  const filteredGroups = groups.filter(group => 
+  const filteredGroups = groups.filter(group =>
     group.group_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     group.college.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -742,7 +742,7 @@ const ViewAllGroups = (props) => {
   return (
     <>
       {/* <Header {...props} /> */}
-      <HomeFiveHeader/>
+      <HomeFiveHeader />
       {/* Breadcrumb */}
 
       {/* Page Content */}
@@ -764,12 +764,12 @@ const ViewAllGroups = (props) => {
 
               {/* Search Bar */}
               <div className="mb-3">
-                <input 
-                  type="text" 
-                  placeholder="Search by group name or college..." 
-                  className="form-control" 
+                <input
+                  type="text"
+                  placeholder="Search by group name or college..."
+                  className="form-control"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)} 
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
 
@@ -795,29 +795,35 @@ const ViewAllGroups = (props) => {
                               <tr key={group.id}>
                                 <td>
                                   <h2 className="table-avatar">
-                                    <Link to="mentee-bookings" className="avatar avatar-sm me-2">
-                                      <UniversityLogo 
-                                        groupData={group} 
-                                        size={40} 
+                                    <span
+                                      className="avatar avatar-sm me-2 cursor-pointer"
+                                      onClick={() => handleJoinClick(group)}
+                                    >
+                                      <UniversityLogo
+                                        groupData={group}
+                                        size={40}
                                       />
-                                    </Link>
-                                    
-                                    <Link to="mentee-bookings">
-                                      {group.college}<span>{group.group_name}</span>
-                                    </Link>
-                              
+                                    </span>
+
+                                    <span
+                                      className="cursor-pointer"
+                                      onClick={() => handleJoinClick(group)}
+                                    >
+                                      <strong>{group.college}</strong>
+                                      <span>{group.group_name}</span>
+                                    </span>
                                   </h2>
                                 </td>
                                 <td className="text-center">
-                                  <button 
+                                  <button
                                     className="btn btn-sm bg-info-light"
                                     onClick={() => handleJoinClick(group)}
                                   >
                                     <i className="far fa-eye" /> Join/View
                                   </button>
                                 </td>
-                              
                               </tr>
+
                             ))
                           ) : (
                             <tr>
