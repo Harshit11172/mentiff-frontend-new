@@ -726,7 +726,7 @@ const UniversityChatGroup = () => {
                               </div>
                             )}
                             {!isFirstInSequence && (
-                              <div style={{ width: 36, height: 36, margin: "0px -5px 0px -5px" }}></div>
+                              <div style={{ width: 36, height: 36, margin: "0px -5px 0px -25px" }}></div>
                             )}
 
 
