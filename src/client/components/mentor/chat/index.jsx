@@ -338,6 +338,15 @@ const UniversityChatGroup = () => {
     return "#f6fafeff";
   };
 
+  const userNameStringToColor = (str = "") => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const color = (hash & 0xffffff).toString(16).padStart(6, "0");
+  return `#${color}`;
+};
+
 
 
 
@@ -362,24 +371,24 @@ const UniversityChatGroup = () => {
 
 
   const sendMessage = () => {
-  if (inputValue.trim() === "") return;
+    if (inputValue.trim() === "") return;
 
-  const newMessage = {
-    message: inputValue,
-    sender: userData.current.username,
-    timestamp: new Date().toISOString(),
-    profile_picture: userData.current.profile_picture,
+    const newMessage = {
+      message: inputValue,
+      sender: userData.current.username,
+      timestamp: new Date().toISOString(),
+      profile_picture: userData.current.profile_picture,
+    };
+
+    setMessages((prev) => [...prev, newMessage]);
+    chatSocket.current.send(JSON.stringify(newMessage));
+    setInputValue("");
+
+    // Keep keyboard open by refocusing
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 100);
   };
-
-  setMessages((prev) => [...prev, newMessage]);
-  chatSocket.current.send(JSON.stringify(newMessage));
-  setInputValue("");
-  
-  // Keep keyboard open by refocusing
-  setTimeout(() => {
-    inputRef.current?.focus();
-  }, 100);
-};
 
 
   const groupedMessages = messages.reduce((acc, msg) => {
@@ -588,217 +597,8 @@ const UniversityChatGroup = () => {
 
               </div>
 
-
-
             )}
 
-
-            {/* Right Panel */}
-
-            {/* Prev used this!!!! */}
-
-            {/* {(showChatWindow || !isMobile) && (
-
-              <div className="col-md-8" style={{ padding: 0 }}>
-
-
-                <div
-                  className="chat-header d-flex align-items-center justify-content-start p-2"
-                  style={{ background: theme.bubbleOther, borderBottom: "1px solid #ddd" }}
-                >
-                  {isMobile && (
-                    <button className="btn btn-link" onClick={() => setShowChatWindow(false)}>
-                      <i className="fas fa-arrow-left" />
-                    </button>
-                  )}
-                  
-                  <div className="d-flex align-items-center">
-                    <div
-                      className="avatar-img rounded-circle me-2 d-flex align-items-center justify-content-center"
-                      style={{
-                        width: 50,
-                        height: 50,
-                        backgroundColor: stringToColor(generateLogoText(groupData)),
-                        color: "black",
-                        // fontWeight: "bold",
-                        fontSize: "12px",
-                      }}
-                    >
-                      {generateLogoText(groupData)}
-                    </div>
-
-                    <h5 style={{ color: theme.textColor }}>
-                      {groupData?.college || "Loading..."}
-                    </h5>
-                  </div>
-
-
-
-
-                </div>
-
-
-                <div
-                  style={{
-                    minHeight: "60vh",
-                    maxHeight: "70vh",
-                    overflowY: "auto",
-                    padding: 10,
-                    background: "#f5f6fa",
-                  }}
-                  ref={chatScrollRef}
-                >
-
-
-
-                  {Object.entries(groupedMessages).map(([dateLabel, msgs]) => (
-                    <div key={dateLabel}>
-                      <div style={{ textAlign: "center", margin: "10px 0", fontSize: 12, color: "#888" }}>
-                        {dateLabel}
-                      </div>
-                      {msgs.map((msg, idx) => {
-                        const isCurrentUser = msg.sender === userData.current?.username;
-                        // const isMentor = usernameToRole[msg.sender] === "mentor";
-                        // check if this user is the mentor of THIS group
-                        const isMentorOfThisGroup = groupData?.members?.some(
-                          (m) => m.user.username === msg.sender && m.user_type === "mentor"
-                        );
-                        return (
-                          <li
-                            key={idx}
-                            style={{
-                              display: "flex",
-                              flexDirection: isCurrentUser ? "row-reverse" : "row",
-                              alignItems: "flex-start",
-                              marginBottom: 16,
-                            }}
-                          >
-
-
-
-                            <div
-                              style={{
-                                position: "relative",
-                                width: 36,
-                                height: 36,
-                                margin: "0 8px",
-                              }}
-                            >
-                              <img
-                                src={msg.profile_picture}
-                                alt=""
-                                style={{
-                                  width: "100%",
-                                  height: "100%",
-                                  borderRadius: "50%",
-                                  display: "block",
-                                }}
-                              />
-                              {isMentorOfThisGroup && (
-                                <span
-                                  style={{
-                                    position: "absolute",
-                                    bottom: -4,
-                                    right: -4,
-                                    backgroundColor: "#198754",
-                                    color: "#fff",
-                                    fontSize: "10px",
-                                    padding: "2px 5px",
-                                    borderRadius: "8px",
-                                    boxShadow: "0 1px 2px rgba(0, 0, 0, 0.15)",
-                                    zIndex: 1,
-                                  }}
-                                >
-                                  M
-                                </span>
-                              )}
-                            </div>
-
-
-
-                            <div
-                              style={{
-                                background: isCurrentUser ? "#d1f5d3" : "#ffffff",
-                                borderRadius: "16px",
-                                padding: "10px 14px",
-                                maxWidth: "75%",
-                                boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
-                              }}
-                            >
-                              <p style={{ margin: 0, fontSize: 14 }}>
-                                {!isCurrentUser && (
-                                  <>
-                                    <strong>{msg.sender}</strong>:{" "}
-                                  </>
-                                )}
-                                {msg.message}
-                              </p>
-
-                              <div
-                                style={{
-                                  fontSize: 10,
-                                  color: "#999",
-                                  marginTop: 4,
-                                  textAlign: isCurrentUser ? "right" : "left",
-                                }}
-                              >
-                                {parseTimestamp(msg.timestamp)?.toLocaleTimeString([], {
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                }) || "Invalid time"}
-                              </div>
-                            </div>
-                          </li>
-                        );
-                      })}
-                    </div>
-                  ))}
-
-
-
-                  {typingUsers.length > 0 && (
-                    <div style={{ fontStyle: "italic", fontSize: 13, color: "#555", marginTop: 8 }}>
-                      {typingUsers.join(", ")} {typingUsers.length > 1 ? "are" : "is"} typing...
-                    </div>
-                  )}
-
-
-                </div>
-
-
-
-                <div
-                  style={{
-                    padding: 10,
-                    background: "#fff",
-                    borderTop: "1px solid #ddd",
-                    position: "sticky",
-                    bottom: 0,
-                    zIndex: 10,
-                  }}
-                >
-                  <div className="input-group">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Type something..."
-                      value={inputValue}
-                      // onChange={(e) => setInputValue(e.target.value)}
-                      onChange={(e) => {
-                        setInputValue(e.target.value);
-                        sendTypingEvent();  // Call this to emit "typing" event
-                      }}
-
-                      onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-                      style={{ padding: 10, fontSize: 14 }}
-                    />
-                    <button className="btn btn-primary" onClick={sendMessage}>
-                      Send
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )} */}
 
             {/* Right Panel */}
 
@@ -863,12 +663,16 @@ const UniversityChatGroup = () => {
                         {dateLabel}
                       </div>
                       {msgs.map((msg, idx) => {
+
                         const isCurrentUser = msg.sender === userData.current?.username;
                         // const isMentor = usernameToRole[msg.sender] === "mentor";
                         // check if this user is the mentor of THIS group
                         const isMentorOfThisGroup = groupData?.members?.some(
                           (m) => m.user.username === msg.sender && m.user_type === "mentor"
+
                         );
+                        // NEW: Check if this is the first message from this user in a sequence
+                        const isFirstInSequence = idx === 0 || msgs[idx - 1].sender !== msg.sender;
                         return (
                           <li
                             key={idx}
@@ -876,51 +680,54 @@ const UniversityChatGroup = () => {
                               display: "flex",
                               flexDirection: isCurrentUser ? "row-reverse" : "row",
                               alignItems: "flex-start",
-                              marginBottom: 8,
+                              marginBottom: 4,
                             }}
                           >
 
-
-
-                            <div
-                              style={{
-                                position: "relative",
-                                width: 36,
-                                height: 36,
-                                margin: "0 8px",
-                                flexShrink: 0, // Prevent avatar from shrinking
-                              }}
-                            >
-                              <img
-                                src={msg.profile_picture}
-                                alt=""
+                            {isFirstInSequence && (
+                              <div
                                 style={{
-                                  width: "100%",
-                                  height: "100%",
-                                  borderRadius: "50%",
-                                  display: "block",
+                                  position: "relative",
+                                  width: 36,
+                                  height: 36,
+                                  margin: "0px -5px 0px 3px",
+                                  flexShrink: 0,
                                 }}
-                              />
-                              {isMentorOfThisGroup && (
-                                <span
+                              >
+                                <img
+                                  src={msg.profile_picture}
+                                  alt=""
                                   style={{
-                                    position: "absolute",
-                                    bottom: -4,
-                                    right: -4,
-                                    backgroundColor: "#198754",
-                                    color: "#fff",
-                                    fontSize: "10px",
-                                    padding: "2px 5px",
-                                    borderRadius: "8px",
-                                    boxShadow: "0 1px 2px rgba(0, 0, 0, 0.15)",
-                                    zIndex: 1,
-                                  }}
-                                >
-                                  M
-                                </span>
-                              )}
-                            </div>
+                                    width: "75%",
+                                    height: "75%",
+                                    borderRadius: "50%",
+                                    display: "block",
 
+                                  }}
+                                />
+                                {isMentorOfThisGroup && (
+                                  <span
+                                    style={{
+                                      position: "absolute",
+                                      bottom: 0,
+                                      right: 6,
+                                      backgroundColor: "#198754",
+                                      color: "#fff",  
+                                      fontSize: "8px",
+                                      padding: "2px 5px",
+                                      borderRadius: "8px",
+                                      boxShadow: "0 1px 2px rgba(0, 0, 0, 0.15)",
+                                      zIndex: 1,
+                                    }}
+                                  >
+                                    M
+                                  </span>
+                                )}
+                              </div>
+                            )}
+                            {!isFirstInSequence && (
+                              <div style={{ width: 36, height: 36, margin: "0px -5px 0px -5px" }}></div>
+                            )}
 
 
                             <div
@@ -943,12 +750,12 @@ const UniversityChatGroup = () => {
                                 whiteSpace: "pre-wrap", // Preserve whitespace and wrap
                                 hyphens: "auto", // Add hyphens for better breaking
                               }}>
-                                {!isCurrentUser && (
+
+                                {!isCurrentUser && isFirstInSequence && (
                                   <>
-                                    {/* <strong>{msg.sender}</strong>{" "} */}
                                     <strong
                                       style={{
-                                        color: "#" + Math.floor(Math.random() * 16777215).toString(16),
+                                        color: userNameStringToColor(msg.sender),
                                         fontSize: "12px"
                                       }}
                                     >
@@ -973,7 +780,8 @@ const UniversityChatGroup = () => {
                                 {parseTimestamp(msg.timestamp)?.toLocaleTimeString([], {
                                   hour: "2-digit",
                                   minute: "2-digit",
-                                }) || "Invalid time"}
+                                  hour12: true,
+                                }).replace(/am|pm/gi, (match) => match.toUpperCase()) || "Invalid time"}
                               </div>
                             </div>
 
