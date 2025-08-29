@@ -52,6 +52,61 @@ const MentorProfile = () => {
   const [selectedOptionId, setSelectedOptionId] = useState(null);
   const selectedOption = sessionOptions.find(opt => opt.id === selectedOptionId);
 
+  const handlePaymentInitiate = async () => {
+    if (!selectedDate || !selectedTimeSlot || !selectedOption || !mentorData) {
+      alert("Please select a date, time slot, and session duration before booking.");
+      return;
+    }
+    if (!currentUser) {
+      alert("⚠️ Please login to book a session!");
+      window.location.href = "/login";
+      return;
+    }
+    if (currentUser?.mentor_id === mentorData?.id) {
+      alert("❌ You cannot book a session with yourself.");
+      return;
+    }
+    if (currentUser?.user_type === "mentor") {
+      alert("❌ A mentor cannot book a session, login as a mentee first!");
+      return;
+    }
+    alert(`Booking a session on ${selectedDate.toLocaleDateString()} at ${selectedTimeSlot} for ${selectedOption.duration_minutes} min. Payment is being initiated...`);
+    try {
+      const authToken = localStorage.getItem("authToken");
+
+      const res = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/payment/initiate/`,
+        {
+          mentee_id: currentUser.mentee_id,
+          mentor_id: mentorData.id,
+          // session_option_id: selectedOption.id,
+          date: selectedDate.toISOString().split("T"),
+          time_slot: selectedTimeSlot,
+          currency: selectedOption.currency,
+          total_amount: selectedOption.fee,
+          callback_url: `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/payment/callback/`
+
+        },
+        {
+          headers: {
+            Authorization: `Token ${authToken}`,
+          },
+        }
+      );
+      // Optionally handle redirect or show a confirmation
+      alert("Payment initiated successfully! Please complete your payment as directed.");
+      // eg: window.location.href = res.data.payment_url;
+      if (res.data.success && res.data.payment_url) {
+        window.location.href = res.data.payment_url;
+      } else {
+        alert("Failed to initiate payment. Please try again.");
+      }
+    } catch (err) {
+      console.error("Payment initiation error:", err);
+      alert("Failed to initiate payment. Please try again.");
+    }
+  };
+
 
 
   // Tab configuration
@@ -1972,7 +2027,7 @@ const MentorProfile = () => {
 
 
 
-      <button
+      {/* <button
         onClick={() => {
           if (!currentUser) {
             alert("⚠️ Please login to book a session!");
@@ -2005,7 +2060,30 @@ const MentorProfile = () => {
         }}
       >
         💳 Pay Now
+      </button> */}
+
+      <button
+        onClick={handlePaymentInitiate}
+        style={{
+          marginTop: "1.5rem",
+          width: "100%",
+          padding: "12px",
+          backgroundColor:
+            currentUser?.mentor_id === mentorData?.id ? "#ccc" : "#198754",
+          color: "white",
+          border: "none",
+          borderRadius: "6px",
+          fontWeight: "600",
+          fontSize: "1rem",
+          cursor:
+            !currentUser || currentUser?.mentor_id === mentorData?.id
+              ? "not-allowed"
+              : "pointer",
+        }}
+      >
+        💳 Pay Now
       </button>
+
 
 
 
