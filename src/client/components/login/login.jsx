@@ -412,7 +412,7 @@ const handleGoogleSuccess = async (credentialResponse) => {
 //   ]
 // }
     // success → response contains token + user
-    const { tokens, user } = res.data;
+    const { token, user } = res.data;
 
     localStorage.setItem("authToken", token[0]); // adjust if backend sends differently
     localStorage.setItem("userData", JSON.stringify(user));
