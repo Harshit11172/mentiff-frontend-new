@@ -395,11 +395,26 @@ const handleGoogleSuccess = async (credentialResponse) => {
       `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/auth/google/`,
       { credential: credentialResponse.credential }
     );
-
+// {
+//   "user": {
+//     "id": 2,
+//     "profile_picture": "http://www.api.mentiff.com/media/https%3A/lh3.googleusercontent.com/a/ACg8ocKcp_w_ovLM7xXZnkKxwAUS2Q2qjRkEGuDxUnqND-vL4l6Czw%3Ds96-c",
+//     "mentee_id": 9,
+//     "mentor_id": null,
+//     "first_name": "Harshit",
+//     "last_name": "Pathak",
+//     "email": "harshit.pathak2301@gmail.com",
+//     "username": "ankitkh9",
+//     "user_type": "mentee"
+//   },
+//   "token": [
+//     "d439fbca678cb3e0f968fd2698c44bfcacda167f"
+//   ]
+// }
     // success → response contains token + user
     const { tokens, user } = res.data;
 
-    localStorage.setItem("authToken", tokens?.access || ""); // adjust if backend sends differently
+    localStorage.setItem("authToken", token[0]); // adjust if backend sends differently
     localStorage.setItem("userData", JSON.stringify(user));
 
     setError(null); // clear any old errors
