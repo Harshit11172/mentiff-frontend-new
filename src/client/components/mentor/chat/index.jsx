@@ -384,10 +384,14 @@ const UniversityChatGroup = () => {
     chatSocket.current.send(JSON.stringify(newMessage));
     setInputValue("");
 
-    // Keep keyboard open by refocusing
-    setTimeout(() => {
-      inputRef.current?.focus();
-    }, 100);
+    // // Keep keyboard open by refocusing
+    // setTimeout(() => {
+    //   inputRef.current?.focus();
+    // }, 100);
+    // Keep keyboard open by refocusing immediately (iOS fix)
+  if (inputRef.current) {
+    inputRef.current.focus();
+  }
   };
 
 
