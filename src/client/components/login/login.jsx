@@ -16,7 +16,7 @@
 //   const [otpSubmitted, setOtpSubmitted] = useState(false); // Whether OTP has been submitted
 //   const [role, setRole] = useState(null); // Track selected role
 //   const [loading, setLoading] = useState(false);
-  
+
 
 //   const togglePasswordVisibility = () => {
 //     setShowPassword(!showPassword);
@@ -172,16 +172,16 @@
 //                           required
 //                         />
 //                       </div>
-                      
+
 //                       <div className="text-end">
 //                         {/* <Link className="forgot-link" to="/forgot-password">
 //                           Resend OTP? 
 //                         </Link> */}
-                        
+
 //                         <Link className="forgot-link" to="/forgot-password">
 //                           Forgot Password?
 //                         </Link>
-                      
+
 //                       </div>
 //                     </>
 //                   )}
@@ -300,8 +300,8 @@ const LoginContainer = (props) => {
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [otpRequested, setOtpRequested] = useState(false);
-  const [otpSubmitted, setOtpSubmitted] = useState(false); 
-  const [role, setRole] = useState(null); 
+  const [otpSubmitted, setOtpSubmitted] = useState(false);
+  const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(false);
   const clientId = "967688971465-dolsps6mln2mr1kueavd8nkuon2r39kf.apps.googleusercontent.com"
   console.log("MY URL HIT LOCATION IS ::::")
@@ -320,7 +320,7 @@ const LoginContainer = (props) => {
       console.log("User is already logged in: Token found");
       const redirectPath = localStorage.getItem("redirectAfterLogin");
       console.log("Redirecting the user to ", redirectPath);
-      history.push(redirectPath); 
+      history.push(redirectPath);
     }
 
     document.body.classList.add("account-page");
@@ -341,13 +341,13 @@ const LoginContainer = (props) => {
       console.error("OTP request failed", error);
       setError("Failed to send OTP or account not found.");
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(""); 
+    setError("");
 
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/login/`, {
@@ -385,56 +385,71 @@ const LoginContainer = (props) => {
   };
 
   const handleRoleSelect = (selectedRole) => {
-    setRole(selectedRole); 
+    setRole(selectedRole);
     history.push("/register", { role: selectedRole });
   };
 
-const handleGoogleSuccess = async (credentialResponse) => {
-  try {
-    const res = await axios.post(
-      `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/auth/google/`,
-      { credential: credentialResponse.credential }
-    );
-// {
-//   "user": {
-//     "id": 2,
-//     "profile_picture": "http://www.api.mentiff.com/media/https%3A/lh3.googleusercontent.com/a/ACg8ocKcp_w_ovLM7xXZnkKxwAUS2Q2qjRkEGuDxUnqND-vL4l6Czw%3Ds96-c",
-//     "mentee_id": 9,
-//     "mentor_id": null,
-//     "first_name": "Harshit",
-//     "last_name": "Pathak",
-//     "email": "harshit.pathak2301@gmail.com",
-//     "username": "ankitkh9",
-//     "user_type": "mentee"
-//   },
-//   "token": [
-//     "d439fbca678cb3e0f968fd2698c44bfcacda167f"
-//   ]
-// }
-    // success → response contains token + user
-    const { token, user } = res.data;
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL_BACKEND}/api/users/auth/google/`,
+        { credential: credentialResponse.credential }
+      );
+      // {
+      //   "user": {
+      //     "id": 2,
+      //     "profile_picture": "http://www.api.mentiff.com/media/https%3A/lh3.googleusercontent.com/a/ACg8ocKcp_w_ovLM7xXZnkKxwAUS2Q2qjRkEGuDxUnqND-vL4l6Czw%3Ds96-c",
+      //     "mentee_id": 9,
+      //     "mentor_id": null,
+      //     "first_name": "Harshit",
+      //     "last_name": "Pathak",
+      //     "email": "harshit.pathak2301@gmail.com",
+      //     "username": "ankitkh9",
+      //     "user_type": "mentee"
+      //   },
+      //   "token": [
+      //     "d439fbca678cb3e0f968fd2698c44bfcacda167f"
+      //   ]
+      // }
+      // success → response contains token + user
+      const { token, user } = res.data;
 
-    localStorage.setItem("authToken", token[0]); // adjust if backend sends differently
-    localStorage.setItem("userData", JSON.stringify(user));
+      localStorage.setItem("authToken", token[0]); // adjust if backend sends differently
+      localStorage.setItem("userData", JSON.stringify(user));
 
-    setError(null); // clear any old errors
+      setError(null); // clear any old errors
 
-    if (user.user_type === "mentor") {
-      history.push("/mentor/mentor-dashboard");
-    } else {
-      history.push("/");
+      // if (user.user_type === "mentor") {
+      //   history.push("/mentor/mentor-dashboard");
+      // } else {
+      //   history.push("/");
+      // }
+            console.log("Token:", token);
+      console.log("User Data:", user);
+
+      const redirectPath = localStorage.getItem("redirectAfterLogin");
+      localStorage.removeItem("redirectAfterLogin");
+
+      if (redirectPath && user.user_type !== "mentor") {
+        history.push(redirectPath);
+      } else {
+        if (user.user_type === "mentor") {
+          history.push("/mentor/mentor-dashboard");
+        } else {
+          history.push("/");
+        }
+      }
+    } catch (err) {
+      console.error("Google login failed", err);
+
+      // Handle backend error dynamically
+      if (err.response && err.response.data) {
+        setError(err.response.data.detail || "Google login failed");
+      } else {
+        setError("Google login failed. Try again.");
+      }
     }
-  } catch (err) {
-    console.error("Google login failed", err);
-
-    // Handle backend error dynamically
-    if (err.response && err.response.data) {
-      setError(err.response.data.detail || "Google login failed");
-    } else {
-      setError("Google login failed. Try again.");
-    }
-  }
-};
+  };
 
 
   return (
@@ -446,16 +461,20 @@ const handleGoogleSuccess = async (credentialResponse) => {
             top: 0,
             left: 0,
             width: "100vw",
-            height: "100vh",
+            minHeight: "100vh",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             backgroundColor: "#fdfdfdff",
+            boxSizing: "border-box", // Add this
+            margin: 0, // Add this
+            padding: 0, // Add this
+            
           }}
         >
           <div className="account-content">
             <div className="account-box">
-              <div className="login-right">
+              <div className="login-right" style={{boxShadow: "0 1px 5px hsla(142, 62%, 40%, 0.59)"}}>
                 <div className="login-header">
                   <h3>
                     Login <span>Mentiff</span>
@@ -488,7 +507,7 @@ const handleGoogleSuccess = async (credentialResponse) => {
                           required
                         />
                       </div>
-                      
+
                       <div className="text-end">
                         <Link className="forgot-link" to="/forgot-password">
                           Forgot Password?
@@ -530,37 +549,38 @@ const handleGoogleSuccess = async (credentialResponse) => {
                   )}
 
                   <div className="text-center dont-have">
-                    Don’t have an account?{" "}
+                    Don’t have an account? Register as{" "}
                   </div>
 
                   <div
                     className="text-center mt-3"
                     style={{ display: "flex", justifyContent: "center", gap: "12px", flexWrap: "wrap" }}
-                  >
+                  > 
+                  
                     <button
                       className="btn btn-secondary"
                       onClick={() => handleRoleSelect("mentee")}
                     >
-                      Join as Mentee
+                       Student
                     </button>
 
                     <button
                       className="btn btn-secondary"
                       onClick={() => handleRoleSelect("mentor")}
                     >
-                      Join as Mentor
+                       Mentor/Alumni
                     </button>
                   </div>
                 </form>
 
                 {/* ✅ Google Login Button */}
-                <div style={{ marginTop: "20px", textAlign: "center" }}>
+                <div style={{ marginTop: "20px", textAlign: "center", minWidth: "280px", width: "100%"   }}>
                   <GoogleLogin
                     onSuccess={handleGoogleSuccess}
                     onError={() => setError("Google login failed")}
                   />
                 </div>
-              
+
               </div>
             </div>
           </div>
