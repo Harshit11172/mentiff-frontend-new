@@ -306,7 +306,7 @@ const LoginContainer = (props) => {
   const clientId = "967688971465-dolsps6mln2mr1kueavd8nkuon2r39kf.apps.googleusercontent.com"
   console.log("MY URL HIT LOCATION IS ::::")
   console.log(window.location.origin)
-
+  const redirectPath = localStorage.getItem("redirectAfterLogin");
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
