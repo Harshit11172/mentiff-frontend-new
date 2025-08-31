@@ -424,7 +424,7 @@ const LoginContainer = (props) => {
       // } else {
       //   history.push("/");
       // }
-            console.log("Token:", token);
+      console.log("Token:", token);
       console.log("User Data:", user);
 
       const redirectPath = localStorage.getItem("redirectAfterLogin");
