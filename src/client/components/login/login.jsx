@@ -307,7 +307,10 @@ const LoginContainer = (props) => {
   console.log("MY URL HIT LOCATION IS ::::")
   console.log(window.location.origin)
   const redirectPath = localStorage.getItem("redirectAfterLogin");
+  
 
+
+  
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
     inputRef.current.type = showPassword ? "password" : "text";
