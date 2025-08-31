@@ -309,7 +309,6 @@ const LoginContainer = (props) => {
   const redirectPath = localStorage.getItem("redirectAfterLogin");
   
 
-
   
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -552,7 +551,7 @@ const LoginContainer = (props) => {
                   )}
 
                   <div className="text-center dont-have">
-                    Don’t have an account? Register as{" "}
+                    Don't have an account? Register as
                   </div>
 
                   <div
