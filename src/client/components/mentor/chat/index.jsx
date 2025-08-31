@@ -339,13 +339,13 @@ const UniversityChatGroup = () => {
   };
 
   const userNameStringToColor = (str = "") => {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const color = (hash & 0xffffff).toString(16).padStart(6, "0");
-  return `#${color}`;
-};
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const color = (hash & 0xffffff).toString(16).padStart(6, "0");
+    return `#${color}`;
+  };
 
 
 
@@ -389,9 +389,9 @@ const UniversityChatGroup = () => {
     //   inputRef.current?.focus();
     // }, 100);
     // Keep keyboard open by refocusing immediately (iOS fix)
-  if (inputRef.current) {
-    inputRef.current.focus();
-  }
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   };
 
 
@@ -716,7 +716,7 @@ const UniversityChatGroup = () => {
                                       bottom: 0,
                                       right: 6,
                                       backgroundColor: "#198754",
-                                      color: "#fff",  
+                                      color: "#fff",
                                       fontSize: "8px",
                                       padding: "2px 5px",
                                       borderRadius: "8px",
@@ -820,7 +820,8 @@ const UniversityChatGroup = () => {
                   }}
                 >
                   <div className="input-group">
-                    <input
+
+                    {/* <input
                       ref={inputRef}  // Add this line
                       type="text"
                       className="form-control"
@@ -832,13 +833,47 @@ const UniversityChatGroup = () => {
                         sendTypingEvent();  // Call this to emit "typing" event
                       }}
 
-                      onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+                      // onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+                      onKeyPress={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          sendMessage();
+                        }
+                      }}
                       style={{ padding: 10, fontSize: 16 }}
+                    /> */}
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      className="form-control"
+                      placeholder="Type something..."
+                      value={inputValue}
+                      onChange={(e) => {
+                        setInputValue(e.target.value);
+                        sendTypingEvent();
+                      }}
+                      onKeyPress={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          sendMessage();
+                        }
+                      }}
+                      style={{
+                        padding: 10,
+                        fontSize: 16,
+                        WebkitAppearance: 'none', // iOS specific
+                        outline: 'none' // Prevent blue outline on focus
+                      }}
+                      autoComplete="off"
+                      autoCorrect="off"
+                      spellCheck="false"
                     />
                     <button className="btn btn-primary" onClick={sendMessage}>
                       Send
                     </button>
                   </div>
+
+
                 </div>
               </div>
             )}
