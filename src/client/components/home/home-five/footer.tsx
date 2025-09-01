@@ -659,7 +659,7 @@ const HomeFiveFooter = () => {
               and dedication to building a platform that truly makes an impact.
             </p>
 
-            <h4>👤 Harshit Pathak</h4>
+            {/* <h4>👤 Harshit Pathak</h4>
             <p>🎓 NIT Bhopal, 2021</p>
             <p>📞 +91 9981226442</p>
             <p>
@@ -673,9 +673,9 @@ const HomeFiveFooter = () => {
             <p>
               🔗 <a href="https://www.linkedin.com/in/pravesh-jhanwar-84b068143/" target="_blank" rel="noreferrer">LinkedIn</a> |{" "}
               📸 <a href="https://www.instagram.com/jhanwarpravesh/" target="_blank" rel="noreferrer">Instagram</a>
-            </p>
+            </p> */}
 
-            <h4>📧 General Contact</h4>
+            <h4>📧 Contact</h4>
             <p>mentiff5@gmail.com</p>
           </div>
         );
